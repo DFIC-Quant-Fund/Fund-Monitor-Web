@@ -1,13 +1,13 @@
-First, run the development server:
+# Install dependencies
 
 ```bash
-npm run dev
-# or
+yarn
+```
+
+# Run the development server
+
+```bash
 yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
 Open [http://localhost:3000](http://localhost:3000) to see build.
