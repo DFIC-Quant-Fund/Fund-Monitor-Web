@@ -1,12 +1,6 @@
 export default function Home() {
 
-    const performanceData = [
-        {
-            date: "2024-01-01",
-            inception_return: "10%",
-        },
-
-    ];
+    
 
     return (
         <div className="min-h-screen bg-white flex items-center justify-center">
