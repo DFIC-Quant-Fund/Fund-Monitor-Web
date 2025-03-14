@@ -1,5 +1,6 @@
 'use client';
 import { useState, useEffect } from 'react';
+import { MdOutlineArrowBackIos, MdOutlineArrowForwardIos} from "react-icons/md"
 
 interface PerformanceData {
     date: string;
@@ -14,6 +15,9 @@ interface PerformanceData {
 interface ApiResponse {
     data: PerformanceData[];
     success: boolean;
+    page: number;
+    totalPages: number;
+    totalRecords: number;
 }
 
 export default function Performance() {
@@ -21,24 +25,28 @@ export default function Performance() {
     const [selectedDate, setSelectedDate] = useState('');
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState('');
+    const [page, setPage] = useState(1);
+    const [totalPages, setTotalPages] = useState(1);
+    const pageSize = 50; // Display 50 rows per page
 
     useEffect(() => {
         fetchData();
-    }, [selectedDate]);
+    }, [selectedDate, page]);
 
     const fetchData = async () => {
         setLoading(true);
         setError('');
         try {
             const url = selectedDate
-                ? `https://api.degrootefinance.com/api/performance?date=${selectedDate}`
-                : 'https://api.degrootefinance.com/api/performance';
-            
+                ? `https://api.degrootefinance.com/api/performance?date=${selectedDate}&page=${page}&limit=${pageSize}`
+                : `https://api.degrootefinance.com/api/performance?page=${page}&limit=${pageSize}`;
+
             const response = await fetch(url);
             const data: ApiResponse = await response.json();
-            
+
             if (data.success) {
                 setPerformanceData(data.data);
+                setTotalPages(data.totalPages);
             } else {
                 setPerformanceData([]);
                 setError('No data available for the selected date.');
@@ -81,8 +89,11 @@ export default function Performance() {
                         <input 
                             type="date" 
                             value={selectedDate} 
-                            onChange={(e) => setSelectedDate(e.target.value)}
-                            className="border px-3 py-2 rounded shadow"
+                            onChange={(e) => {
+                                setSelectedDate(e.target.value);
+                                setPage(1); // Reset to first page when date changes
+                            }}
+                            className={`border px-3 py-2 rounded shadow ${selectedDate ? 'text-black' : 'text-gray-500'}`}
                         />
                         <button
                             onClick={downloadCSV}
@@ -93,8 +104,8 @@ export default function Performance() {
                     </div>
                 </div>
 
-                {loading && <p className="text-gray-600">Loading data...</p>}
-                {error && <p className="text-red-600">{error}</p>}
+                {loading && <p className="p-3 text-gray-600">Loading data...</p>}
+                {error && <p className="p-3 text-gray-600">{error}</p>}
 
                 <div className="overflow-x-auto">
                     <table className="w-full border-collapse">
@@ -128,8 +139,26 @@ export default function Performance() {
                         </tbody>
                     </table>
                 </div>
+
+                {/* Pagination */}
+                <div className="flex justify-between items-center mt-4">
+                    <button 
+                        onClick={() => setPage(page - 1)} 
+                        disabled={page === 1}
+                        className="text-[#800000] disabled:opacity-50"
+                    >
+                        <MdOutlineArrowBackIos size={25}/>
+                    </button>
+                    <span className="text-gray-700">Page {page} of {totalPages}</span>
+                    <button 
+                        onClick={() => setPage(page + 1)} 
+                        disabled={page === totalPages}
+                        className="text-[#800000] disabled:opacity-50"
+                    >
+                        <MdOutlineArrowForwardIos size={25}/>
+                    </button>
+                </div>
             </div>
         </div>
     );
 }
-
