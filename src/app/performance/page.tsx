@@ -1,15 +1,15 @@
 'use client';
 import { useState, useEffect } from 'react';
-import { MdOutlineArrowBackIos, MdOutlineArrowForwardIos} from "react-icons/md"
+import { MdOutlineArrowBackIos, MdOutlineArrowForwardIos} from "react-icons/md";
 
 interface PerformanceData {
     date: string;
-    inception_return: string;
-    one_day_return: string;
-    one_month_return: string;
-    one_week_return: string;
-    one_year_return: string;
-    ytd_return: string;
+    inception_return: string | null;
+    one_day_return: string | null;
+    one_month_return: string | null;
+    one_week_return: string | null;
+    one_year_return: string | null;
+    ytd_return: string | null;
 }
 
 interface ApiResponse {
@@ -27,7 +27,7 @@ export default function Performance() {
     const [error, setError] = useState('');
     const [page, setPage] = useState(1);
     const [totalPages, setTotalPages] = useState(1);
-    const pageSize = 50; // Display 50 rows per page
+    const pageSize = 50;
 
     useEffect(() => {
         fetchData();
@@ -58,6 +58,25 @@ export default function Performance() {
         setLoading(false);
     };
 
+    const formatReturn = (value: string | null) => {
+        if (value === null || value === undefined) return <span className="text-black">–</span>;
+        const numberValue = parseFloat(value);
+        return (
+            <span className={numberValue > 0 ? 'text-green-600' : numberValue < 0 ? 'text-red-600' : 'text-black'}>
+                {numberValue}%
+            </span>
+        );
+    };
+
+    const validateDate = (date: string) => {
+        const year = parseInt(date.split('-')[0], 10);
+        if (year < 1900 || year > 2100) {
+            alert("Please enter a valid year between 1900 and 2100.");
+            return '';
+        }
+        return date;
+    };
+
     const downloadCSV = () => {
         if (performanceData.length === 0) return;
 
@@ -65,7 +84,7 @@ export default function Performance() {
         const csvContent = [
             headers.join(','),
             ...performanceData.map(row =>
-                headers.map(header => row[header as keyof PerformanceData]).join(',')
+                headers.map(header => row[header as keyof PerformanceData] ?? '-').join(',')
             )
         ].join('\n');
 
@@ -90,9 +109,11 @@ export default function Performance() {
                             type="date" 
                             value={selectedDate} 
                             onChange={(e) => {
-                                setSelectedDate(e.target.value);
-                                setPage(1); // Reset to first page when date changes
+                                setSelectedDate(validateDate(e.target.value));
+                                setPage(1);
                             }}
+                            min="1900-01-01" 
+                            max="2100-12-31"
                             className={`border px-3 py-2 rounded shadow ${selectedDate ? 'text-black' : 'text-gray-500'}`}
                         />
                         <button
@@ -104,57 +125,49 @@ export default function Performance() {
                     </div>
                 </div>
 
-                {loading && <p className="p-3 text-gray-600">Loading data...</p>}
-                {error && <p className="p-3 text-gray-600">{error}</p>}
-
-                <div className="overflow-x-auto">
+                <div className="overflow-x-auto max-h-[735px]">
                     <table className="w-full border-collapse">
-                        <thead>
+                        <thead className="sticky top-0 bg-white shadow-md z-10">
                             <tr>
-                                <th className="border-b-2 border-[#800000] p-3 text-left text-[#800000]">Date</th>
-                                <th className="border-b-2 border-[#800000] p-3 text-left text-[#800000]">Inception Return</th>
-                                <th className="border-b-2 border-[#800000] p-3 text-left text-[#800000]">1 Day Return</th>
-                                <th className="border-b-2 border-[#800000] p-3 text-left text-[#800000]">1 Week Return</th>
-                                <th className="border-b-2 border-[#800000] p-3 text-left text-[#800000]">1 Month Return</th>
-                                <th className="border-b-2 border-[#800000] p-3 text-left text-[#800000]">1 Year Return</th>
-                                <th className="border-b-2 border-[#800000] p-3 text-left text-[#800000]">YTD Return</th>
+                                <th className="border-b-2 border-[#800000] p-3 text-left text-[#800000] bg-white">Date</th>
+                                <th className="border-b-2 border-[#800000] p-3 text-left text-[#800000] bg-white">Inception Return</th>
+                                <th className="border-b-2 border-[#800000] p-3 text-left text-[#800000] bg-white">1 Day Return</th>
+                                <th className="border-b-2 border-[#800000] p-3 text-left text-[#800000] bg-white">1 Week Return</th>
+                                <th className="border-b-2 border-[#800000] p-3 text-left text-[#800000] bg-white">1 Month Return</th>
+                                <th className="border-b-2 border-[#800000] p-3 text-left text-[#800000] bg-white">1 Year Return</th>
+                                <th className="border-b-2 border-[#800000] p-3 text-left text-[#800000] bg-white">YTD Return</th>
                             </tr>
                         </thead>
                         <tbody>
-                            {performanceData.length > 0 ? (
+                            {loading ? (
+                                <tr><td colSpan={7} className="p-3 text-gray-600 text-center">Loading data...</td></tr>
+                            ) : error ? (
+                                <tr><td colSpan={7} className="p-3 text-gray-600 text-center">{error}</td></tr>
+                            ) : performanceData.length > 0 ? (
                                 performanceData.map((row, index) => (
                                     <tr key={row.date} className={index % 2 === 0 ? 'bg-gray-50' : 'bg-white'}>
                                         <td className="border-b border-gray-200 p-3 text-gray-900">{row.date}</td>
-                                        <td className="border-b border-gray-200 p-3 text-gray-900">{row.inception_return}%</td>
-                                        <td className="border-b border-gray-200 p-3 text-gray-900">{row.one_day_return}%</td>
-                                        <td className="border-b border-gray-200 p-3 text-gray-900">{row.one_week_return}%</td>
-                                        <td className="border-b border-gray-200 p-3 text-gray-900">{row.one_month_return}%</td>
-                                        <td className="border-b border-gray-200 p-3 text-gray-900">{row.one_year_return}%</td>
-                                        <td className="border-b border-gray-200 p-3 text-gray-900">{row.ytd_return}%</td>
+                                        <td className="border-b border-gray-200 p-3">{formatReturn(row.inception_return)}</td>
+                                        <td className="border-b border-gray-200 p-3">{formatReturn(row.one_day_return)}</td>
+                                        <td className="border-b border-gray-200 p-3">{formatReturn(row.one_week_return)}</td>
+                                        <td className="border-b border-gray-200 p-3">{formatReturn(row.one_month_return)}</td>
+                                        <td className="border-b border-gray-200 p-3">{formatReturn(row.one_year_return)}</td>
+                                        <td className="border-b border-gray-200 p-3">{formatReturn(row.ytd_return)}</td>
                                     </tr>
                                 ))
                             ) : (
-                                !loading && <tr><td colSpan={7} className="p-3 text-gray-600">No data available.</td></tr>
+                                <tr><td colSpan={7} className="p-3 text-gray-600 text-center">No data available.</td></tr>
                             )}
                         </tbody>
                     </table>
                 </div>
 
-                {/* Pagination */}
                 <div className="flex justify-between items-center mt-4">
-                    <button 
-                        onClick={() => setPage(page - 1)} 
-                        disabled={page === 1}
-                        className="text-[#800000] disabled:opacity-50"
-                    >
+                    <button onClick={() => setPage(page - 1)} disabled={page === 1} className="text-[#800000] disabled:opacity-50">
                         <MdOutlineArrowBackIos size={25}/>
                     </button>
                     <span className="text-gray-700">Page {page} of {totalPages}</span>
-                    <button 
-                        onClick={() => setPage(page + 1)} 
-                        disabled={page === totalPages}
-                        className="text-[#800000] disabled:opacity-50"
-                    >
+                    <button onClick={() => setPage(page + 1)} disabled={page === totalPages} className="text-[#800000] disabled:opacity-50">
                         <MdOutlineArrowForwardIos size={25}/>
                     </button>
                 </div>
