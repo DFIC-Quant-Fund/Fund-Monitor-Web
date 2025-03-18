@@ -1,34 +1,34 @@
 "use client";
 
 import { useState } from "react";
+import Home from "./home"; 
+
+// Very ugly login page, but it works
 
 export default function Login() {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
-  const [isLoggedIn, setIsLoggedIn] = useState(false); // Track login state
+  const [isLoggedIn, setIsLoggedIn] = useState(false); 
 
   const handleLogin = () => {
     console.log("Logging in with:", { username, password });
     if (username === "admin" && password === "admin") {
-      console.log("Login successful");
-      setIsLoggedIn(true); // Update state to show dashboard
+      setIsLoggedIn(true); 
     } else {
       console.log("Invalid credentials");
     }
   };
 
-  // If logged in, show dashboard content
+  // right now just load the home page in a react fragment
+  // could add a logout button, logic would prolly need to go here
   if (isLoggedIn) {
     return (
-      <div>
-        <h1>Welcome, {username}!</h1>
-        <p>This is your dashboard.</p>
-        <button onClick={() => setIsLoggedIn(false)}>Logout</button>
-      </div>
+      <>
+       <Home/> 
+      </>
     );
   }
 
-  // If not logged in, show login form
   return (
     <div>
       <h1>Login</h1>
