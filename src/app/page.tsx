@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import Home from "./home"; 
+import Performance from "./performance";
 
 // Very ugly login page, but it works
 
@@ -9,6 +10,7 @@ export default function Login() {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [isLoggedIn, setIsLoggedIn] = useState(false); 
+  const [showPerformance, setShowPerformance] = useState(false); 
 
   const handleLogin = () => {
     console.log("Logging in with:", { username, password });
@@ -20,11 +22,26 @@ export default function Login() {
   };
 
   // right now just load the home page in a react fragment
-  // could add a logout button, logic would prolly need to go here
   if (isLoggedIn) {
     return (
       <>
-       <Home/> 
+      {/* You could load in the home component, i have commented it right now since it obstructs the buttons */}
+       {/* <Home/>  */}
+       <button 
+        onClick={() => setShowPerformance(!showPerformance)}
+        className="border-2 border-blue-500 text-blue-500 px-4 py-2 rounded-md hover:bg-blue-500 hover:text-white transition"
+        >
+        {showPerformance ? "Hide Performance" : "Show Performance"}
+        </button>
+
+        {showPerformance && <Performance />}
+
+        <button 
+        onClick={() => setIsLoggedIn(false)}
+        className="border-2 border-red-500 text-red-500 px-4 py-2 rounded-md hover:bg-red-500 hover:text-white transition mt-4"
+        >
+        Logout
+        </button>
       </>
     );
   }
