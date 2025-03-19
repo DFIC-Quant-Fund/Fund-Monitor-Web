@@ -19,9 +19,9 @@ interface ApiResponse {
 export default function Performance() {
     const [performanceData, setPerformanceData] = useState<PerformanceData[]>([]);
     const [selectedDate, setSelectedDate] = useState('');
-    const [loading, setLoading] = useState(false);
+    const [loading, setLoading] = useState(true);
     const [error, setError] = useState('');
-
+    
     const fetchData = useCallback(async () => {
         setLoading(true);
         setError('');
@@ -86,7 +86,7 @@ export default function Performance() {
         <div className="min-h-screen bg-white p-8 flex flex-col">
             <div className="max-w-7xl mx-auto w-full flex flex-col flex-grow">
                 <div className="flex flex-col md:flex-row md:justify-between md:items-center mb-4">
-                    <h1 className="text-[#800000] text-4xl font-bold">Performance Data</h1>
+                    <h1 className="text-[#800000] text-4xl font-bold">Performance</h1>
                     <div className="flex flex-col md:flex-row gap-4 mt-4 md:mt-0">
                         <input 
                             type="date" 
@@ -122,7 +122,7 @@ export default function Performance() {
                                 {loading ? (
                                     <tr><td colSpan={7} className="p-3 text-gray-600 text-center">Loading data...</td></tr>
                                 ) : error ? (
-                                    <tr><td colSpan={7} className="p-3 text-gray-600 text-center">{error}</td></tr>
+                                    <tr><td colSpan={7} className="p-3 text-gray-600 text-center text-red-600">{error}</td></tr>
                                 ) : performanceData.length > 0 ? (
                                     performanceData.map((row, index) => (
                                         <tr key={row.date} className={index % 2 === 0 ? 'bg-gray-50' : 'bg-white'}>

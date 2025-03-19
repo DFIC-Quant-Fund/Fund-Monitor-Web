@@ -13,7 +13,7 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "DFIC Dashboard",
+  title: "DFIC Fund Monitor",
   description: "An system to monitor the metrics and transactions of the Investment Council's portfolio",
 };
 
