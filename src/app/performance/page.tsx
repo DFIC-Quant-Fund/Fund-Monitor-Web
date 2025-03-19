@@ -1,6 +1,5 @@
 'use client';
-import { useState, useEffect } from 'react';
-import { MdOutlineArrowBackIos, MdOutlineArrowForwardIos } from "react-icons/md";
+import { useState, useEffect, useCallback } from 'react';
 
 interface PerformanceData {
     date: string;
@@ -15,9 +14,6 @@ interface PerformanceData {
 interface ApiResponse {
     data: PerformanceData[];
     success: boolean;
-    page: number;
-    totalPages: number;
-    totalRecords: number;
 }
 
 export default function Performance() {
@@ -25,28 +21,20 @@ export default function Performance() {
     const [selectedDate, setSelectedDate] = useState('');
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState('');
-    const [page, setPage] = useState(1);
-    const [totalPages, setTotalPages] = useState(1);
-    const pageSize = 50;
 
-    useEffect(() => {
-        fetchData();
-    }, [selectedDate, page]);
-
-    const fetchData = async () => {
+    const fetchData = useCallback(async () => {
         setLoading(true);
         setError('');
         try {
             const url = selectedDate
-                ? `https://api.degrootefinance.com/api/performance?date=${selectedDate}&page=${page}&limit=${pageSize}`
-                : `https://api.degrootefinance.com/api/performance?page=${page}&limit=${pageSize}`;
+                ? `https://api.degrootefinance.com/api/performance?date=${selectedDate}`
+                : `https://api.degrootefinance.com/api/performance`;
 
             const response = await fetch(url);
             const data: ApiResponse = await response.json();
 
             if (data.success) {
                 setPerformanceData(data.data);
-                setTotalPages(data.totalPages);
             } else {
                 setPerformanceData([]);
                 setError('No data available for the selected date.');
@@ -56,7 +44,11 @@ export default function Performance() {
             setError('Failed to fetch data. Please try again.');
         }
         setLoading(false);
-    };
+    }, [selectedDate]);
+
+    useEffect(() => {
+        fetchData();
+    }, [fetchData]);
 
     const formatReturn = (value: string | null) => {
         if (value === null || value === undefined) return <span className="text-black">–</span>;
@@ -66,11 +58,6 @@ export default function Performance() {
                 {numberValue}%
             </span>
         );
-    };
-
-    const validateDate = (date: string) => {
-        const year = parseInt(date.split('-')[0], 10);
-        return date;
     };
 
     const downloadCSV = () => {
@@ -98,20 +85,13 @@ export default function Performance() {
     return (
         <div className="min-h-screen bg-white p-8 flex flex-col">
             <div className="max-w-7xl mx-auto w-full flex flex-col flex-grow">
-                {/* Title & Controls (Responsive) */}
                 <div className="flex flex-col md:flex-row md:justify-between md:items-center mb-4">
-                    {/* Title */}
                     <h1 className="text-[#800000] text-4xl font-bold">Performance Data</h1>
-
-                    {/* Date Input & Download Button */}
                     <div className="flex flex-col md:flex-row gap-4 mt-4 md:mt-0">
                         <input 
                             type="date" 
                             value={selectedDate} 
-                            onChange={(e) => {
-                                setSelectedDate(validateDate(e.target.value));
-                                setPage(1);
-                            }}
+                            onChange={(e) => setSelectedDate(e.target.value)}
                             min="1900-01-01" 
                             max="2100-12-31"
                             className="border px-3 py-2 rounded shadow text-black"
@@ -124,20 +104,18 @@ export default function Performance() {
                         </button>
                     </div>
                 </div>
-
-                {/* Table Wrapper */}
                 <div className="flex-grow overflow-hidden">
                     <div className="overflow-y-auto max-h-[calc(100vh-180px)] border rounded-lg">
                         <table className="w-full border-collapse">
                             <thead className="sticky top-0 bg-white shadow-md z-10">
                                 <tr>
-                                    <th className="border-b-2 border-[#800000] p-3 text-left text-[#800000] bg-white">Date</th>
-                                    <th className="border-b-2 border-[#800000] p-3 text-left text-[#800000] bg-white">Inception Return</th>
-                                    <th className="border-b-2 border-[#800000] p-3 text-left text-[#800000] bg-white">1 Day Return</th>
-                                    <th className="border-b-2 border-[#800000] p-3 text-left text-[#800000] bg-white">1 Week Return</th>
-                                    <th className="border-b-2 border-[#800000] p-3 text-left text-[#800000] bg-white">1 Month Return</th>
-                                    <th className="border-b-2 border-[#800000] p-3 text-left text-[#800000] bg-white">1 Year Return</th>
-                                    <th className="border-b-2 border-[#800000] p-3 text-left text-[#800000] bg-white">YTD Return</th>
+                                    <th className="border-b-2 border-[#800000] p-3 text-left text-[#800000]">Date</th>
+                                    <th className="border-b-2 border-[#800000] p-3 text-left text-[#800000]">Inception Return</th>
+                                    <th className="border-b-2 border-[#800000] p-3 text-left text-[#800000]">1 Day Return</th>
+                                    <th className="border-b-2 border-[#800000] p-3 text-left text-[#800000]">1 Week Return</th>
+                                    <th className="border-b-2 border-[#800000] p-3 text-left text-[#800000]">1 Month Return</th>
+                                    <th className="border-b-2 border-[#800000] p-3 text-left text-[#800000]">1 Year Return</th>
+                                    <th className="border-b-2 border-[#800000] p-3 text-left text-[#800000]">YTD Return</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -163,17 +141,6 @@ export default function Performance() {
                             </tbody>
                         </table>
                     </div>
-                </div>
-
-                {/* Pagination */}
-                <div className="flex justify-center items-center mt-4 gap-2">
-                    <button onClick={() => setPage(page - 1)} disabled={page === 1} className="text-[#800000] disabled:opacity-50">
-                        <MdOutlineArrowBackIos size={25}/>
-                    </button>
-                    <span className="text-gray-700">Page {page} of {totalPages}</span>
-                    <button onClick={() => setPage(page + 1)} disabled={page === totalPages} className="text-[#800000] disabled:opacity-50">
-                        <MdOutlineArrowForwardIos size={25}/>
-                    </button>
                 </div>
             </div>
         </div>
