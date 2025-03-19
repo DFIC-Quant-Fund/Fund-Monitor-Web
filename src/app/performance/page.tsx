@@ -1,6 +1,6 @@
 'use client';
 import { useState, useEffect } from 'react';
-import { MdOutlineArrowBackIos, MdOutlineArrowForwardIos} from "react-icons/md";
+import { MdOutlineArrowBackIos, MdOutlineArrowForwardIos } from "react-icons/md";
 
 interface PerformanceData {
     date: string;
@@ -70,10 +70,6 @@ export default function Performance() {
 
     const validateDate = (date: string) => {
         const year = parseInt(date.split('-')[0], 10);
-        if (year < 1900 || year > 2100) {
-            alert("Please enter a valid year between 1900 and 2100.");
-            return '';
-        }
         return date;
     };
 
@@ -100,11 +96,15 @@ export default function Performance() {
     };
 
     return (
-        <div className="min-h-screen bg-white p-8">
-            <div className="max-w-7xl mx-auto">
-                <div className="flex justify-between items-center mb-8">
+        <div className="min-h-screen bg-white p-8 flex flex-col">
+            <div className="max-w-7xl mx-auto w-full flex flex-col flex-grow">
+                {/* Title & Controls (Responsive) */}
+                <div className="flex flex-col md:flex-row md:justify-between md:items-center mb-4">
+                    {/* Title */}
                     <h1 className="text-[#800000] text-4xl font-bold">Performance Data</h1>
-                    <div className="flex items-center gap-4">
+
+                    {/* Date Input & Download Button */}
+                    <div className="flex flex-col md:flex-row gap-4 mt-4 md:mt-0">
                         <input 
                             type="date" 
                             value={selectedDate} 
@@ -114,7 +114,7 @@ export default function Performance() {
                             }}
                             min="1900-01-01" 
                             max="2100-12-31"
-                            className={`border px-3 py-2 rounded shadow ${selectedDate ? 'text-black' : 'text-gray-500'}`}
+                            className="border px-3 py-2 rounded shadow text-black"
                         />
                         <button
                             onClick={downloadCSV}
@@ -125,44 +125,48 @@ export default function Performance() {
                     </div>
                 </div>
 
-                <div className="overflow-x-auto max-h-[735px]">
-                    <table className="w-full border-collapse">
-                        <thead className="sticky top-0 bg-white shadow-md z-10">
-                            <tr>
-                                <th className="border-b-2 border-[#800000] p-3 text-left text-[#800000] bg-white">Date</th>
-                                <th className="border-b-2 border-[#800000] p-3 text-left text-[#800000] bg-white">Inception Return</th>
-                                <th className="border-b-2 border-[#800000] p-3 text-left text-[#800000] bg-white">1 Day Return</th>
-                                <th className="border-b-2 border-[#800000] p-3 text-left text-[#800000] bg-white">1 Week Return</th>
-                                <th className="border-b-2 border-[#800000] p-3 text-left text-[#800000] bg-white">1 Month Return</th>
-                                <th className="border-b-2 border-[#800000] p-3 text-left text-[#800000] bg-white">1 Year Return</th>
-                                <th className="border-b-2 border-[#800000] p-3 text-left text-[#800000] bg-white">YTD Return</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {loading ? (
-                                <tr><td colSpan={7} className="p-3 text-gray-600 text-center">Loading data...</td></tr>
-                            ) : error ? (
-                                <tr><td colSpan={7} className="p-3 text-gray-600 text-center">{error}</td></tr>
-                            ) : performanceData.length > 0 ? (
-                                performanceData.map((row, index) => (
-                                    <tr key={row.date} className={index % 2 === 0 ? 'bg-gray-50' : 'bg-white'}>
-                                        <td className="border-b border-gray-200 p-3 text-gray-900">{row.date}</td>
-                                        <td className="border-b border-gray-200 p-3">{formatReturn(row.inception_return)}</td>
-                                        <td className="border-b border-gray-200 p-3">{formatReturn(row.one_day_return)}</td>
-                                        <td className="border-b border-gray-200 p-3">{formatReturn(row.one_week_return)}</td>
-                                        <td className="border-b border-gray-200 p-3">{formatReturn(row.one_month_return)}</td>
-                                        <td className="border-b border-gray-200 p-3">{formatReturn(row.one_year_return)}</td>
-                                        <td className="border-b border-gray-200 p-3">{formatReturn(row.ytd_return)}</td>
-                                    </tr>
-                                ))
-                            ) : (
-                                <tr><td colSpan={7} className="p-3 text-gray-600 text-center">No data available.</td></tr>
-                            )}
-                        </tbody>
-                    </table>
+                {/* Table Wrapper */}
+                <div className="flex-grow overflow-hidden">
+                    <div className="overflow-y-auto max-h-[calc(100vh-180px)] border rounded-lg">
+                        <table className="w-full border-collapse">
+                            <thead className="sticky top-0 bg-white shadow-md z-10">
+                                <tr>
+                                    <th className="border-b-2 border-[#800000] p-3 text-left text-[#800000] bg-white">Date</th>
+                                    <th className="border-b-2 border-[#800000] p-3 text-left text-[#800000] bg-white">Inception Return</th>
+                                    <th className="border-b-2 border-[#800000] p-3 text-left text-[#800000] bg-white">1 Day Return</th>
+                                    <th className="border-b-2 border-[#800000] p-3 text-left text-[#800000] bg-white">1 Week Return</th>
+                                    <th className="border-b-2 border-[#800000] p-3 text-left text-[#800000] bg-white">1 Month Return</th>
+                                    <th className="border-b-2 border-[#800000] p-3 text-left text-[#800000] bg-white">1 Year Return</th>
+                                    <th className="border-b-2 border-[#800000] p-3 text-left text-[#800000] bg-white">YTD Return</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {loading ? (
+                                    <tr><td colSpan={7} className="p-3 text-gray-600 text-center">Loading data...</td></tr>
+                                ) : error ? (
+                                    <tr><td colSpan={7} className="p-3 text-gray-600 text-center">{error}</td></tr>
+                                ) : performanceData.length > 0 ? (
+                                    performanceData.map((row, index) => (
+                                        <tr key={row.date} className={index % 2 === 0 ? 'bg-gray-50' : 'bg-white'}>
+                                            <td className="border-b border-gray-200 p-3 text-gray-900">{row.date}</td>
+                                            <td className="border-b border-gray-200 p-3">{formatReturn(row.inception_return)}</td>
+                                            <td className="border-b border-gray-200 p-3">{formatReturn(row.one_day_return)}</td>
+                                            <td className="border-b border-gray-200 p-3">{formatReturn(row.one_week_return)}</td>
+                                            <td className="border-b border-gray-200 p-3">{formatReturn(row.one_month_return)}</td>
+                                            <td className="border-b border-gray-200 p-3">{formatReturn(row.one_year_return)}</td>
+                                            <td className="border-b border-gray-200 p-3">{formatReturn(row.ytd_return)}</td>
+                                        </tr>
+                                    ))
+                                ) : (
+                                    <tr><td colSpan={7} className="p-3 text-gray-600 text-center">No data available.</td></tr>
+                                )}
+                            </tbody>
+                        </table>
+                    </div>
                 </div>
 
-                <div className="flex justify-between items-center mt-4">
+                {/* Pagination */}
+                <div className="flex justify-center items-center mt-4 gap-2">
                     <button onClick={() => setPage(page - 1)} disabled={page === 1} className="text-[#800000] disabled:opacity-50">
                         <MdOutlineArrowBackIos size={25}/>
                     </button>
