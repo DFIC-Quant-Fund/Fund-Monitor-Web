@@ -182,9 +182,9 @@ export default function Holdings() {
                             <p className="text-black text-lg">
                                 <span className="font-semibold">USD to CAD:</span> ${parseFloat(exchangeRatesData.USD).toFixed(6)}
                             </p>
-                            <p className="text-black text-lg">
+                            {/* <p className="text-black text-lg">
                                 <span className="font-semibold">EUR to CAD:</span> ${parseFloat(exchangeRatesData.EUR).toFixed(6)}
-                            </p>
+                            </p> */}
                         </div>
                     ) : (
                         <p className="text-black text-center">Fetching exchange rates...</p>
