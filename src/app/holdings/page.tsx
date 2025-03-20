@@ -37,7 +37,7 @@ interface HoldingsApiResponse {
 export default function Holdings() {
     const [holdingsData, setHoldingsData] = useState<HoldingData[]>([]);
     const [selectedDate, setSelectedDate] = useState(new Date().toISOString().split('T')[0]);
-    const [selectedPortfolio, setSelectedPortfolio] = useState('core'); // Add this line
+    const [selectedPortfolio, setSelectedPortfolio] = useState('core');
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState('');
     const [exchangeRatesData, setExchangeRatesData] = useState<ExchangeRates | null>(null);
@@ -84,7 +84,7 @@ export default function Holdings() {
             setError('Failed to fetch data. Please try again.');
         }
         setLoading(false);
-    }, [selectedDate, selectedPortfolio]); // Add selectedPortfolio to dependencies
+    }, [selectedDate, selectedPortfolio]);
 
     useEffect(() => {
         fetchExchangeRates();
