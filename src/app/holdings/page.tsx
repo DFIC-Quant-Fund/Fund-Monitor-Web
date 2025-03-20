@@ -46,7 +46,7 @@ export default function Holdings() {
     // Fetch exchange rates
     const fetchExchangeRates = useCallback(async () => {
         try {
-            const response = await fetch(`https://api.degrootefinance.com/exchange-rates?date=${selectedDate}`);
+            const response = await fetch(`https://api.degrootefinance.com/api/exchange-rates?date=${selectedDate}`);
             const data: ExchangeRatesApiResponse = await response.json();
 
             if (data.success && data.data) {
