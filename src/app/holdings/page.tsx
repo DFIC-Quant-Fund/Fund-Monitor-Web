@@ -136,9 +136,9 @@ export default function Holdings() {
                         </thead>
                         <tbody>
                             {loading ? (
-                                <tr>
-                                    <td colSpan={6} className="p-3 text-black text-center">Loading data...</td>
-                                </tr>
+                                <tr><td colSpan={7} className="p-3 text-gray-600 text-center">Loading data...</td></tr>
+                            ) : error ? (
+                                <tr><td colSpan={7} className="p-3 text-gray-600 text-center text-red-600">{error}</td></tr>
                             ) : holdingsData.length > 0 ? (
                                 holdingsData.map((row, index) => {
                                     const marketValue = parseFloat(row.market_value);
