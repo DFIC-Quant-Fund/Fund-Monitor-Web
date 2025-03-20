@@ -26,10 +26,7 @@ export default function Performance() {
         setLoading(true);
         setError('');
         try {
-            const url = selectedDate
-                ? `https://api.degrootefinance.com/api/performance?date=${selectedDate}`
-                : `https://api.degrootefinance.com/api/performance`;
-
+            const url = `https://api.degrootefinance.com/api/performance?date=${selectedDate}`
             const response = await fetch(url);
             const data: ApiResponse = await response.json();
 
