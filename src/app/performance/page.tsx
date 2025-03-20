@@ -55,7 +55,7 @@ export default function Performance() {
         const numberValue = parseFloat(value);
         return (
             <span className={numberValue > 0 ? 'text-green-600' : numberValue < 0 ? 'text-red-600' : 'text-black'}>
-                {numberValue}%
+                {numberValue.toFixed(4)}%
             </span>
         );
     };
