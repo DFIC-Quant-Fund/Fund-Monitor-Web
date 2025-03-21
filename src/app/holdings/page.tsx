@@ -43,7 +43,7 @@ interface HoldingsApiResponse {
 export default function Holdings() {
     const [holdingsData, setHoldingsData] = useState<HoldingData[]>([]);
     const [selectedPortfolio, setSelectedPortfolio] = useState('core');
-    const [selectedDate, setSelectedDate] = useState(new Date().toLocaleDateString('en-CA'));
+    const [selectedDate, setSelectedDate] = useState(new Date(Date.now() - 86400000).toLocaleDateString('en-CA'));
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState('');
     const [exchangeRatesData, setExchangeRatesData] = useState<ExchangeRates | null>(null);
