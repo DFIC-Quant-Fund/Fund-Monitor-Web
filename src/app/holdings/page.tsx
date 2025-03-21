@@ -17,6 +17,11 @@ interface HoldingData {
     type: string;
 }
 
+interface SortConfig {
+    key: string;
+    direction: 'asc' | 'desc';
+}
+
 // Interface for Currency Exchange Data
 interface ExchangeRates {
     CAD: string;
@@ -42,6 +47,7 @@ export default function Holdings() {
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState('');
     const [exchangeRatesData, setExchangeRatesData] = useState<ExchangeRates | null>(null);
+    const [sortConfig, setSortConfig] = useState<SortConfig>({ key: '', direction: 'asc' });
 
     const STARTING_VALUE = 101644.99;
 
@@ -101,6 +107,32 @@ export default function Holdings() {
         return acc + marketValue; // CAD remains unchanged
     }, 0);
 
+    const sortData = (data: HoldingData[]) => {
+        if (!sortConfig.key) return data;
+
+        return [...data].sort((a, b) => {
+            let aValue: string | number = a[sortConfig.key as keyof HoldingData];
+            let bValue: string | number = b[sortConfig.key as keyof HoldingData];
+
+            // Convert to numbers for numerical columns
+            if (sortConfig.key === 'shares_held' || sortConfig.key === 'price' || sortConfig.key === 'market_value') {
+                aValue = parseFloat(aValue as string) || 0;
+                bValue = parseFloat(bValue as string) || 0;
+            }
+
+            if (aValue < bValue) return sortConfig.direction === 'asc' ? -1 : 1;
+            if (aValue > bValue) return sortConfig.direction === 'asc' ? 1 : -1;
+            return 0;
+        });
+    };
+
+    const handleSort = (key: string) => {
+        setSortConfig(prevConfig => ({
+            key,
+            direction: prevConfig.key === key && prevConfig.direction === 'asc' ? 'desc' : 'asc'
+        }));
+    };
+
     // Calculate Inception Return
     const inceptionReturn = ((totalPortfolioValue - STARTING_VALUE) / STARTING_VALUE) * 100;
 
@@ -131,14 +163,29 @@ export default function Holdings() {
 
                 <div className="w-full border rounded-lg overflow-hidden mb-6">
                     <table className="w-full border-collapse ">
-                        <thead className="sticky top-0 bg-white shadow-md z-10 ">
+                        <thead className="sticky top-0 bg-white shadow-md z-10">
                             <tr>
-                                {['Name', 'Ticker', 'Shares', 'Price (CAD)', 'Market Value (CAD)', 'Fund'].map((header) => (
+                                {[
+                                    { label: 'Name', key: 'name' },
+                                    { label: 'Ticker', key: 'ticker' },
+                                    { label: 'Shares', key: 'shares_held' },
+                                    { label: 'Price (CAD)', key: 'price' },
+                                    { label: 'Market Value (CAD)', key: 'market_value' },
+                                    { label: 'Fund', key: 'fund' }
+                                ].map(({ label, key }) => (
                                     <th
-                                        key={header}
-                                        className="border-b-2 border-[#800000] p-3 text-left text-[#800000]"
+                                        key={key}
+                                        onClick={() => handleSort(key)}
+                                        className="border-b-2 border-[#800000] p-3 text-left text-[#800000] cursor-pointer hover:bg-gray-50"
                                     >
-                                        {header}
+                                        <div className="flex items-center gap-1">
+                                            {label}
+                                            {sortConfig.key === key && (
+                                                <span className="ml-1">
+                                                    {sortConfig.direction === 'asc' ? '↑' : '↓'}
+                                                </span>
+                                            )}
+                                        </div>
                                     </th>
                                 ))}
                             </tr>
@@ -149,7 +196,7 @@ export default function Holdings() {
                             ) : error ? (
                                 <tr><td colSpan={7} className="p-3 text-gray-600 text-center text-red-600">{error}</td></tr>
                             ) : holdingsData.length > 0 ? (
-                                holdingsData.map((row, index) => {
+                                sortData(holdingsData).map((row, index) => {
                                     const marketValue = parseFloat(row.market_value);
                                     const price = parseFloat(row.price);
                                     let convertedMarketValue = marketValue;
