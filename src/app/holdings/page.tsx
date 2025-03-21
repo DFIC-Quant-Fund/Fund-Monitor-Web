@@ -66,11 +66,7 @@ export default function Holdings() {
         setLoading(true);
         setError('');
         try {
-            const endpoint = selectedPortfolio === 'core' 
-                ? 'holdings'
-                : selectedPortfolio;
-            
-            const response = await fetch(`https://api.degrootefinance.com/api/${endpoint}?date=${selectedDate}`);
+            const response = await fetch(`https://api.degrootefinance.com/api/holdings?portfolio=${selectedPortfolio}&date=${selectedDate}`);
             const data: HoldingsApiResponse = await response.json();
 
             if (data.success) {
