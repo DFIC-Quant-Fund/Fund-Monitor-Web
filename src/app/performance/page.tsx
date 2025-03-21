@@ -80,6 +80,8 @@ export default function Performance() {
         window.URL.revokeObjectURL(url);
     };
 
+    
+
     return (
         <div className="min-h-screen bg-white p-8 flex flex-col">
             <div className="max-w-7xl mx-auto w-full flex flex-col flex-grow">
