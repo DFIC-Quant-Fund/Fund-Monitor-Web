@@ -11,16 +11,16 @@ export default function Home() {
 
             <div className="flex flex-col space-y-4">
                 <button 
+                    onClick={() => router.push("/holdings")}
+                    className="bg-[#800000] text-white px-6 py-3 rounded-lg text-lg font-semibold hover:bg-[#600000] transition cursor-pointer"
+                >
+                    Holdings
+                </button>
+                <button 
                     onClick={() => router.push("/performance")}
                     className="bg-[#800000] text-white px-6 py-3 rounded-lg text-lg font-semibold hover:bg-[#600000] transition cursor-pointer"
                 >
                     Performance
-                </button>
-                <button 
-                    disabled
-                    className="bg-gray-400 text-white px-6 py-3 rounded-lg text-lg font-semibold cursor-not-allowed"
-                >
-                    Fund (Coming Soon)
                 </button>
                 <button 
                     disabled

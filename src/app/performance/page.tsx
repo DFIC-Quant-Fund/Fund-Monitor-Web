@@ -1,5 +1,6 @@
 'use client';
 import { useState, useEffect, useCallback } from 'react';
+import { API_BASE_URL } from '../../utils/apiBase';
 
 interface PerformanceData {
     date: string;
@@ -18,7 +19,7 @@ interface ApiResponse {
 
 export default function Performance() {
     const [performanceData, setPerformanceData] = useState<PerformanceData[]>([]);
-    const [selectedDate, setSelectedDate] = useState(new Date().toISOString().split('T')[0]);
+    const [selectedDate, setSelectedDate] = useState(new Date().toLocaleDateString('en-CA'));
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState('');
     
@@ -26,10 +27,7 @@ export default function Performance() {
         setLoading(true);
         setError('');
         try {
-            const url = selectedDate
-                ? `https://api.degrootefinance.com/api/performance?date=${selectedDate}`
-                : `https://api.degrootefinance.com/api/performance`;
-
+            const url = `${API_BASE_URL}/api/performance?date=${selectedDate}`
             const response = await fetch(url);
             const data: ApiResponse = await response.json();
 
@@ -104,43 +102,41 @@ export default function Performance() {
                         </button>
                     </div>
                 </div>
-                <div className="flex-grow overflow-hidden">
-                    <div className="overflow-y-auto max-h-[calc(100vh-180px)] border rounded-lg">
-                        <table className="w-full border-collapse">
-                            <thead className="sticky top-0 bg-white shadow-md z-10">
-                                <tr>
-                                    <th className="border-b-2 border-[#800000] p-3 text-left text-[#800000]">Date</th>
-                                    <th className="border-b-2 border-[#800000] p-3 text-left text-[#800000]">Inception Return</th>
-                                    <th className="border-b-2 border-[#800000] p-3 text-left text-[#800000]">1 Day Return</th>
-                                    <th className="border-b-2 border-[#800000] p-3 text-left text-[#800000]">1 Week Return</th>
-                                    <th className="border-b-2 border-[#800000] p-3 text-left text-[#800000]">1 Month Return</th>
-                                    <th className="border-b-2 border-[#800000] p-3 text-left text-[#800000]">1 Year Return</th>
-                                    <th className="border-b-2 border-[#800000] p-3 text-left text-[#800000]">YTD Return</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                {loading ? (
-                                    <tr><td colSpan={7} className="p-3 text-gray-600 text-center">Loading data...</td></tr>
-                                ) : error ? (
-                                    <tr><td colSpan={7} className="p-3 text-gray-600 text-center text-red-600">{error}</td></tr>
-                                ) : performanceData.length > 0 ? (
-                                    performanceData.map((row, index) => (
-                                        <tr key={row.date} className={index % 2 === 0 ? 'bg-gray-50' : 'bg-white'}>
-                                            <td className="border-b border-gray-200 p-3 text-gray-900">{row.date}</td>
-                                            <td className="border-b border-gray-200 p-3">{formatReturn(row.inception_return)}</td>
-                                            <td className="border-b border-gray-200 p-3">{formatReturn(row.one_day_return)}</td>
-                                            <td className="border-b border-gray-200 p-3">{formatReturn(row.one_week_return)}</td>
-                                            <td className="border-b border-gray-200 p-3">{formatReturn(row.one_month_return)}</td>
-                                            <td className="border-b border-gray-200 p-3">{formatReturn(row.one_year_return)}</td>
-                                            <td className="border-b border-gray-200 p-3">{formatReturn(row.ytd_return)}</td>
-                                        </tr>
-                                    ))
-                                ) : (
-                                    <tr><td colSpan={7} className="p-3 text-gray-600 text-center">No data available.</td></tr>
-                                )}
-                            </tbody>
-                        </table>
-                    </div>
+                <div className="w-full border rounded-lg overflow-hidden mb-6">
+                    <table className="w-full border-collapse ">
+                        <thead className="sticky top-0 bg-white shadow-md z-10">
+                            <tr>
+                                <th className="border-b-2 border-[#800000] p-3 text-left text-[#800000]">Date</th>
+                                <th className="border-b-2 border-[#800000] p-3 text-left text-[#800000]">Inception Return</th>
+                                <th className="border-b-2 border-[#800000] p-3 text-left text-[#800000]">1 Day Return</th>
+                                <th className="border-b-2 border-[#800000] p-3 text-left text-[#800000]">1 Week Return</th>
+                                <th className="border-b-2 border-[#800000] p-3 text-left text-[#800000]">1 Month Return</th>
+                                <th className="border-b-2 border-[#800000] p-3 text-left text-[#800000]">1 Year Return</th>
+                                <th className="border-b-2 border-[#800000] p-3 text-left text-[#800000]">YTD Return</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {loading ? (
+                                <tr><td colSpan={7} className="p-3 text-gray-600 text-center">Loading data...</td></tr>
+                            ) : error ? (
+                                <tr><td colSpan={7} className="p-3 text-gray-600 text-center text-red-600">{error}</td></tr>
+                            ) : performanceData.length > 0 ? (
+                                performanceData.map((row, index) => (
+                                    <tr key={row.date} className={index % 2 === 0 ? 'bg-gray-50' : 'bg-white'}>
+                                        <td className="border-b border-gray-200 p-3 text-gray-900">{row.date}</td>
+                                        <td className="border-b border-gray-200 p-3">{formatReturn(row.inception_return)}</td>
+                                        <td className="border-b border-gray-200 p-3">{formatReturn(row.one_day_return)}</td>
+                                        <td className="border-b border-gray-200 p-3">{formatReturn(row.one_week_return)}</td>
+                                        <td className="border-b border-gray-200 p-3">{formatReturn(row.one_month_return)}</td>
+                                        <td className="border-b border-gray-200 p-3">{formatReturn(row.one_year_return)}</td>
+                                        <td className="border-b border-gray-200 p-3">{formatReturn(row.ytd_return)}</td>
+                                    </tr>
+                                ))
+                            ) : (
+                                <tr><td colSpan={7} className="p-3 text-gray-600 text-center">No data available.</td></tr>
+                            )}
+                        </tbody>
+                    </table>
                 </div>
             </div>
         </div>
