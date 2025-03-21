@@ -36,7 +36,7 @@ interface HoldingsApiResponse {
 
 export default function Holdings() {
     const [holdingsData, setHoldingsData] = useState<HoldingData[]>([]);
-    const [selectedDate, setSelectedDate] = useState(new Date().toISOString().split('T')[0]);
+    const [selectedDate, setSelectedDate] = useState(new Date().toLocaleDateString('en-CA'));
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState('');
     const [exchangeRatesData, setExchangeRatesData] = useState<ExchangeRates | null>(null);

@@ -18,7 +18,7 @@ interface ApiResponse {
 
 export default function Performance() {
     const [performanceData, setPerformanceData] = useState<PerformanceData[]>([]);
-    const [selectedDate, setSelectedDate] = useState(new Date().toISOString().split('T')[0]);
+    const [selectedDate, setSelectedDate] = useState(new Date().toLocaleDateString('en-CA'));
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState('');
     
