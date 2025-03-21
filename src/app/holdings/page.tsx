@@ -61,7 +61,9 @@ export default function Holdings() {
                 setExchangeRatesData(data.data);
             } else {
                 setExchangeRatesData(null);
-                console.error("Error fetching exchange rates:", data);
+                if (data.success === false) {
+                    console.error("Exchange rates API returned unsuccessful response");
+                }
             }
         } catch (error) {
             console.error('Error fetching exchange rates:', error);
