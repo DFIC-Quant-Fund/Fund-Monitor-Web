@@ -36,6 +36,7 @@ interface HoldingsApiResponse {
 
 export default function Holdings() {
     const [holdingsData, setHoldingsData] = useState<HoldingData[]>([]);
+    const [selectedPortfolio, setSelectedPortfolio] = useState('core');
     const [selectedDate, setSelectedDate] = useState(new Date().toLocaleDateString('en-CA'));
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState('');
@@ -61,12 +62,15 @@ export default function Holdings() {
         }
     }, [selectedDate]);
 
-    // Fetch holdings data
     const fetchData = useCallback(async () => {
         setLoading(true);
         setError('');
         try {
-            const response = await fetch(`https://api.degrootefinance.com/api/holdings?date=${selectedDate}`);
+            const endpoint = selectedPortfolio === 'core' 
+                ? 'holdings'
+                : selectedPortfolio;
+            
+            const response = await fetch(`https://api.degrootefinance.com/api/${endpoint}?date=${selectedDate}`);
             const data: HoldingsApiResponse = await response.json();
 
             if (data.success) {
@@ -80,7 +84,7 @@ export default function Holdings() {
             setError('Failed to fetch data. Please try again.');
         }
         setLoading(false);
-    }, [selectedDate]);
+    }, [selectedDate, selectedPortfolio]);
 
     useEffect(() => {
         fetchExchangeRates();
@@ -109,11 +113,19 @@ export default function Holdings() {
                 <div className="flex flex-col md:flex-row md:justify-between md:items-center mb-4">
                     <h1 className="text-[#800000] text-4xl font-bold">Holdings</h1>
                     <div className="flex flex-col md:flex-row gap-4 mt-4 md:mt-0">
-                        <input 
-                            type="date" 
-                            value={selectedDate} 
+                        <select
+                            value={selectedPortfolio}
+                            onChange={(e) => setSelectedPortfolio(e.target.value)}
+                            className="border px-3 py-2 rounded shadow text-black"
+                        >
+                            <option value="core">Core Portfolio</option>
+                            <option value="benchmark">Benchmark Portfolio</option>
+                        </select>
+                        <input
+                            type="date"
+                            value={selectedDate}
                             onChange={(e) => setSelectedDate(e.target.value)}
-                            min="1900-01-01" 
+                            min="1900-01-01"
                             max="2100-12-31"
                             className="border px-3 py-2 rounded shadow text-black"
                         />
