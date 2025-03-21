@@ -137,7 +137,7 @@ export default function Holdings() {
                                         key={header}
                                         className="border-b-2 border-[#800000] p-3 text-left text-[#800000]"
                                     >
-                                        {header.toUpperCase()}
+                                        {header}
                                     </th>
                                 ))}
                             </tr>
