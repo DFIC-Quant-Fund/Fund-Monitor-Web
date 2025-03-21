@@ -1,5 +1,6 @@
 'use client';
 import { useState, useEffect, useCallback } from 'react';
+import { API_BASE_URL } from '../../utils/apiBase';
 
 interface PerformanceData {
     date: string;
@@ -26,7 +27,7 @@ export default function Performance() {
         setLoading(true);
         setError('');
         try {
-            const url = `https://api.degrootefinance.com/api/performance?date=${selectedDate}`
+            const url = `${API_BASE_URL}/api/performance?date=${selectedDate}`
             const response = await fetch(url);
             const data: ApiResponse = await response.json();
 

@@ -21,6 +21,7 @@
     "@types/react": "^19",
     "@types/react-csv": "^1.1.10",
     "@types/react-dom": "^19",
+    "cross-env": "^7.0.3",
     "eslint": "^9",
     "eslint-config-next": "15.2.1",
     "tailwindcss": "^4",

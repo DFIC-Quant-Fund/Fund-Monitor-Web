@@ -1,5 +1,6 @@
 'use client';
 import { useState, useEffect, useCallback } from 'react';
+import { API_BASE_URL } from '../../utils/apiBase';
 
 // Interface for Holdings Data
 interface HoldingData {
@@ -47,7 +48,7 @@ export default function Holdings() {
     // Fetch exchange rates
     const fetchExchangeRates = useCallback(async () => {
         try {
-            const response = await fetch(`https://api.degrootefinance.com/api/exchange-rates?date=${selectedDate}`);
+            const response = await fetch(`${API_BASE_URL}/api/exchange-rates?date=${selectedDate}`);
             const data: ExchangeRatesApiResponse = await response.json();
 
             if (data.success && data.data) {
@@ -66,7 +67,7 @@ export default function Holdings() {
         setLoading(true);
         setError('');
         try {
-            const response = await fetch(`https://api.degrootefinance.com/api/holdings?portfolio=${selectedPortfolio}&date=${selectedDate}`);
+            const response = await fetch(`${API_BASE_URL}/api/holdings?portfolio=${selectedPortfolio}&date=${selectedDate}`);
             const data: HoldingsApiResponse = await response.json();
 
             if (data.success) {
