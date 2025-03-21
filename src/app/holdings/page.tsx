@@ -128,7 +128,7 @@ export default function Holdings() {
                     </div>
                 </div>
 
-                <div className="w-full border rounded-lg mb-6">
+                <div className="w-full border rounded-lg overflow-hidden mb-6">
                     <table className="w-full border-collapse ">
                         <thead className="sticky top-0 bg-white shadow-md z-10 ">
                             <tr>
