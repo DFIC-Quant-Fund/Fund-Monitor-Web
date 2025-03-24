@@ -1,5 +1,5 @@
 'use client';
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useCallback, Suspense } from 'react';
 import { API_BASE_URL } from '../../utils/apiBase';
 import { useSearchParams, useRouter } from 'next/navigation';
 
@@ -41,7 +41,7 @@ interface HoldingsApiResponse {
     success: boolean;
 }
 
-export default function Holdings() {
+function HoldingsContent() {
     // Getting parameters from url
     const searchParams = useSearchParams();
     const router = useRouter();
@@ -66,6 +66,12 @@ export default function Holdings() {
         params.set('portfolio', portfolio);
         router.push(`/holdings?${params.toString()}`, { scroll: false });
     }, [router]);
+
+    useEffect(() => {
+        if (!urlDate || !urlPortfolio) {
+          updateURL(selectedDate, selectedPortfolio);
+        }
+    }, [urlDate, urlPortfolio, selectedDate, selectedPortfolio, updateURL]);
 
     // Update on change to portfolio
     const onPortfolioChange = (newPortfolio: string) => {
@@ -288,3 +294,11 @@ export default function Holdings() {
         </div>
     );
 }
+export default function HoldingsPage() {
+    return (
+        <Suspense fallback={<div>Loading...</div>}>
+            <HoldingsContent />
+        </Suspense>
+    );
+}
+
