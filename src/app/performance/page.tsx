@@ -2,6 +2,8 @@
 import { useState, useEffect, useCallback } from 'react';
 import { useRouter } from 'next/navigation';
 import { API_BASE_URL } from '../../utils/apiBase';
+import Loading from "../loading";
+
 
 interface PerformanceData {
     date: string;
@@ -100,8 +102,14 @@ export default function Performance() {
     };
 
     if (authLoading) {
-        return <div>Loading...</div>; 
+        return (
+            <>
+                <Loading /> 
+            </>
+        );
     }
+    
+    
 
     return (
         <div className="min-h-screen bg-white p-8 flex flex-col">

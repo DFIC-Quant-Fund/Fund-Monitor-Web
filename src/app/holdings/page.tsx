@@ -2,6 +2,7 @@
 import { useState, useEffect, useCallback } from 'react';
 import { useRouter } from 'next/navigation';
 import { API_BASE_URL } from '../../utils/apiBase';
+import Loading from '../loading';
 
 // Interface for Holdings Data
 interface HoldingData {
@@ -154,9 +155,13 @@ export default function Holdings() {
     const inceptionReturn = ((totalPortfolioValue - STARTING_VALUE) / STARTING_VALUE) * 100;
 
     if (authLoading) {
-        return <div>Loading...</div>; 
+        return (
+            <>
+                <Loading /> 
+            </>
+        );
     }
-    
+
     return (
         <div className="min-h-screen bg-white p-8 flex flex-col">
             <div className="max-w-7xl mx-auto w-full flex flex-col flex-grow">

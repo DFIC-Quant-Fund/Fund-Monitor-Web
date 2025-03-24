@@ -2,6 +2,7 @@
 
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
+import Loading from "./loading";
 
 export default function Home() {
     const router = useRouter();
@@ -17,7 +18,13 @@ export default function Home() {
     }, []);
 
     // While authentication status is loading, show a loading message
-    if (isAuthenticated === null) return <div>Loading...</div>;
+    if (isAuthenticated === null){
+      return (
+        <>
+          <Loading />
+        </>
+      )
+    } 
 
     // Once authenticated, render the home page
     return (
@@ -47,7 +54,7 @@ export default function Home() {
                         localStorage.removeItem("auth");
                         router.push("/login");
                     }}
-                    className="bg-red-600 text-white px-6 py-3 rounded-lg text-lg font-semibold hover:bg-red-800 transition cursor-pointer"
+                    className="bg-[#800000] text-white px-6 py-3 rounded-lg text-lg font-semibold hover:bg-[#600000] transition cursor-pointer"
                 >
                     Logout
                 </button>
