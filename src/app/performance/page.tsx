@@ -1,5 +1,6 @@
 'use client';
 import { useState, useEffect, useCallback } from 'react';
+import { useRouter } from 'next/navigation';
 import { API_BASE_URL } from '../../utils/apiBase';
 
 interface PerformanceData {
@@ -18,11 +19,20 @@ interface ApiResponse {
 }
 
 export default function Performance() {
+    const router = useRouter();
     const [performanceData, setPerformanceData] = useState<PerformanceData[]>([]);
     const [selectedDate, setSelectedDate] = useState(new Date().toLocaleDateString('en-CA'));
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState('');
-    
+
+    useEffect(() => {
+        // Check authentication status
+        const token = localStorage.getItem('auth');
+        if (!token) {
+            router.push('/login'); 
+        }
+    }, [router]);
+
     const fetchData = useCallback(async () => {
         setLoading(true);
         setError('');
