@@ -24,22 +24,26 @@ export default function Login() {
         <div className="min-h-screen flex items-center justify-center bg-gray-100">
             <div className="bg-white p-8 rounded-lg shadow-lg w-96">
                 <h2 className="text-2xl font-bold mb-6 text-center text-[#800000]">Login</h2>
-                <form onSubmit={handleLogin} className="space-y-4">
+                <form onSubmit={handleLogin} className="space-y-4" autoComplete="on">
                     <input
                         type="email"
+                        name="email" 
                         placeholder="Email"
                         className="w-full p-3 border border-gray-300 rounded-lg text-black"
                         value={email}
                         onChange={(e) => setEmail(e.target.value)}
                         required
+                        autoComplete="username" 
                     />
                     <input
                         type="password"
+                        name="password" 
                         placeholder="Password"
                         className="w-full p-3 border border-gray-300 rounded-lg text-black"
                         value={password}
                         onChange={(e) => setPassword(e.target.value)}
                         required
+                        autoComplete="current-password" 
                     />
                     <button
                         type="submit"
