@@ -1,6 +1,7 @@
 'use client';
 import { useState, useEffect, useCallback } from 'react';
 import { API_BASE_URL } from '../../utils/apiBase';
+import { useSearchParams, useRouter } from 'next/navigation';
 
 // Interface for Holdings Data
 interface HoldingData {
@@ -41,15 +42,42 @@ interface HoldingsApiResponse {
 }
 
 export default function Holdings() {
+    // Getting parameters from url
+    const searchParams = useSearchParams();
+    const router = useRouter();
+    const urlDate = searchParams.get('date');
+    const urlPortfolio = searchParams.get('portfolio');
+
+    const baseDate = new Date(Date.now() - 86400000).toLocaleDateString('en-CA');
     const [holdingsData, setHoldingsData] = useState<HoldingData[]>([]);
-    const [selectedPortfolio, setSelectedPortfolio] = useState('core');
-    const [selectedDate, setSelectedDate] = useState(new Date(Date.now() - 86400000).toLocaleDateString('en-CA'));
+    const [selectedPortfolio, setSelectedPortfolio] = useState(urlPortfolio || 'core');
+    const [selectedDate, setSelectedDate] = useState(urlDate || baseDate);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState('');
     const [exchangeRatesData, setExchangeRatesData] = useState<ExchangeRates | null>(null);
     const [sortConfig, setSortConfig] = useState<SortConfig>({ key: 'fund', direction: 'desc' });
 
     const STARTING_VALUE = 101644.99;
+
+    // Update url when selection changes
+    const updateURL = useCallback((date: string, portfolio: string) => {
+        const params = new URLSearchParams();
+        params.set('date', date);
+        params.set('portfolio', portfolio);
+        router.push(`/holdings?${params.toString()}`, { scroll: false });
+    }, [router]);
+
+    // Update on change to portfolio
+    const onPortfolioChange = (newPortfolio: string) => {
+        setSelectedPortfolio(newPortfolio);
+        updateURL(selectedDate, newPortfolio);
+    };
+
+    // Update on change to date
+    const onDateChange = (newDate: string) => {
+        setSelectedDate(newDate);
+        updateURL(newDate, selectedPortfolio);
+    };
 
     // Fetch exchange rates
     const fetchExchangeRates = useCallback(async () => {
@@ -94,7 +122,7 @@ export default function Holdings() {
     useEffect(() => {
         fetchExchangeRates();
         fetchData();
-    }, [fetchExchangeRates, fetchData]);
+    }, [urlDate, urlPortfolio, fetchExchangeRates, fetchData]);
 
     // Convert holdings market values and price to CAD
     const totalPortfolioValue = holdingsData.reduce((acc, row) => {
@@ -146,7 +174,7 @@ export default function Holdings() {
                     <div className="flex flex-col md:flex-row gap-4 mt-4 md:mt-0">
                         <select
                             value={selectedPortfolio}
-                            onChange={(e) => setSelectedPortfolio(e.target.value)}
+                            onChange={(e) => onPortfolioChange(e.target.value)}
                             className="border px-3 py-2 rounded shadow text-black"
                         >
                             <option value="core">Core Portfolio</option>
@@ -155,7 +183,7 @@ export default function Holdings() {
                         <input
                             type="date"
                             value={selectedDate}
-                            onChange={(e) => setSelectedDate(e.target.value)}
+                            onChange={(e) => onDateChange(e.target.value)}
                             min="1900-01-01"
                             max="2100-12-31"
                             className="border px-3 py-2 rounded shadow text-black"
