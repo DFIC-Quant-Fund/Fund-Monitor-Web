@@ -7,8 +7,8 @@ interface PerformanceData {
     date: string;
     inception_return: string | null;
     one_day_return: string | null;
-    one_month_return: string | null;
     one_week_return: string | null;
+    one_month_return: string | null;
     one_year_return: string | null;
     ytd_return: string | null;
 }
@@ -24,15 +24,19 @@ export default function Performance() {
     const [selectedDate, setSelectedDate] = useState(new Date().toLocaleDateString('en-CA'));
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState('');
+    const [authLoading, setAuthLoading] = useState(true); // New loading state for auth check
 
+    // Authentication check useEffect
     useEffect(() => {
-        // Check authentication status
         const token = localStorage.getItem('auth');
         if (!token) {
             router.push('/login'); 
+        } else {
+            setAuthLoading(false); // Authentication check complete
         }
     }, [router]);
 
+    // Fetch performance data useCallback
     const fetchData = useCallback(async () => {
         setLoading(true);
         setError('');
@@ -54,10 +58,14 @@ export default function Performance() {
         setLoading(false);
     }, [selectedDate]);
 
+    // Fetch data when the component is loaded and auth check is done
     useEffect(() => {
-        fetchData();
-    }, [fetchData]);
+        if (!authLoading) {
+            fetchData();
+        }
+    }, [authLoading, fetchData]);
 
+    // Format return values with colors
     const formatReturn = (value: string | null) => {
         if (value === null || value === undefined) return <span className="text-black">–</span>;
         const numberValue = parseFloat(value);
@@ -68,6 +76,7 @@ export default function Performance() {
         );
     };
 
+    // Download performance data as CSV
     const downloadCSV = () => {
         if (performanceData.length === 0) return;
 
@@ -89,6 +98,10 @@ export default function Performance() {
         document.body.removeChild(a);
         window.URL.revokeObjectURL(url);
     };
+
+    if (authLoading) {
+        return <div>Loading...</div>; 
+    }
 
     return (
         <div className="min-h-screen bg-white p-8 flex flex-col">
