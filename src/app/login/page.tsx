@@ -12,8 +12,8 @@ export default function Login() {
         e.preventDefault();
         // Dummy authentication logic (Replace with real authentication)
         if (email === "admin@dfic.com" && password === "admin") {
-            localStorage.setItem("auth", "true");
-            router.push("/");
+            localStorage.setItem("auth", "true"); 
+            router.push("/"); // Redirect to the home page or performance page
         } else {
             alert("Invalid credentials!");
         }
@@ -27,7 +27,7 @@ export default function Login() {
                     <input
                         type="email"
                         placeholder="Email"
-                        className="w-full p-3 border border-gray-300 rounded-lg"
+                        className="w-full p-3 border border-gray-300 rounded-lg text-black"
                         value={email}
                         onChange={(e) => setEmail(e.target.value)}
                         required
@@ -35,7 +35,7 @@ export default function Login() {
                     <input
                         type="password"
                         placeholder="Password"
-                        className="w-full p-3 border border-gray-300 rounded-lg"
+                        className="w-full p-3 border border-gray-300 rounded-lg text-black"
                         value={password}
                         onChange={(e) => setPassword(e.target.value)}
                         required

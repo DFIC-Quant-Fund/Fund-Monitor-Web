@@ -5,7 +5,7 @@ import { useEffect, useState } from "react";
 
 export default function Home() {
     const router = useRouter();
-    const [isAuthenticated, setIsAuthenticated] = useState(false);
+    const [isAuthenticated, setIsAuthenticated] = useState<boolean | null>(null); // Start with null to represent loading
 
     useEffect(() => {
         const auth = localStorage.getItem("auth");
@@ -16,8 +16,10 @@ export default function Home() {
         }
     }, []);
 
-    if (!isAuthenticated) return null; 
+    // While authentication status is loading, show a loading message
+    if (isAuthenticated === null) return <div>Loading...</div>;
 
+    // Once authenticated, render the home page
     return (
         <div className="min-h-screen bg-white flex flex-col items-center justify-center">
             <h1 className="text-[#800000] text-6xl font-bold mb-6">DFIC</h1>
