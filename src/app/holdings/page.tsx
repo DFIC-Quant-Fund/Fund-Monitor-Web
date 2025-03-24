@@ -1,5 +1,6 @@
 'use client';
 import { useState, useEffect, useCallback } from 'react';
+import { useRouter } from 'next/navigation';
 import { API_BASE_URL } from '../../utils/apiBase';
 
 // Interface for Holdings Data
@@ -41,6 +42,7 @@ interface HoldingsApiResponse {
 }
 
 export default function Holdings() {
+    const router = useRouter();
     const [holdingsData, setHoldingsData] = useState<HoldingData[]>([]);
     const [selectedPortfolio, setSelectedPortfolio] = useState('core');
     const [selectedDate, setSelectedDate] = useState(new Date(Date.now() - 86400000).toLocaleDateString('en-CA'));
@@ -48,8 +50,19 @@ export default function Holdings() {
     const [error, setError] = useState('');
     const [exchangeRatesData, setExchangeRatesData] = useState<ExchangeRates | null>(null);
     const [sortConfig, setSortConfig] = useState<SortConfig>({ key: 'fund', direction: 'desc' });
+    const [authLoading, setAuthLoading] = useState(true); // New loading state for auth check
 
     const STARTING_VALUE = 101644.99;
+
+    // Authentication check useEffect
+    useEffect(() => {
+        const token = localStorage.getItem('auth');
+        if (!token) {
+            router.push('/login'); 
+        } else {
+            setAuthLoading(false); // Authentication check complete
+        }
+    }, [router]);
 
     // Fetch exchange rates
     const fetchExchangeRates = useCallback(async () => {
@@ -92,9 +105,11 @@ export default function Holdings() {
     }, [selectedDate, selectedPortfolio]);
 
     useEffect(() => {
-        fetchExchangeRates();
-        fetchData();
-    }, [fetchExchangeRates, fetchData]);
+        if (!authLoading) {
+            fetchExchangeRates();
+            fetchData();
+        }
+    }, [authLoading, fetchExchangeRates, fetchData]);
 
     // Convert holdings market values and price to CAD
     const totalPortfolioValue = holdingsData.reduce((acc, row) => {
@@ -138,6 +153,10 @@ export default function Holdings() {
     // Calculate Inception Return
     const inceptionReturn = ((totalPortfolioValue - STARTING_VALUE) / STARTING_VALUE) * 100;
 
+    if (authLoading) {
+        return <div>Loading...</div>; 
+    }
+    
     return (
         <div className="min-h-screen bg-white p-8 flex flex-col">
             <div className="max-w-7xl mx-auto w-full flex flex-col flex-grow">
