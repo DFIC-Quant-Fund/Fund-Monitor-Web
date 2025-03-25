@@ -59,7 +59,7 @@ export default function Holdings() {
     useEffect(() => {
         const token = localStorage.getItem('auth');
         if (!token) {
-            router.push('/login'); 
+            router.push('/login?redirect=%2Fholdings'); 
         } else {
             setAuthLoading(false); // Authentication check complete
         }

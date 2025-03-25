@@ -32,7 +32,7 @@ export default function Performance() {
     useEffect(() => {
         const token = localStorage.getItem('auth');
         if (!token) {
-            router.push('/login'); 
+            router.push('/login?redirect=%2Fperformance'); 
         } else {
             setAuthLoading(false); // Authentication check complete
         }

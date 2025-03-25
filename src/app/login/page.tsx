@@ -1,24 +1,41 @@
-"use client"; // Ensure this is a Client Component
+"use client"; 
 
-import { useState } from "react";
-import { useRouter } from "next/navigation";
-
+import { useState, useEffect } from "react";
+import { useRouter, useSearchParams } from "next/navigation";
+import Loading from "../loading"; // Import your loading component
 
 export default function Login() {
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
+    const [authLoading, setAuthLoading] = useState(true); // ✅ Added auth loading state
     const router = useRouter();
+    const searchParams = useSearchParams();
+    const redirectPath = searchParams.get("redirect") || "/";
+
+    // check if user is already logged in, redirect if true
+    useEffect(() => {
+        const token = localStorage.getItem("auth");
+        if (token) {
+            router.push(redirectPath); 
+        } else {
+            setAuthLoading(false); // Finish auth check
+        }
+    }, [router, redirectPath]);
 
     const handleLogin = (e: React.FormEvent) => {
         e.preventDefault();
-        // Dummy authentication logic (Replace with real authentication)
         if (email === "admin@dfic.com" && password === "admin") {
             localStorage.setItem("auth", "true"); 
-            router.push("/"); // Redirect to the home page or performance page
+            router.push(redirectPath);
         } else {
             alert("Invalid credentials!");
         }
     };
+
+    // show loading indicator while checking authentication
+    if (authLoading) {
+        return <Loading />;
+    }
 
     return (
         <div className="min-h-screen flex items-center justify-center bg-gray-100">
