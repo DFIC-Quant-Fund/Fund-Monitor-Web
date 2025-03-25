@@ -1,5 +1,6 @@
 'use client';
-import { useState, useEffect, useCallback } from 'react';
+import {useState, useEffect, useCallback, Suspense} from 'react';
+import { useSearchParams, useRouter } from 'next/navigation';
 import { API_BASE_URL } from '../../utils/apiBase';
 
 interface PerformanceData {
@@ -17,12 +18,38 @@ interface ApiResponse {
     success: boolean;
 }
 
-export default function Performance() {
+function Performance() {
+
+    const searchParams = useSearchParams();
+    const router = useRouter();
+    const urlDate = searchParams.get('date')
+    const baseDate = new Date().toLocaleDateString('en-CA')
+
     const [performanceData, setPerformanceData] = useState<PerformanceData[]>([]);
-    const [selectedDate, setSelectedDate] = useState(new Date().toLocaleDateString('en-CA'));
+    const [selectedDate, setSelectedDate] = useState(urlDate || baseDate);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState('');
-    
+
+    // Update url when selection changes
+    const updateURL = useCallback((date: string) => {
+        const params = new URLSearchParams();
+        params.set('date', date);
+        router.push(`/performance?${params.toString()}`, { scroll: false });
+    }, [router]);
+
+    // Updates url when no params are present
+    useEffect(() => {
+        if (!urlDate) {
+          updateURL(selectedDate);
+        }
+    }, [urlDate, selectedDate, updateURL]);
+
+    // Update on change to date
+    const onDateChange = (newDate: string) => {
+        setSelectedDate(newDate);
+        updateURL(newDate);
+    };
+
     const fetchData = useCallback(async () => {
         setLoading(true);
         setError('');
@@ -89,7 +116,7 @@ export default function Performance() {
                         <input 
                             type="date" 
                             value={selectedDate} 
-                            onChange={(e) => setSelectedDate(e.target.value)}
+                            onChange={(e) => onDateChange(e.target.value)}
                             min="1900-01-01" 
                             max="2100-12-31"
                             className="border px-3 py-2 rounded shadow text-black"
@@ -141,4 +168,12 @@ export default function Performance() {
             </div>
         </div>
     );
+}
+
+export default function PerformancePage(){
+    return(
+        <Suspense fallback={<div>Loading...</div>}>
+            <Performance />
+        </Suspense>
+    )
 }
