@@ -169,6 +169,7 @@ function Performance() {
         </div>
     );
 }
+
 export default function PerformancePage(){
     return(
         <Suspense fallback={<div>Loading...</div>}>
