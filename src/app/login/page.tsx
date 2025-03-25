@@ -23,7 +23,10 @@ export default function Login() {
     return (
         <div className="min-h-screen flex items-center justify-center bg-gray-100">
             <div className="bg-white p-8 rounded-lg shadow-lg w-96">
-                <h2 className="text-2xl font-bold mb-6 text-center text-[#800000]">Login</h2>
+                <div className="flex items-center justify-center mb-6">
+                    <img src="/dfic-logo-no-text.png" alt="DFIC Logo" className="h-8 w-8 mr-4 mb-1.5" />
+                    <h2 className="text-2xl font-bold text-center text-[#800000]">DFIC Fund Monitor</h2>
+                </div>
                 <form onSubmit={handleLogin} className="space-y-4" autoComplete="on">
                     <input
                         type="email"
@@ -54,5 +57,5 @@ export default function Login() {
                 </form>
             </div>
         </div>
-    );
+    );    
 }
