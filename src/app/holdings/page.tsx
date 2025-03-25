@@ -67,6 +67,7 @@ function HoldingsContent() {
         router.push(`/holdings?${params.toString()}`, { scroll: false });
     }, [router]);
 
+    // Updates url when there are missing params
     useEffect(() => {
         if (!urlDate || !urlPortfolio) {
           updateURL(selectedDate, selectedPortfolio);
