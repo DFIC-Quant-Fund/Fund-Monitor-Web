@@ -187,6 +187,8 @@ function HoldingsContent() {
     const inceptionReturn = ((totalPortfolioValue - STARTING_VALUE) / STARTING_VALUE) * 100;
 
     return (
+        <>
+        <Header />
         <Paper sx={{ maxWidth: 'xl', mx: 'auto', p: 3, borderRadius: 2, boxShadow: theme.shadows[3] }}>
         
         {/* Holdings Section */}
@@ -348,8 +350,8 @@ function HoldingsContent() {
                     </Typography>
                 </Box>
             </Box>
-
         </Paper>
+    </>
     );
 }
 

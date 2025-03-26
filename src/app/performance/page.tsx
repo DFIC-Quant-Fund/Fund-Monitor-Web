@@ -118,6 +118,8 @@ function Performance() {
     };
 
     return (
+        <>
+        <Header />
             <Paper sx={{ maxWidth: 'xl', mx: 'auto', p: 3, borderRadius: 2, boxShadow: theme.shadows[3] }}>
                 <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 4 }}>
                     <Typography variant="h3" fontWeight={800} sx={{ color: theme.palette.primary.main }}>
@@ -173,6 +175,7 @@ function Performance() {
                     </Table>
                 </TableContainer>
             </Paper>
+    </>
     );
 }
 
