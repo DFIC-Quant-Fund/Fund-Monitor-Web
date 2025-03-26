@@ -52,6 +52,7 @@ function Performance() {
     // Update on change to date
     const onDateChange = (newDate: string) => {
         setSelectedDate(newDate);
+        setPage(0);
         updateURL(newDate);
         setPage(0);
     };
@@ -156,9 +157,7 @@ function Performance() {
                             },
                         }}
                     />                
-                    <Button variant="contained" color="primary" startIcon={<Download />} onClick={downloadCSV} sx={{ backgroundColor: theme.palette.primary.main, marginLeft: 2,  width: 180, height: 40, borderRadius: "8px", 
-                            fontSize: '1rem',
-                            textTransform: 'none',
+                    <Button variant="contained" color="primary" startIcon={<Download />} onClick={downloadCSV} sx={{ backgroundColor: theme.palette.primary.main,  width: 180, height: 40, borderRadius: "8px",
                             padding: "8px", outline: "none" }}>
                         Export
                     </Button>
