@@ -28,7 +28,7 @@ function Performance() {
     const searchParams = useSearchParams();
     const router = useRouter();
     const urlDate = searchParams.get('date')
-    const baseDate = new Date().toLocaleDateString('en-CA')
+    const baseDate = new Date(Date.now() - 86400000).toLocaleDateString('en-CA');
 
     const [performanceData, setPerformanceData] = useState<PerformanceData[]>([]);
     const [selectedDate, setSelectedDate] = useState(urlDate || baseDate);
@@ -54,6 +54,7 @@ function Performance() {
         setSelectedDate(newDate);
         setPage(0);
         updateURL(newDate);
+        setPage(0);
     };
 
     const fetchData = useCallback(async () => {

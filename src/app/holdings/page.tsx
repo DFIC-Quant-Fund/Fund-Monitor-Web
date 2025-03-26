@@ -1,4 +1,5 @@
 'use client';
+import QueryStatsIcon from '@mui/icons-material/QueryStats';
 import { useState, useEffect, useCallback, Suspense } from 'react';
 import { API_BASE_URL } from '../../utils/apiBase';
 import Header from '../components/heading';
@@ -200,42 +201,45 @@ function HoldingsContent() {
         boxShadow: 'none', padding: 0, overflow: 'auto', borderRadius: 0 }}>
         
         {/* Holdings Section */}
-        <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 4, pl: 10, pr: 10, pt:3}}>
+        <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 4, pl: 10, pr: 10, pt: 3 }}>
             <Typography variant="h4" fontWeight={800} sx={{ color: theme.palette.primary.main }}>
                 Holdings
             </Typography>
             <Box sx={{ display: 'flex', gap: 2 }}>
+                <Box
+                    component="input"
+                    type="date"
+                    value={selectedDate || ""}
+                    onChange={(e) => onDateChange(e.target.value)}
+                    min="1900-01-01"
+                    max="2100-12-31"
+                    sx={{
+                        width: 180,
+                        height: 40,
+                        border: "1px solid #ccc",
+                        borderRadius: "8px",
+                        padding: "8px",
+                        outline: "none",
+                        "&:focus": {
+                            borderColor: "primary.main",
+                        },
+                    }}
+                />
                 <FormControl size="small">
                     <Select
                         value={selectedPortfolio}
                         onChange={(e) => onPortfolioChange(e.target.value)}
-                        sx={{ width: 180, height: 40,
+                        sx={{
+                            width: 180, height: 40,
                             borderRadius: "8px",
-                            padding: "8px",}}
+                            padding: "8px",
+                            marginLeft: 2,
+                        }}
                     >
                         <MenuItem value="core">Core Portfolio</MenuItem>
                         <MenuItem value="benchmark">Benchmark Portfolio</MenuItem>
                     </Select>
                 </FormControl>
-                <Box
-                        component="input"
-                        type="date"
-                        value={selectedDate || ""}
-                        onChange={(e) => onDateChange(e.target.value)}
-                        min="1900-01-01"
-                        max="2100-12-31"
-                        sx={{
-                            width: 180,
-                            height: 40,
-                            border: "1px solid #ccc",
-                            borderRadius: "8px",
-                            padding: "8px",
-                            outline: "none",
-                            "&:focus": {
-                                borderColor: "primary.main",
-                            },
-                        }}
-                    />  
             </Box>
         </Box>
 
@@ -252,14 +256,25 @@ function HoldingsContent() {
                                 borderRadius: '4px', // Rounded corners
                                 backgroundColor: '#f2f2f2', // Light background color (button-like)
                                 transition: 'all 0.3s ease-in-out',
+                                display: 'flex',
+                                alignItems: 'center',
+                                gap: .1,
                                 '&:hover': {
                                     backgroundColor: '#800000', // Button-like background on hover
                                     color: '#ffffff', // White text on hover
                                     boxShadow: '0 2px 8px rgba(0, 0, 0, 0.2)', // Adds shadow for depth
+                                    '& svg': {
+                                        color: '#ffffff', // White text on hover
+                                    },
                                 },
                                 }}
                             >
-                                Fund: {fund}
+                                <QueryStatsIcon sx={{ 
+                                    color: theme.palette.text.primary, 
+                                    transition: 'color 0.3s ease-in-out',
+                                    mr: 1 
+                                }} />
+                                {fund}
                             </Typography>
                         <TableContainer component={Paper}>
                             <Table stickyHeader sx={{ tableLayout: 'fixed', width: '100%' }}>
