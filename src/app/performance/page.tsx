@@ -80,7 +80,7 @@ function Performance() {
     }, [fetchData]);
 
     const formatReturn = (value: string | null) => {
-        if (value === null) return <Typography variant="body2">–</Typography>;
+        if (value === null) return <Typography variant="body2" sx={{ fontSize: '10rem' }}>–</Typography>;
         
         const numberValue = parseFloat(value);
         const color = numberValue > 0 ? theme.palette.success.main : 
@@ -88,7 +88,7 @@ function Performance() {
                      theme.palette.text.secondary;
         
         return (
-          <Typography variant="body2" color={color}>
+          <Typography variant="body2" sx={{ fontSize: '1.1rem' }} color={color}>
             {numberValue.toFixed(4)}%
           </Typography>
         );
@@ -119,7 +119,7 @@ function Performance() {
     return (
             <Paper sx={{ maxWidth: 'xl', mx: 'auto', p: 3, borderRadius: 2, boxShadow: theme.shadows[3] }}>
                 <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 4 }}>
-                    <Typography variant="h4" fontWeight={800} sx={{ color: theme.palette.primary.main }}>
+                    <Typography variant="h3" fontWeight={800} sx={{ color: theme.palette.primary.main }}>
                         Performance
                     </Typography>
                 <Box>
@@ -145,7 +145,7 @@ function Performance() {
                         <TableHead>
                             <TableRow sx={{ backgroundColor: theme.palette.grey[200], borderBottom: `2px solid ${theme.palette.primary.main}` }}>
                                 {['Date', 'Inception Return', '1 Day Return', '1 Week Return', '1 Month Return', '1 Year Return', 'YTD Return'].map(header => (
-                                    <TableCell key={header} align="center" sx={{ fontWeight: 'bold', color: theme.palette.primary.main, borderBottom: `2px solid ${theme.palette.primary.main}` }}>
+                                    <TableCell key={header} align="center" sx={{ fontWeight: 'bold', color: theme.palette.primary.main, borderBottom: `2px solid ${theme.palette.primary.main}`, fontSize: '1.1rem' }}>
                                         {header}
                                     </TableCell>
                                 ))}
@@ -159,9 +159,9 @@ function Performance() {
                             ) : performanceData.length > 0 ? (
                                 performanceData.map((row, index) => (
                                     <TableRow key={row.date} sx={{ backgroundColor: index % 2 === 0 ? theme.palette.action.hover : 'inherit' }}>
-                                        <TableCell align="center">{row.date}</TableCell>
+                                        <TableCell align="center" sx={{ fontSize: '1.1rem' }}>{row.date}</TableCell>
                                         {[row.inception_return, row.one_day_return, row.one_week_return, row.one_month_return, row.one_year_return, row.ytd_return].map((val, idx) => (
-                                            <TableCell key={idx} align="center">{formatReturn(val)}</TableCell>
+                                            <TableCell key={idx} align="center" sx={{ fontSize: '1.1rem' }}>{formatReturn(val)}</TableCell>
                                         ))}
                                     </TableRow>
                                 ))

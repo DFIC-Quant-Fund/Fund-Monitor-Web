@@ -64,15 +64,19 @@ const theme = createTheme({
         root: {
           backgroundColor: '#800000',
           color: '#ffffff',
-          width: '180px',
-          height: '40px',
+          padding: '10px 24px', // Padding to match your example (px-6 py-3)
+          fontSize: '1.125rem', // Match the 'text-lg' style
+          fontWeight: 600,
+          borderRadius: '8px', // Rounded corners (rounded-lg)
+          textTransform: 'none', // Prevent text from being uppercase by default
           '&:hover': {
-            backgroundColor: '#a00000',
+            backgroundColor: '#600000', // Hover color match with your example
           },
           '&:disabled': {
-            backgroundColor: '#d3d3d3',
+            backgroundColor: '#a8a7a7', // Disabled button color
             color: '#ffffff',
           },
+          transition: 'background-color 0.3s', // Smooth hover transition
         },
       },
     },

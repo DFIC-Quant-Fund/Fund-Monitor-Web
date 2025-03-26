@@ -190,7 +190,7 @@ function HoldingsContent() {
         
         {/* Holdings Section */}
         <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 4 }}>
-            <Typography variant="h4" fontWeight={800} sx={{ color: theme.palette.primary.main }}>
+            <Typography variant="h3" fontWeight={800} sx={{ color: theme.palette.primary.main }}>
                 Holdings
             </Typography>
             <Box sx={{ display: 'flex', gap: 2 }}>
@@ -241,10 +241,10 @@ function HoldingsContent() {
                                                     fontWeight: 'bold', 
                                                     color: theme.palette.primary.main, 
                                                     borderBottom: `2px solid ${theme.palette.primary.main}`,
-                                                    cursor: 'pointer'
+                                                    cursor: 'pointer',
                                                 }}
                                             >
-                                                <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                                                <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '1.1rem' }}>
                                                     {label}
                                                     {sortConfig.key === key && (
                                                         <span>{sortConfig.direction === 'asc' ? '↑' : '↓'}</span>
@@ -277,12 +277,12 @@ function HoldingsContent() {
                                             }
                                             return (
                                                 <TableRow key={row.ticker} sx={{ backgroundColor: index % 2 === 0 ? theme.palette.action.hover : 'inherit' }}>
-                                                    <TableCell align="center">{row.name}</TableCell>
-                                                    <TableCell align="center">{row.ticker}</TableCell>
-                                                    <TableCell align="center">{row.shares_held}</TableCell>
-                                                    <TableCell align="center">{convertedPrice.toFixed(2)}</TableCell>
-                                                    <TableCell align="center">{convertedMarketValue.toFixed(2)}</TableCell>
-                                                    <TableCell align="center">{row.fund}</TableCell>
+                                                    <TableCell align="center" sx={{fontSize: '1rem' }}>{row.name}</TableCell>
+                                                    <TableCell align="center" sx={{fontSize: '1rem' }}>{row.ticker}</TableCell>
+                                                    <TableCell align="center" sx={{fontSize: '1rem' }}>{row.shares_held}</TableCell>
+                                                    <TableCell align="center" sx={{fontSize: '1rem' }}>{convertedPrice.toFixed(2)}</TableCell>
+                                                    <TableCell align="center" sx={{fontSize: '1rem' }}>{convertedMarketValue.toFixed(2)}</TableCell>
+                                                    <TableCell align="center" sx={{fontSize: '1rem' }}>{row.fund}</TableCell>
                                                 </TableRow>
                                             );
                                         })
