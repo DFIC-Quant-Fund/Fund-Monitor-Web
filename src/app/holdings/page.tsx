@@ -1,4 +1,5 @@
 'use client';
+import QueryStatsIcon from '@mui/icons-material/QueryStats';
 import { useState, useEffect, useCallback, Suspense } from 'react';
 import { API_BASE_URL } from '../../utils/apiBase';
 import Header from '../components/heading';
@@ -252,14 +253,25 @@ function HoldingsContent() {
                                 borderRadius: '4px', // Rounded corners
                                 backgroundColor: '#f2f2f2', // Light background color (button-like)
                                 transition: 'all 0.3s ease-in-out',
+                                display: 'flex',
+                                alignItems: 'center',
+                                gap: .1,
                                 '&:hover': {
                                     backgroundColor: '#800000', // Button-like background on hover
                                     color: '#ffffff', // White text on hover
                                     boxShadow: '0 2px 8px rgba(0, 0, 0, 0.2)', // Adds shadow for depth
+                                    '& svg': {
+                                        color: '#ffffff', // White text on hover
+                                    },
                                 },
                                 }}
                             >
-                                Fund: {fund}
+                                <QueryStatsIcon sx={{ 
+                                    color: theme.palette.text.primary, 
+                                    transition: 'color 0.3s ease-in-out',
+                                    mr: 1 
+                                }} />
+                                {fund}
                             </Typography>
                         <TableContainer component={Paper}>
                             <Table stickyHeader sx={{ tableLayout: 'fixed', width: '100%' }}>
