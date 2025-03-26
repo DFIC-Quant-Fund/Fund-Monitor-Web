@@ -5,7 +5,7 @@ export default function Header() {
   return (
     <nav className="bg-[#800000] text-white shadow-lg">
       <div className="max-w-7xl mx-auto px-4">
-        <div className="flex justify-between items-center h-22 sm:h-22 py-2 sm:py-0">
+        <div className="flex justify-between items-center h-22">
           {/* Logo */}
           <Link href="/" className="flex items-center space-x-2">
             <Image
@@ -18,35 +18,26 @@ export default function Header() {
           </Link>
 
           {/* Navigation */}
-          <div className="flex space-x-2 sm:space-x-4">
+          <div className="flex space-x-4">
             <Link
               href="/holdings"
-              className="
-                px-2 py-1 rounded-md text-xs font-bold 
-                hover:bg-[#600000] transition-colors duration-200
-                sm:px-3 sm:py-2 sm:text-base
-              "
+              className="px-3 py-2 rounded-md text-base font-bold 
+                         hover:bg-[#600000] transition-colors duration-200"
             >
               Holdings
             </Link>
             <Link
               href="/performance"
-              className="
-                px-2 py-1 rounded-md text-xs font-bold 
-                hover:bg-[#600000] transition-colors duration-200
-                sm:px-3 sm:py-2 sm:text-base
-              "
+              className="px-3 py-2 rounded-md text-base font-bold 
+                         hover:bg-[#600000] transition-colors duration-200"
             >
               Performance
             </Link>
             <Link
               href="/transactions"
-              className="
-                px-2 py-1 rounded-md text-xs font-bold 
-                hover:bg-[#600000] transition-colors duration-200
-                cursor-not-allowed opacity-50
-                sm:px-3 sm:py-2 sm:text-base
-              "
+              className="px-3 py-2 rounded-md text-base font-bold 
+                         hover:bg-[#600000] transition-colors duration-200 
+                         cursor-not-allowed opacity-50"
               onClick={(e) => {
                 e.preventDefault(); // disabled navigation for now
               }}
@@ -59,13 +50,10 @@ export default function Header() {
           {/* Logout */}
           <button
             onClick={() => {
-              // logout functionality
+              // logout logic
             }}
-            className="
-              hidden sm:inline-block
-              px-3 py-2 rounded-md text-base font-bold 
-              hover:bg-[#600000] transition-colors duration-200
-            "
+            className="px-3 py-2 rounded-md text-base font-bold 
+                       hover:bg-[#600000] transition-colors duration-200"
           >
             Logout
           </button>
