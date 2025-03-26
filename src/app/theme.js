@@ -84,6 +84,14 @@ const theme = createTheme({
         root: {
           borderBottom: '1px solid rgba(0, 0, 0, 0.1)',
           padding: '12px',
+          width: '150px', 
+          maxWidth: '150px',
+          wordWrap: 'break-word', // Allow text wrapping
+          whiteSpace: 'normal', // Override nowrap to allow wrapping
+          display: 'flex', // Use flexbox for centering
+          justifyContent: 'center', // Center horizontally
+          alignItems: 'center', // Center vertically
+          textAlign: 'center', // Ensure text is centered
         },
       },
     },

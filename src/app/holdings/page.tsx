@@ -2,7 +2,7 @@
 import { useState, useEffect, useCallback, Suspense } from 'react';
 import { API_BASE_URL } from '../../utils/apiBase';
 import { useSearchParams, useRouter } from 'next/navigation';
-import { Box, Typography, Select, MenuItem, TextField, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, CircularProgress, FormControl, InputLabel } from '@mui/material';
+import { Box, Typography, Select, MenuItem, TextField, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, CircularProgress, FormControl } from '@mui/material';
 import theme from '../theme.js';
 
 // Interface for Holdings Data
@@ -221,8 +221,8 @@ function HoldingsContent() {
                         <Typography variant="h5" sx={{ fontWeight: 'bold', mb: 2 }}>
                             Fund: {fund}
                         </Typography>
-                        <TableContainer component={Paper} sx={{ borderRadius: 2, boxShadow: theme.shadows[2], overflow: 'hidden' }}>
-                            <Table stickyHeader>
+                        <TableContainer component={Paper}>
+                            <Table stickyHeader sx={{ tableLayout: 'fixed', width: '100%' }}>
                                 <TableHead>
                                     <TableRow sx={{ backgroundColor: theme.palette.grey[200], borderBottom: `2px solid ${theme.palette.primary.main}` }}>
                                         {[
