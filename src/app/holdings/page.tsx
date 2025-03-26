@@ -1,5 +1,5 @@
 'use client';
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useCallback, Suspense } from 'react';
 import { API_BASE_URL } from '../../utils/apiBase';
 import { useSearchParams, useRouter } from 'next/navigation';
 import { Box, Typography, Select, MenuItem, TextField, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, CircularProgress, FormControl, InputLabel } from '@mui/material';
@@ -43,7 +43,7 @@ interface HoldingsApiResponse {
     success: boolean;
 }
 
-export default function HoldingsContent() {
+function HoldingsContent() {
     // Getting parameters from url
     const searchParams = useSearchParams();
     const router = useRouter();
@@ -341,5 +341,13 @@ export default function HoldingsContent() {
         </Paper>
     </Box>
 
+    );
+}
+
+export default function HoldingsPage() {
+    return (
+        <Suspense fallback={<div>Loading...</div>}>
+            <HoldingsContent />
+        </Suspense>
     );
 }

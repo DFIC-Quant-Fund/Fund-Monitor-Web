@@ -123,6 +123,7 @@ export default function Performance() {
                     <Typography variant="h4" fontWeight={800} sx={{ color: theme.palette.primary.main }}>
                         Performance
                     </Typography>
+                <Box>
                 <TextField
                     type="date"
                     value={selectedDate}
@@ -131,9 +132,10 @@ export default function Performance() {
                     sx={{ width: 180 }}
                     InputLabelProps={{ shrink: true }}
                 />                    
-                    <Button variant="contained" color="primary" startIcon={<Download />} onClick={downloadCSV} sx={{ backgroundColor: theme.palette.primary.main }}>
+                    <Button variant="contained" color="primary" startIcon={<Download />} onClick={downloadCSV} sx={{ backgroundColor: theme.palette.primary.main, marginLeft: 2 }}>
                         Export
                     </Button>
+                </Box>
                 </Box>
                 <TableContainer component={Paper} sx={{ borderRadius: 2, boxShadow: theme.shadows[2], overflow: 'hidden', border: '2px solid black' }}>
                     <Table stickyHeader>
