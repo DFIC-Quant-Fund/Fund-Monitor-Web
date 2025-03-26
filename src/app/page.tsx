@@ -1,7 +1,7 @@
 "use client"; // Ensure this is a Client Component
 
 import { useRouter } from "next/navigation";
-import { Box, Typography, Select, MenuItem, TextField, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, CircularProgress, FormControl, InputLabel, ThemeProvider, Button } from '@mui/material';
+import { Box, Typography, Button } from '@mui/material';
 
 export default function Home() {
     const router = useRouter();

@@ -1,8 +1,8 @@
 'use client';
-import { useState, useEffect, useCallback, Suspense } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { API_BASE_URL } from '../../utils/apiBase';
 import { useSearchParams, useRouter } from 'next/navigation';
-import { Box, Typography, Select, MenuItem, TextField, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, CircularProgress, FormControl, InputLabel, ThemeProvider } from '@mui/material';
+import { Box, Typography, Select, MenuItem, TextField, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, CircularProgress, FormControl, InputLabel } from '@mui/material';
 import theme from '../theme.js';
 
 // Interface for Holdings Data
