@@ -53,6 +53,7 @@ function Performance() {
     const onDateChange = (newDate: string) => {
         setSelectedDate(newDate);
         updateURL(newDate);
+        setPage(0);
     };
 
     const fetchData = useCallback(async () => {
