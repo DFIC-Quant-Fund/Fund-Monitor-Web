@@ -156,7 +156,9 @@ function Performance() {
                             },
                         }}
                     />                
-                    <Button variant="contained" color="primary" startIcon={<Download />} onClick={downloadCSV} sx={{ backgroundColor: theme.palette.primary.main, marginLeft: 2,  width: 180, height: 40, borderRadius: "8px",
+                    <Button variant="contained" color="primary" startIcon={<Download />} onClick={downloadCSV} sx={{ backgroundColor: theme.palette.primary.main, marginLeft: 2,  width: 180, height: 40, borderRadius: "8px", 
+                            fontSize: '1rem',
+                            textTransform: 'none',
                             padding: "8px", outline: "none" }}>
                         Export
                     </Button>
