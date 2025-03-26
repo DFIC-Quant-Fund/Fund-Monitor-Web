@@ -232,6 +232,7 @@ function HoldingsContent() {
                             borderRadius: "8px",
                             padding: "8px",
                             outline: "none",
+                            marginLeft: 2,
                             "&:focus": {
                                 borderColor: "primary.main",
                             },
