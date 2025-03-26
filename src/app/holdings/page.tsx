@@ -224,23 +224,24 @@ function HoldingsContent() {
         {Object.keys(groupedByFund).map((fund) => (
                     <Box key={fund} sx={{ mb: 4 }}>
                             <Typography
-                            variant="h5"
-                            sx={{
+                                variant="h5"
+                                sx={{
                                 fontWeight: 'bold',
                                 mb: 2,
                                 cursor: 'pointer',
+                                padding: '4px 8px', // Adds padding for a button-like feel
+                                borderRadius: '4px', // Rounded corners
+                                backgroundColor: '#f2f2f2', // Light background color (button-like)
                                 transition: 'all 0.3s ease-in-out',
                                 '&:hover': {
-                                backgroundColor: '#800000', // Button-like background on hover
-                                color: '#ffffff', // White text on hover
-                                padding: '4px 8px', // Slight padding like a button
-                                borderRadius: '4px', // Rounded corners for button effect
+                                    backgroundColor: '#800000', // Button-like background on hover
+                                    color: '#ffffff', // White text on hover
+                                    boxShadow: '0 2px 8px rgba(0, 0, 0, 0.2)', // Adds shadow for depth
                                 },
-                            }}
+                                }}
                             >
-                            Fund: {fund}
+                                Fund: {fund}
                             </Typography>
-
                         <TableContainer component={Paper}>
                             <Table stickyHeader sx={{ tableLayout: 'fixed', width: '100%' }}>
                                 <TableHead>
