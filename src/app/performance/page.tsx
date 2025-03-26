@@ -1,7 +1,7 @@
 'use client';
 import {useState, useEffect, useCallback, Suspense} from 'react';
 import { useSearchParams, useRouter } from 'next/navigation';
-import { Box, Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Typography,Button,CircularProgress, TextField, TablePagination,
+import { Box, Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Typography,Button,CircularProgress, TablePagination,
 } from '@mui/material';
 import { Download } from '@mui/icons-material';
 import { API_BASE_URL } from '../../utils/apiBase';
@@ -133,19 +133,27 @@ function Performance() {
                         Performance
                     </Typography>
                 <Box>
-                <TextField
-                    type="date"
-                    value={selectedDate}
-                    onChange={(e) => onDateChange(e.target.value)}
-                    size="small"
-                    sx={{
-                        width: 180,
-                        height: 40,
-                        '& .MuiInputBase-root': { height: '100%' }, // Ensures input field fills height
-                    }}
-                    InputLabelProps={{ shrink: true }}
-                />                    
-                    <Button variant="contained" color="primary" startIcon={<Download />} onClick={downloadCSV} sx={{ backgroundColor: theme.palette.primary.main, marginLeft: 2,  width: 180, height: 38 }}>
+                <Box
+                        component="input"
+                        type="date"
+                        value={selectedDate || ""}
+                        onChange={(e) => onDateChange(e.target.value)}
+                        min="1900-01-01"
+                        max="2100-12-31"
+                        sx={{
+                            width: 180,
+                            height: 40,
+                            border: "1px solid #ccc",
+                            borderRadius: "8px",
+                            padding: "8px",
+                            outline: "none",
+                            "&:focus": {
+                                borderColor: "primary.main",
+                            },
+                        }}
+                    />                
+                    <Button variant="contained" color="primary" startIcon={<Download />} onClick={downloadCSV} sx={{ backgroundColor: theme.palette.primary.main, marginLeft: 2,  width: 180, height: 40, borderRadius: "8px",
+                            padding: "8px", }}>
                         Export
                     </Button>
                 </Box>

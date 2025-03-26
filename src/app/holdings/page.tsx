@@ -3,7 +3,7 @@ import { useState, useEffect, useCallback, Suspense } from 'react';
 import { API_BASE_URL } from '../../utils/apiBase';
 import Header from '../components/heading';
 import { useSearchParams, useRouter } from 'next/navigation';
-import { Box, Typography, Select, MenuItem, TextField, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, CircularProgress, FormControl } from '@mui/material';
+import { Box, Typography, Select, MenuItem, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, CircularProgress, FormControl } from '@mui/material';
 import theme from '../theme';
 
 // Interface for Holdings Data
@@ -203,20 +203,33 @@ function HoldingsContent() {
                     <Select
                         value={selectedPortfolio}
                         onChange={(e) => onPortfolioChange(e.target.value)}
-                        sx={{ minWidth: 180 }}
+                        sx={{ width: 180, height: 40,
+                            borderRadius: "8px",
+                            padding: "8px",}}
                     >
                         <MenuItem value="core">Core Portfolio</MenuItem>
                         <MenuItem value="benchmark">Benchmark Portfolio</MenuItem>
                     </Select>
                 </FormControl>
-                <TextField
-                    type="date"
-                    value={selectedDate}
-                    onChange={(e) => onDateChange(e.target.value)}
-                    size="small"
-                    sx={{ width: 180 }}
-                    InputLabelProps={{ shrink: true }}
-                />
+                <Box
+                        component="input"
+                        type="date"
+                        value={selectedDate || ""}
+                        onChange={(e) => onDateChange(e.target.value)}
+                        min="1900-01-01"
+                        max="2100-12-31"
+                        sx={{
+                            width: 180,
+                            height: 40,
+                            border: "1px solid #ccc",
+                            borderRadius: "8px",
+                            padding: "8px",
+                            outline: "none",
+                            "&:focus": {
+                                borderColor: "primary.main",
+                            },
+                        }}
+                    />  
             </Box>
         </Box>
 
