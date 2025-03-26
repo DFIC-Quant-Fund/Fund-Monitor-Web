@@ -201,7 +201,7 @@ function HoldingsContent() {
         boxShadow: 'none', padding: 0, overflow: 'auto', borderRadius: 0 }}>
         
         {/* Holdings Section */}
-        <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 4, pl: 10, pr: 10, pt:3}}>
+        <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 4, pl: 10, pr: 10, pt: 3 }}>
             <Typography variant="h4" fontWeight={800} sx={{ color: theme.palette.primary.main }}>
                 Holdings
             </Typography>
@@ -210,34 +210,36 @@ function HoldingsContent() {
                     <Select
                         value={selectedPortfolio}
                         onChange={(e) => onPortfolioChange(e.target.value)}
-                        sx={{ width: 180, height: 40,
+                        sx={{
+                            width: 180, height: 40,
                             borderRadius: "8px",
-                            padding: "8px",}}
+                            padding: "8px",
+                        }}
                     >
                         <MenuItem value="core">Core Portfolio</MenuItem>
                         <MenuItem value="benchmark">Benchmark Portfolio</MenuItem>
                     </Select>
                 </FormControl>
                 <Box
-                        component="input"
-                        type="date"
-                        value={selectedDate || ""}
-                        onChange={(e) => onDateChange(e.target.value)}
-                        min="1900-01-01"
-                        max="2100-12-31"
-                        sx={{
-                            width: 180,
-                            height: 40,
-                            border: "1px solid #ccc",
-                            borderRadius: "8px",
-                            padding: "8px",
-                            outline: "none",
-                            marginLeft: 2,
-                            "&:focus": {
-                                borderColor: "primary.main",
-                            },
-                        }}
-                    />  
+                    component="input"
+                    type="date"
+                    value={selectedDate || ""}
+                    onChange={(e) => onDateChange(e.target.value)}
+                    min="1900-01-01"
+                    max="2100-12-31"
+                    sx={{
+                        width: 180,
+                        height: 40,
+                        border: "1px solid #ccc",
+                        borderRadius: "8px",
+                        padding: "8px",
+                        outline: "none",
+                        marginLeft: 2,
+                        "&:focus": {
+                            borderColor: "primary.main",
+                        },
+                    }}
+                />
             </Box>
         </Box>
 
