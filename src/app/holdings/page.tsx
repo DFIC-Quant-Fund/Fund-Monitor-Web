@@ -146,6 +146,16 @@ function HoldingsContent() {
         return acc + marketValue; // CAD remains unchanged
     }, 0);
 
+    // Group data by fund
+    const groupedByFund = holdingsData.reduce((groups, row) => {
+        const fund = row.fund;
+        if (!groups[fund]) {
+            groups[fund] = [];
+        }
+        groups[fund].push(row);
+        return groups;
+    }, {} as { [key: string]: HoldingData[] });
+
     const sortData = (data: HoldingData[]) => {
         if (!sortConfig.key) return data;
 
@@ -209,78 +219,86 @@ function HoldingsContent() {
         </Box>
 
         {/* Table */}
-        <TableContainer component={Paper} sx={{ borderRadius: 2, boxShadow: theme.shadows[2], overflow: 'hidden', border: '2px solid black', mb: 4 }}>
-            <Table stickyHeader>
-                <TableHead>
-                    <TableRow sx={{ backgroundColor: theme.palette.grey[200], borderBottom: `2px solid ${theme.palette.primary.main}` }}>
-                        {[
-                            { label: 'Name', key: 'name' },
-                            { label: 'Ticker', key: 'ticker' },
-                            { label: 'Shares', key: 'shares_held' },
-                            { label: 'Price (CAD)', key: 'price' },
-                            { label: 'Market Value (CAD)', key: 'market_value' },
-                            { label: 'Fund', key: 'fund' }
-                        ].map(({ label, key }) => (
-                            <TableCell 
-                                key={key} 
-                                onClick={() => handleSort(key)} 
-                                align="center"
-                                sx={{ 
-                                    fontWeight: 'bold', 
-                                    color: theme.palette.primary.main, 
-                                    borderBottom: `2px solid ${theme.palette.primary.main}`,
-                                    cursor: 'pointer'
-                                }}
-                            >
-                                <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                                    {label}
-                                    {sortConfig.key === key && (
-                                        <span>{sortConfig.direction === 'asc' ? '↑' : '↓'}</span>
+        {Object.keys(groupedByFund).map((fund) => (
+                    <Box key={fund} sx={{ mb: 4 }}>
+                        <Typography variant="h5" sx={{ fontWeight: 'bold', mb: 2 }}>
+                            Fund: {fund}
+                        </Typography>
+                        <TableContainer component={Paper} sx={{ borderRadius: 2, boxShadow: theme.shadows[2], overflow: 'hidden', border: '2px solid black' }}>
+                            <Table stickyHeader>
+                                <TableHead>
+                                    <TableRow sx={{ backgroundColor: theme.palette.grey[200], borderBottom: `2px solid ${theme.palette.primary.main}` }}>
+                                        {[
+                                            { label: 'Name', key: 'name' },
+                                            { label: 'Ticker', key: 'ticker' },
+                                            { label: 'Shares', key: 'shares_held' },
+                                            { label: 'Price (CAD)', key: 'price' },
+                                            { label: 'Market Value (CAD)', key: 'market_value' },
+                                            { label: 'Fund', key: 'fund' }
+                                        ].map(({ label, key }) => (
+                                            <TableCell 
+                                                key={key} 
+                                                onClick={() => handleSort(key)} 
+                                                align="center"
+                                                sx={{ 
+                                                    fontWeight: 'bold', 
+                                                    color: theme.palette.primary.main, 
+                                                    borderBottom: `2px solid ${theme.palette.primary.main}`,
+                                                    cursor: 'pointer'
+                                                }}
+                                            >
+                                                <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                                                    {label}
+                                                    {sortConfig.key === key && (
+                                                        <span>{sortConfig.direction === 'asc' ? '↑' : '↓'}</span>
+                                                    )}
+                                                </Box>
+                                            </TableCell>
+                                        ))}
+                                    </TableRow>
+                                </TableHead>
+                                <TableBody>
+                                    {loading ? (
+                                        <TableRow><TableCell colSpan={6} align="center"><CircularProgress color="primary" /></TableCell></TableRow>
+                                    ) : error ? (
+                                        <TableRow><TableCell colSpan={6} align="center"><Typography color="error">{error}</Typography></TableCell></TableRow>
+                                    ) : groupedByFund[fund].length > 0 ? (
+                                        sortData(groupedByFund[fund]).map((row, index) => {
+                                            const marketValue = parseFloat(row.market_value);
+                                            const price = parseFloat(row.price);
+                                            let convertedMarketValue = marketValue;
+                                            let convertedPrice = price;
+
+                                            if (exchangeRatesData) {
+                                                if (row.security_currency === "USD") {
+                                                    convertedMarketValue = marketValue / parseFloat(exchangeRatesData.USD);
+                                                    convertedPrice = price / parseFloat(exchangeRatesData.USD);
+                                                } else if (row.security_currency === "EUR") {
+                                                    convertedMarketValue = marketValue / parseFloat(exchangeRatesData.EUR);
+                                                    convertedPrice = price / parseFloat(exchangeRatesData.EUR);
+                                                }
+                                            }
+
+                                            return (
+                                                <TableRow key={row.ticker} sx={{ backgroundColor: index % 2 === 0 ? theme.palette.action.hover : 'inherit' }}>
+                                                    <TableCell align="center">{row.name}</TableCell>
+                                                    <TableCell align="center">{row.ticker}</TableCell>
+                                                    <TableCell align="center">{row.shares_held}</TableCell>
+                                                    <TableCell align="center">{convertedPrice.toFixed(2)}</TableCell>
+                                                    <TableCell align="center">{convertedMarketValue.toFixed(2)}</TableCell>
+                                                    <TableCell align="center">{row.fund}</TableCell>
+                                                </TableRow>
+                                            );
+                                        })
+                                    ) : (
+                                        <TableRow><TableCell colSpan={6} align="center"><Typography>No data available</Typography></TableCell></TableRow>
                                     )}
-                                </Box>
-                            </TableCell>
-                        ))}
-                    </TableRow>
-                </TableHead>
-                <TableBody>
-                    {loading ? (
-                        <TableRow><TableCell colSpan={6} align="center"><CircularProgress color="primary" /></TableCell></TableRow>
-                    ) : error ? (
-                        <TableRow><TableCell colSpan={6} align="center"><Typography color="error">{error}</Typography></TableCell></TableRow>
-                    ) : holdingsData.length > 0 ? (
-                        sortData(holdingsData).map((row, index) => {
-                            const marketValue = parseFloat(row.market_value);
-                            const price = parseFloat(row.price);
-                            let convertedMarketValue = marketValue;
-                            let convertedPrice = price;
+                                </TableBody>
+                            </Table>
+                        </TableContainer>
+                    </Box>
+                ))}
 
-                            if (exchangeRatesData) {
-                                if (row.security_currency === "USD") {
-                                    convertedMarketValue = marketValue / parseFloat(exchangeRatesData.USD);
-                                    convertedPrice = price / parseFloat(exchangeRatesData.USD);
-                                } else if (row.security_currency === "EUR") {
-                                    convertedMarketValue = marketValue / parseFloat(exchangeRatesData.EUR);
-                                    convertedPrice = price / parseFloat(exchangeRatesData.EUR);
-                                }
-                            }
-
-                            return (
-                                <TableRow key={row.ticker} sx={{ backgroundColor: index % 2 === 0 ? theme.palette.action.hover : 'inherit' }}>
-                                    <TableCell align="center">{row.name}</TableCell>
-                                    <TableCell align="center">{row.ticker}</TableCell>
-                                    <TableCell align="center">{row.shares_held}</TableCell>
-                                    <TableCell align="center">{convertedPrice.toFixed(2)}</TableCell>
-                                    <TableCell align="center">{convertedMarketValue.toFixed(2)}</TableCell>
-                                    <TableCell align="center">{row.fund}</TableCell>
-                                </TableRow>
-                            );
-                        })
-                    ) : (
-                        <TableRow><TableCell colSpan={6} align="center"><Typography>No data available</Typography></TableCell></TableRow>
-                    )}
-                </TableBody>
-            </Table>
-        </TableContainer>
 
                     <Box sx={{
                 width: '100%', 
