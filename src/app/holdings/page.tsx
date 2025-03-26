@@ -22,7 +22,7 @@ interface HoldingData {
 }
 
 interface SortConfig {
-    key: string;
+    key:  string | null;
     direction: 'asc' | 'desc';
 }
 
@@ -58,8 +58,8 @@ function HoldingsContent() {
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState('');
     const [exchangeRatesData, setExchangeRatesData] = useState<ExchangeRates | null>(null);
-    const [sortConfig, setSortConfig] = useState<SortConfig>({ key: 'fund', direction: 'desc' });
-
+    const [sortConfig, setSortConfig] = useState<SortConfig>({ key: null, direction: 'asc' });
+// setting default prev to asc 
     const STARTING_VALUE = 101644.99;
 
     // Update url when selection changes
@@ -158,6 +158,8 @@ function HoldingsContent() {
     }, {} as { [key: string]: HoldingData[] });
 
     const sortData = (data: HoldingData[]) => {
+        // If no key, return the data unsorted
+        if (!sortConfig || !sortConfig.key) return data;
         if (!sortConfig.key) return data;
 
         return [...data].sort((a, b) => {
