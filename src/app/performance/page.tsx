@@ -5,6 +5,7 @@ import { Box, Paper, Table, TableBody, TableCell, TableContainer, TableHead, Tab
 } from '@mui/material';
 import { Download } from '@mui/icons-material';
 import { API_BASE_URL } from '../../utils/apiBase';
+import Header from '../components/heading';
 import theme from '../theme.js';
 
 interface PerformanceData {
@@ -58,7 +59,7 @@ function Performance() {
         setLoading(true);
         setError('');
         try {
-            const url = `${API_BASE_URL}/api/performance?date=${selectedDate}`
+            const url = `${API_BASE_URL}/api/performance?date=${selectedDate}`;
             const response = await fetch(url);
             const data: ApiResponse = await response.json();
 
