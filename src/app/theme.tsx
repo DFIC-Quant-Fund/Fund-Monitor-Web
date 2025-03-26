@@ -160,4 +160,10 @@ const theme = createTheme({
   } as Components,
 } as CustomThemeOptions);
 
+export const backgroundTheme = {
+  background: {
+    default: 'white', // Override background color globally to white
+  },
+};
+
 export default theme;

@@ -127,12 +127,15 @@ function Performance() {
     return (
         <>
         <Header />
-            <Paper sx={{ maxWidth: 'xl', mx: 'auto', p: 3, borderRadius: 2, boxShadow: theme.shadows[3] }}>
-                <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 4 }}>
-                    <Typography variant="h3" fontWeight={800} sx={{ color: theme.palette.primary.main }}>
+        <Paper sx={{ width: '100vw',
+        height: '100vh', 
+        backgroundColor: 'white',
+        boxShadow: 'none', padding: 0, overflow: 'auto', borderRadius: 0 }}>
+                <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 4, pl: 10, pr: 10, pt:3}}>
+                    <Typography variant="h4" fontWeight={800} sx={{ color: theme.palette.primary.main }}>
                         Performance
                     </Typography>
-                <Box>
+                <Box sx={{ display: 'flex', gap: 2 }}>
                 <Box
                         component="input"
                         type="date"
@@ -153,12 +156,12 @@ function Performance() {
                         }}
                     />                
                     <Button variant="contained" color="primary" startIcon={<Download />} onClick={downloadCSV} sx={{ backgroundColor: theme.palette.primary.main, marginLeft: 2,  width: 180, height: 40, borderRadius: "8px",
-                            padding: "8px", }}>
+                            padding: "8px", outline: "none" }}>
                         Export
                     </Button>
                 </Box>
                 </Box>
-                <TableContainer component={Paper} sx={{ borderRadius: 2, boxShadow: theme.shadows[2], overflow: 'hidden' }}>
+                <TableContainer component={Box} sx={{ overflow: 'hidden', pl: 10, pr: 10, pb:5 }}>
                     <Table stickyHeader sx={{ tableLayout: 'fixed', width: '100%' }}>
                         <TableHead>
                             <TableRow sx={{ backgroundColor: theme.palette.grey[200], borderBottom: `2px solid ${theme.palette.primary.main}` }}>

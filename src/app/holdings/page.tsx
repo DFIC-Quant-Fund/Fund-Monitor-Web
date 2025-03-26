@@ -6,6 +6,8 @@ import { useSearchParams, useRouter } from 'next/navigation';
 import { Box, Typography, Select, MenuItem, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, CircularProgress, FormControl } from '@mui/material';
 import theme from '../theme';
 
+
+  
 // Interface for Holdings Data
 interface HoldingData {
     fund: string;
@@ -45,6 +47,7 @@ interface HoldingsApiResponse {
 }
 
 function HoldingsContent() {
+
     // Getting parameters from url
     const searchParams = useSearchParams();
     const router = useRouter();
@@ -191,11 +194,14 @@ function HoldingsContent() {
     return (
         <>
         <Header />
-        <Paper sx={{ maxWidth: 'xl', mx: 'auto', p: 3, borderRadius: 2, boxShadow: theme.shadows[3] }}>
+        <Paper sx={{ width: '100vw',
+        height: '100vh', 
+        backgroundColor: 'white',
+        boxShadow: 'none', padding: 0, overflow: 'auto', borderRadius: 0 }}>
         
         {/* Holdings Section */}
-        <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 4 }}>
-            <Typography variant="h3" fontWeight={800} sx={{ color: theme.palette.primary.main }}>
+        <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 4, pl: 10, pr: 10, pt:3}}>
+            <Typography variant="h4" fontWeight={800} sx={{ color: theme.palette.primary.main }}>
                 Holdings
             </Typography>
             <Box sx={{ display: 'flex', gap: 2 }}>
@@ -235,7 +241,7 @@ function HoldingsContent() {
 
         {/* Table */}
         {Object.keys(groupedByFund).map((fund) => (
-                    <Box key={fund} sx={{ mb: 4 }}>
+                    <Box key={fund} sx={{ mb: 4,  pl: 10, pr: 10 }}>
                             <Typography
                                 variant="h5"
                                 sx={{
@@ -333,6 +339,7 @@ function HoldingsContent() {
                 display: 'flex',
                 flexDirection: 'column',
                 gap: 2, // Gap between the boxes
+                pl: 10, pr: 10, pb:5
             }}>
                 <Box sx={{
                     borderRadius: 2, boxShadow: theme.shadows[2], overflow: 'hidden', 
