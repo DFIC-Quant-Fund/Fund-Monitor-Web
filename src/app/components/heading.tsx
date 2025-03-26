@@ -50,10 +50,13 @@ export default function Header() {
           {/* Logout */}
           <button
             onClick={() => {
-              // logout logic
+              // logout functionality
             }}
-            className="px-3 py-2 rounded-md text-base font-bold 
-                       hover:bg-[#600000] transition-colors duration-200"
+            className="
+              px-2 py-1 text-xs font-bold 
+              hover:bg-[#600000] transition-colors duration-200
+              sm:px-3 sm:py-2 sm:text-base
+            "
           >
             Logout
           </button>
