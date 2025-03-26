@@ -2,6 +2,7 @@
 import {useState, useEffect, useCallback, Suspense} from 'react';
 import { useSearchParams, useRouter } from 'next/navigation';
 import { API_BASE_URL } from '../../utils/apiBase';
+import Header from '../components/heading';
 
 interface PerformanceData {
     date: string;
@@ -54,7 +55,7 @@ function Performance() {
         setLoading(true);
         setError('');
         try {
-            const url = `${API_BASE_URL}/api/performance?date=${selectedDate}`
+            const url = `${API_BASE_URL}/api/performance?date=${selectedDate}`;
             const response = await fetch(url);
             const data: ApiResponse = await response.json();
 
@@ -108,65 +109,69 @@ function Performance() {
     };
 
     return (
-        <div className="min-h-screen bg-white p-8 flex flex-col">
-            <div className="max-w-7xl mx-auto w-full flex flex-col flex-grow">
-                <div className="flex flex-col md:flex-row md:justify-between md:items-center mb-4">
-                    <h1 className="text-[#800000] text-4xl font-bold">Performance</h1>
-                    <div className="flex flex-col md:flex-row gap-4 mt-4 md:mt-0">
-                        <input 
-                            type="date" 
-                            value={selectedDate} 
-                            onChange={(e) => onDateChange(e.target.value)}
-                            min="1900-01-01" 
-                            max="2100-12-31"
-                            className="border px-3 py-2 rounded shadow text-black"
-                        />
-                        <button
-                            onClick={downloadCSV}
-                            className="bg-[#800000] text-white px-4 py-2 rounded hover:bg-[#600000] transition-colors"
-                        >
-                            Download CSV
-                        </button>
+        <>
+            <Header />
+
+            <div className="min-h-screen bg-white p-8 flex flex-col">
+                <div className="max-w-7xl mx-auto w-full flex flex-col flex-grow">
+                    <div className="flex flex-col md:flex-row md:justify-between md:items-center mb-4">
+                        <h1 className="text-[#800000] text-4xl font-bold">Performance</h1>
+                        <div className="flex flex-col md:flex-row gap-4 mt-4 md:mt-0">
+                            <input 
+                                type="date" 
+                                value={selectedDate} 
+                                onChange={(e) => onDateChange(e.target.value)}
+                                min="1900-01-01" 
+                                max="2100-12-31"
+                                className="border px-3 py-2 rounded shadow text-black"
+                            />
+                            <button
+                                onClick={downloadCSV}
+                                className="bg-[#800000] text-white px-4 py-2 rounded hover:bg-[#600000] transition-colors"
+                            >
+                                Download CSV
+                            </button>
+                        </div>
+                    </div>
+                    <div className="w-full border rounded-lg overflow-x-auto mb-6">
+                        <table className="w-full border-collapse ">
+                            <thead className="sticky top-0 bg-white shadow-md z-10">
+                                <tr>
+                                    <th className="border-b-2 border-[#800000] p-3 text-left text-[#800000]">Date</th>
+                                    <th className="border-b-2 border-[#800000] p-3 text-left text-[#800000]">Inception Return</th>
+                                    <th className="border-b-2 border-[#800000] p-3 text-left text-[#800000]">1 Day Return</th>
+                                    <th className="border-b-2 border-[#800000] p-3 text-left text-[#800000]">1 Week Return</th>
+                                    <th className="border-b-2 border-[#800000] p-3 text-left text-[#800000]">1 Month Return</th>
+                                    <th className="border-b-2 border-[#800000] p-3 text-left text-[#800000]">1 Year Return</th>
+                                    <th className="border-b-2 border-[#800000] p-3 text-left text-[#800000]">YTD Return</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {loading ? (
+                                    <tr><td colSpan={7} className="p-3 text-gray-600 text-center">Loading data...</td></tr>
+                                ) : error ? (
+                                    <tr><td colSpan={7} className="p-3 text-gray-600 text-center text-red-600">{error}</td></tr>
+                                ) : performanceData.length > 0 ? (
+                                    performanceData.map((row, index) => (
+                                        <tr key={row.date} className={index % 2 === 0 ? 'bg-gray-50' : 'bg-white'}>
+                                            <td className="border-b border-gray-200 p-3 text-gray-900">{row.date}</td>
+                                            <td className="border-b border-gray-200 p-3">{formatReturn(row.inception_return)}</td>
+                                            <td className="border-b border-gray-200 p-3">{formatReturn(row.one_day_return)}</td>
+                                            <td className="border-b border-gray-200 p-3">{formatReturn(row.one_week_return)}</td>
+                                            <td className="border-b border-gray-200 p-3">{formatReturn(row.one_month_return)}</td>
+                                            <td className="border-b border-gray-200 p-3">{formatReturn(row.one_year_return)}</td>
+                                            <td className="border-b border-gray-200 p-3">{formatReturn(row.ytd_return)}</td>
+                                        </tr>
+                                    ))
+                                ) : (
+                                    <tr><td colSpan={7} className="p-3 text-gray-600 text-center">No data available.</td></tr>
+                                )}
+                            </tbody>
+                        </table>
                     </div>
                 </div>
-                <div className="w-full border rounded-lg overflow-x-auto mb-6">
-                    <table className="w-full border-collapse ">
-                        <thead className="sticky top-0 bg-white shadow-md z-10">
-                            <tr>
-                                <th className="border-b-2 border-[#800000] p-3 text-left text-[#800000]">Date</th>
-                                <th className="border-b-2 border-[#800000] p-3 text-left text-[#800000]">Inception Return</th>
-                                <th className="border-b-2 border-[#800000] p-3 text-left text-[#800000]">1 Day Return</th>
-                                <th className="border-b-2 border-[#800000] p-3 text-left text-[#800000]">1 Week Return</th>
-                                <th className="border-b-2 border-[#800000] p-3 text-left text-[#800000]">1 Month Return</th>
-                                <th className="border-b-2 border-[#800000] p-3 text-left text-[#800000]">1 Year Return</th>
-                                <th className="border-b-2 border-[#800000] p-3 text-left text-[#800000]">YTD Return</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {loading ? (
-                                <tr><td colSpan={7} className="p-3 text-gray-600 text-center">Loading data...</td></tr>
-                            ) : error ? (
-                                <tr><td colSpan={7} className="p-3 text-gray-600 text-center text-red-600">{error}</td></tr>
-                            ) : performanceData.length > 0 ? (
-                                performanceData.map((row, index) => (
-                                    <tr key={row.date} className={index % 2 === 0 ? 'bg-gray-50' : 'bg-white'}>
-                                        <td className="border-b border-gray-200 p-3 text-gray-900">{row.date}</td>
-                                        <td className="border-b border-gray-200 p-3">{formatReturn(row.inception_return)}</td>
-                                        <td className="border-b border-gray-200 p-3">{formatReturn(row.one_day_return)}</td>
-                                        <td className="border-b border-gray-200 p-3">{formatReturn(row.one_week_return)}</td>
-                                        <td className="border-b border-gray-200 p-3">{formatReturn(row.one_month_return)}</td>
-                                        <td className="border-b border-gray-200 p-3">{formatReturn(row.one_year_return)}</td>
-                                        <td className="border-b border-gray-200 p-3">{formatReturn(row.ytd_return)}</td>
-                                    </tr>
-                                ))
-                            ) : (
-                                <tr><td colSpan={7} className="p-3 text-gray-600 text-center">No data available.</td></tr>
-                            )}
-                        </tbody>
-                    </table>
-                </div>
             </div>
-        </div>
+        </>
     );
 }
 
