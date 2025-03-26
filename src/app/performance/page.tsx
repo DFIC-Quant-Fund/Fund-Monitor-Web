@@ -1,7 +1,7 @@
 'use client';
 import {useState, useEffect, useCallback} from 'react';
 import { useSearchParams, useRouter } from 'next/navigation';
-import { Box, Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Typography,Button,CircularProgress,
+import { Box, Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Typography,Button,CircularProgress, TextField,
 } from '@mui/material';
 import { Download } from '@mui/icons-material';
 import { API_BASE_URL } from '../../utils/apiBase';
@@ -123,6 +123,14 @@ export default function Performance() {
                     <Typography variant="h4" fontWeight={800} sx={{ color: theme.palette.primary.main }}>
                         Performance
                     </Typography>
+                <TextField
+                    type="date"
+                    value={selectedDate}
+                    onChange={(e) => onDateChange(e.target.value)}
+                    size="small"
+                    sx={{ width: 180 }}
+                    InputLabelProps={{ shrink: true }}
+                />                    
                     <Button variant="contained" color="primary" startIcon={<Download />} onClick={downloadCSV} sx={{ backgroundColor: theme.palette.primary.main }}>
                         Export
                     </Button>
