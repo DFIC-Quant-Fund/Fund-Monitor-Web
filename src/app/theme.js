@@ -64,6 +64,8 @@ const theme = createTheme({
         root: {
           backgroundColor: '#800000',
           color: '#ffffff',
+          width: '180px',
+          height: '40px',
           '&:hover': {
             backgroundColor: '#a00000',
           },

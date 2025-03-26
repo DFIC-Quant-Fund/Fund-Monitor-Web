@@ -128,16 +128,20 @@ function Performance() {
                     value={selectedDate}
                     onChange={(e) => onDateChange(e.target.value)}
                     size="small"
-                    sx={{ width: 180 }}
+                    sx={{
+                        width: 180,
+                        height: 40,
+                        '& .MuiInputBase-root': { height: '100%' }, // Ensures input field fills height
+                    }}
                     InputLabelProps={{ shrink: true }}
                 />                    
-                    <Button variant="contained" color="primary" startIcon={<Download />} onClick={downloadCSV} sx={{ backgroundColor: theme.palette.primary.main, marginLeft: 2 }}>
+                    <Button variant="contained" color="primary" startIcon={<Download />} onClick={downloadCSV} sx={{ backgroundColor: theme.palette.primary.main, marginLeft: 2,  width: 180, height: 38 }}>
                         Export
                     </Button>
                 </Box>
                 </Box>
                 <TableContainer component={Paper} sx={{ borderRadius: 2, boxShadow: theme.shadows[2], overflow: 'hidden' }}>
-                    <Table stickyHeader>
+                    <Table stickyHeader sx={{ tableLayout: 'fixed', width: '100%' }}>
                         <TableHead>
                             <TableRow sx={{ backgroundColor: theme.palette.grey[200], borderBottom: `2px solid ${theme.palette.primary.main}` }}>
                                 {['Date', 'Inception Return', '1 Day Return', '1 Week Return', '1 Month Return', '1 Year Return', 'YTD Return'].map(header => (
