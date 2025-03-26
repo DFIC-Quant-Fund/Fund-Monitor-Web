@@ -1,10 +1,10 @@
 import { createTheme } from '@mui/material/styles';
-
+// theme file for dfic colours 
 const theme = createTheme({
   palette: {
     primary: {
-      main: '#800000',
-      contrastText: '#ffffff',
+      main: '#800000', //dfic red 
+      contrastText: '#ffffff', //white 
     },
     secondary: {
       main: '#d32f2f',
