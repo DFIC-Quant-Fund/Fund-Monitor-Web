@@ -6,7 +6,7 @@ import { Box, Paper, Table, TableBody, TableCell, TableContainer, TableHead, Tab
 import { Download } from '@mui/icons-material';
 import { API_BASE_URL } from '../../utils/apiBase';
 import Header from '../components/heading';
-import theme from '../theme.js';
+import theme from '../theme';
 
 interface PerformanceData {
     date: string;

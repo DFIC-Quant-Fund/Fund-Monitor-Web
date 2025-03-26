@@ -4,7 +4,7 @@ import { API_BASE_URL } from '../../utils/apiBase';
 import Header from '../components/heading';
 import { useSearchParams, useRouter } from 'next/navigation';
 import { Box, Typography, Select, MenuItem, TextField, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, CircularProgress, FormControl } from '@mui/material';
-import theme from '../theme.js';
+import theme from '../theme';
 
 // Interface for Holdings Data
 interface HoldingData {
@@ -251,8 +251,7 @@ function HoldingsContent() {
                                             { label: 'Ticker', key: 'ticker' },
                                             { label: 'Shares', key: 'shares_held' },
                                             { label: 'Price (CAD)', key: 'price' },
-                                            { label: 'Market Value (CAD)', key: 'market_value' },
-                                            { label: 'Fund', key: 'fund' }
+                                            { label: 'Market Value (CAD)', key: 'market_value' }
                                         ].map(({ label, key }) => (
                                             <TableCell 
                                                 key={key} 
@@ -303,7 +302,6 @@ function HoldingsContent() {
                                                     <TableCell align="center" sx={{fontSize: '1rem' }}>{row.shares_held}</TableCell>
                                                     <TableCell align="center" sx={{fontSize: '1rem' }}>{convertedPrice.toFixed(2)}</TableCell>
                                                     <TableCell align="center" sx={{fontSize: '1rem' }}>{convertedMarketValue.toFixed(2)}</TableCell>
-                                                    <TableCell align="center" sx={{fontSize: '1rem' }}>{row.fund}</TableCell>
                                                 </TableRow>
                                             );
                                         })

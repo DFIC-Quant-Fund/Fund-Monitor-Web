@@ -1,10 +1,27 @@
 import { createTheme } from '@mui/material/styles';
+import { Components, PaletteOptions, ThemeOptions } from '@mui/material/styles';
 // theme file for dfic colours 
+
+// Extending PaletteOptions for custom colors
+interface CustomPalette extends PaletteOptions {
+  summaryBox?: {
+    background: string;
+    border: string;
+    header: string;
+    text: string;
+  };
+}
+
+// Extending ThemeOptions to include custom palette
+interface CustomThemeOptions extends ThemeOptions {
+  palette?: CustomPalette;
+}
+
 const theme = createTheme({
   palette: {
     primary: {
-      main: '#800000', //dfic red 
-      contrastText: '#ffffff', //white 
+      main: '#800000', // DFIC red
+      contrastText: '#ffffff',
     },
     secondary: {
       main: '#d32f2f',
@@ -23,14 +40,13 @@ const theme = createTheme({
     success: {
       main: '#28a745',
     },
-    // Summary box colors
     summaryBox: {
       background: '#f8f8f8',
       border: '#e0e0e0',
       header: '#800000',
       text: '#333333',
     },
-  },
+  } as CustomPalette,
   typography: {
     fontFamily: 'Poppins, "Roboto", "Helvetica", "Arial", sans-serif',
     h6: {
@@ -39,7 +55,6 @@ const theme = createTheme({
     body2: {
       color: '#5c5c5c',
     },
-    // Typography for summary boxes
     summaryHeader: {
       fontSize: '1.1rem',
       fontWeight: 600,
@@ -57,26 +72,26 @@ const theme = createTheme({
       fontStyle: 'italic',
     },
   },
-  spacing: 8, // Adding a custom spacing scale
+  spacing: 8,
   components: {
     MuiButton: {
       styleOverrides: {
         root: {
           backgroundColor: '#800000',
           color: '#ffffff',
-          padding: '10px 24px', 
+          padding: '10px 24px',
           fontSize: '1.125rem',
           fontWeight: 600,
-          borderRadius: '8px', // Rounded corners (rounded-lg)
-          textTransform: 'none', // Prevent text from being uppercase by default
+          borderRadius: '8px',
+          textTransform: 'none',
           '&:hover': {
-            backgroundColor: '#600000', // Hover color match 
+            backgroundColor: '#600000',
           },
           '&:disabled': {
-            backgroundColor: '#a8a7a7', // Disabled button color
+            backgroundColor: '#a8a7a7',
             color: '#ffffff',
           },
-          transition: 'background-color 0.3s', // Smooth hover transition
+          transition: 'background-color 0.3s',
         },
       },
     },
@@ -90,14 +105,14 @@ const theme = createTheme({
         root: {
           borderBottom: '1px solid rgba(0, 0, 0, 0.1)',
           padding: '12px',
-          width: '150px', 
+          width: '150px',
           maxWidth: '150px',
-          wordWrap: 'break-word', // Allow text wrapping
-          whiteSpace: 'normal', // Override nowrap to allow wrapping
-          display: 'flex', // Use flexbox for centering
-          justifyContent: 'center', // Center horizontally
-          alignItems: 'center', // Center vertically
-          textAlign: 'center', // Ensure text is centered
+          wordWrap: 'break-word',
+          whiteSpace: 'normal',
+          display: 'flex',
+          justifyContent: 'center',
+          alignItems: 'center',
+          textAlign: 'center',
         },
       },
     },
@@ -107,8 +122,8 @@ const theme = createTheme({
           backgroundColor: 'transparent',
           boxShadow: 'none',
           padding: 0,
-        }
-      }
+        },
+      },
     },
     MuiBox: {
       variants: [
@@ -142,7 +157,7 @@ const theme = createTheme({
         },
       ],
     },
-  },
-});
+  } as Components,
+} as CustomThemeOptions);
 
 export default theme;
