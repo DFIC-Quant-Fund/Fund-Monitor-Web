@@ -1,5 +1,5 @@
 'use client';
-import {useState, useEffect, useCallback} from 'react';
+import {useState, useEffect, useCallback, Suspense} from 'react';
 import { useSearchParams, useRouter } from 'next/navigation';
 import { Box, Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Typography,Button,CircularProgress, TextField,
 } from '@mui/material';
@@ -22,7 +22,7 @@ interface ApiResponse {
     success: boolean;
 }
 
-export default function Performance() {
+function Performance() {
 
     const searchParams = useSearchParams();
     const router = useRouter();
@@ -171,4 +171,12 @@ export default function Performance() {
             </Paper>
         </Box>
     );
+}
+
+export default function PerformancePage(){
+    return(
+        <Suspense fallback={<div>Loading...</div>}>
+            <Performance />
+        </Suspense>
+    )
 }
