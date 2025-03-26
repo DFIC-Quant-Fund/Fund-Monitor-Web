@@ -1,7 +1,7 @@
 'use client';
 import {useState, useEffect, useCallback, Suspense} from 'react';
 import { useSearchParams, useRouter } from 'next/navigation';
-import { Box, Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Typography,Button,CircularProgress, TextField,
+import { Box, Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Typography,Button,CircularProgress, TextField, TablePagination,
 } from '@mui/material';
 import { Download } from '@mui/icons-material';
 import { API_BASE_URL } from '../../utils/apiBase';
@@ -81,7 +81,7 @@ function Performance() {
     }, [fetchData]);
 
     const formatReturn = (value: string | null) => {
-        if (value === null) return <Typography variant="body2" sx={{ fontSize: '10rem' }}>–</Typography>;
+        if (value === null) return <Typography variant="body2" sx={{ fontSize: '1rem' }}>–</Typography>;
         
         const numberValue = parseFloat(value);
         const color = numberValue > 0 ? theme.palette.success.main : 
@@ -115,6 +115,13 @@ function Performance() {
         a.click();
         document.body.removeChild(a);
         window.URL.revokeObjectURL(url);
+    };
+
+    const [page, setPage] = useState(0);
+    const rowsPerPage = 50; // Number of rows per page
+
+    const handleChangePage = (event: unknown, newPage: number) => {
+        setPage(newPage);
     };
 
     return (
@@ -160,7 +167,7 @@ function Performance() {
                             ) : error ? (
                                 <TableRow><TableCell colSpan={7} align="center"><Typography color="error">{error}</Typography></TableCell></TableRow>
                             ) : performanceData.length > 0 ? (
-                                performanceData.map((row, index) => (
+                                performanceData.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((row, index) => (
                                     <TableRow key={row.date} sx={{ backgroundColor: index % 2 === 0 ? theme.palette.action.hover : 'inherit' }}>
                                         <TableCell align="center" sx={{ fontSize: '1.1rem' }}>{row.date}</TableCell>
                                         {[row.inception_return, row.one_day_return, row.one_week_return, row.one_month_return, row.one_year_return, row.ytd_return].map((val, idx) => (
@@ -173,6 +180,14 @@ function Performance() {
                             )}
                         </TableBody>
                     </Table>
+                    <TablePagination
+                    rowsPerPageOptions={[50]} 
+                    component="div"
+                    count={performanceData.length}
+                    rowsPerPage={rowsPerPage}
+                    page={page}
+                    onPageChange={handleChangePage}
+                    />
                 </TableContainer>
             </Paper>
     </>
