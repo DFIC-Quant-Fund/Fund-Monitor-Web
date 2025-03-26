@@ -2,6 +2,8 @@
 import { useState, useEffect, useCallback, Suspense } from 'react';
 import { API_BASE_URL } from '../../utils/apiBase';
 import { useSearchParams, useRouter } from 'next/navigation';
+import { Box, Typography, Select, MenuItem, TextField, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, CircularProgress, FormControl, InputLabel, ThemeProvider } from '@mui/material';
+import theme from '../theme.js';
 
 // Interface for Holdings Data
 interface HoldingData {
@@ -41,7 +43,7 @@ interface HoldingsApiResponse {
     success: boolean;
 }
 
-function HoldingsContent() {
+export default function HoldingsContent() {
     // Getting parameters from url
     const searchParams = useSearchParams();
     const router = useRouter();
@@ -174,132 +176,170 @@ function HoldingsContent() {
     const inceptionReturn = ((totalPortfolioValue - STARTING_VALUE) / STARTING_VALUE) * 100;
 
     return (
-        <div className="min-h-screen bg-white p-8 flex flex-col">
-            <div className="max-w-7xl mx-auto w-full flex flex-col flex-grow">
-                <div className="flex flex-col md:flex-row md:justify-between md:items-center mb-4">
-                    <h1 className="text-[#800000] text-4xl font-bold">Holdings</h1>
-                    <div className="flex flex-col md:flex-row gap-4 mt-4 md:mt-0">
-                        <select
-                            value={selectedPortfolio}
-                            onChange={(e) => onPortfolioChange(e.target.value)}
-                            className="border px-3 py-2 rounded shadow text-black"
-                        >
-                            <option value="core">Core Portfolio</option>
-                            <option value="benchmark">Benchmark Portfolio</option>
-                        </select>
-                        <input
-                            type="date"
-                            value={selectedDate}
-                            onChange={(e) => onDateChange(e.target.value)}
-                            min="1900-01-01"
-                            max="2100-12-31"
-                            className="border px-3 py-2 rounded shadow text-black"
-                        />
-                    </div>
-                </div>
 
-                <div className="w-full border rounded-lg overflow-x-auto mb-6">
-                    <table className="w-full border-collapse ">
-                        <thead className="sticky top-0 bg-white shadow-md z-10">
-                            <tr>
-                                {[
-                                    { label: 'Name', key: 'name' },
-                                    { label: 'Ticker', key: 'ticker' },
-                                    { label: 'Shares', key: 'shares_held' },
-                                    { label: 'Price (CAD)', key: 'price' },
-                                    { label: 'Market Value (CAD)', key: 'market_value' },
-                                    { label: 'Fund', key: 'fund' }
-                                ].map(({ label, key }) => (
-                                    <th
-                                        key={key}
-                                        onClick={() => handleSort(key)}
-                                        className="border-b-2 border-[#800000] p-3 text-left text-[#800000] cursor-pointer hover:bg-gray-50"
-                                    >
-                                        <div className="flex items-center gap-1">
-                                            {label}
-                                            {sortConfig.key === key && (
-                                                <span className="ml-1">
-                                                    {sortConfig.direction === 'asc' ? '↑' : '↓'}
-                                                </span>
-                                            )}
-                                        </div>
-                                    </th>
-                                ))}
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {loading ? (
-                                <tr><td colSpan={7} className="p-3 text-gray-600 text-center">Loading data...</td></tr>
-                            ) : error ? (
-                                <tr><td colSpan={7} className="p-3 text-red-600 text-center ">{error}</td></tr>
-                            ) : holdingsData.length > 0 ? (
-                                sortData(holdingsData).map((row, index) => {
-                                    const marketValue = parseFloat(row.market_value);
-                                    const price = parseFloat(row.price);
-                                    let convertedMarketValue = marketValue;
-                                    let convertedPrice = price;
+        <Box sx={{ minHeight: '100vh', backgroundColor: theme.palette.background.default, p: 4 }}>
+        <Paper sx={{ maxWidth: 'xl', mx: 'auto', p: 3, borderRadius: 2, boxShadow: theme.shadows[3] }}>
+        
+        {/* Holdings Section */}
+        <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 4 }}>
+            <Typography variant="h4" fontWeight={800} sx={{ color: theme.palette.primary.main }}>
+                Holdings
+            </Typography>
+            <Box sx={{ display: 'flex', gap: 2 }}>
+                <FormControl size="small">
+                    <InputLabel>Portfolio</InputLabel>
+                    <Select
+                        value={selectedPortfolio}
+                        onChange={(e) => onPortfolioChange(e.target.value)}
+                        sx={{ minWidth: 180 }}
+                    >
+                        <MenuItem value="core">Core Portfolio</MenuItem>
+                        <MenuItem value="benchmark">Benchmark Portfolio</MenuItem>
+                    </Select>
+                </FormControl>
+                <TextField
+                    type="date"
+                    value={selectedDate}
+                    onChange={(e) => onDateChange(e.target.value)}
+                    size="small"
+                    sx={{ width: 180 }}
+                    InputLabelProps={{ shrink: true }}
+                />
+            </Box>
+        </Box>
 
-                                    if (exchangeRatesData) {
-                                        if (row.security_currency === "USD") {
-                                            convertedMarketValue = marketValue / parseFloat(exchangeRatesData.USD);
-                                            convertedPrice = price / parseFloat(exchangeRatesData.USD);
-                                        } else if (row.security_currency === "EUR") {
-                                            convertedMarketValue = marketValue / parseFloat(exchangeRatesData.EUR);
-                                            convertedPrice = price / parseFloat(exchangeRatesData.EUR);
-                                        }
-                                    }
+        {/* Table */}
+        <TableContainer component={Paper} sx={{ borderRadius: 2, boxShadow: theme.shadows[2], overflow: 'hidden', border: '2px solid black', mb: 4 }}>
+            <Table stickyHeader>
+                <TableHead>
+                    <TableRow sx={{ backgroundColor: theme.palette.grey[200], borderBottom: `2px solid ${theme.palette.primary.main}` }}>
+                        {[
+                            { label: 'Name', key: 'name' },
+                            { label: 'Ticker', key: 'ticker' },
+                            { label: 'Shares', key: 'shares_held' },
+                            { label: 'Price (CAD)', key: 'price' },
+                            { label: 'Market Value (CAD)', key: 'market_value' },
+                            { label: 'Fund', key: 'fund' }
+                        ].map(({ label, key }) => (
+                            <TableCell 
+                                key={key} 
+                                onClick={() => handleSort(key)} 
+                                align="center"
+                                sx={{ 
+                                    fontWeight: 'bold', 
+                                    color: theme.palette.primary.main, 
+                                    borderBottom: `2px solid ${theme.palette.primary.main}`,
+                                    cursor: 'pointer'
+                                }}
+                            >
+                                <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                                    {label}
+                                    {sortConfig.key === key && (
+                                        <span>{sortConfig.direction === 'asc' ? '↑' : '↓'}</span>
+                                    )}
+                                </Box>
+                            </TableCell>
+                        ))}
+                    </TableRow>
+                </TableHead>
+                <TableBody>
+                    {loading ? (
+                        <TableRow><TableCell colSpan={6} align="center"><CircularProgress color="primary" /></TableCell></TableRow>
+                    ) : error ? (
+                        <TableRow><TableCell colSpan={6} align="center"><Typography color="error">{error}</Typography></TableCell></TableRow>
+                    ) : holdingsData.length > 0 ? (
+                        sortData(holdingsData).map((row, index) => {
+                            const marketValue = parseFloat(row.market_value);
+                            const price = parseFloat(row.price);
+                            let convertedMarketValue = marketValue;
+                            let convertedPrice = price;
 
-                                    return (
-                                        <tr key={row.ticker} className={index % 2 === 0 ? 'bg-gray-50' : 'bg-white'}>
-                                            <td className="border-b border-gray-200 p-3 text-black">{row.name}</td>
-                                            <td className="border-b border-gray-200 p-3 text-black">{row.ticker}</td>
-                                            <td className="border-b border-gray-200 p-3 text-black">{row.shares_held}</td>
-                                            <td className="border-b border-gray-200 p-3 text-black">${convertedPrice.toFixed(2)}</td>
-                                            <td className="border-b border-gray-200 p-3 text-black">${convertedMarketValue.toFixed(2)}</td>
-                                            <td className="border-b border-gray-200 p-3 text-black">{row.fund}</td>
-                                        </tr>
-                                    );
-                                })
-                            ) : (
-                                <tr>
-                                    <td colSpan={6} className="p-3 text-black text-center">No data available.</td>
-                                </tr>
-                            )}
-                        </tbody>
-                    </table>
-                </div>
+                            if (exchangeRatesData) {
+                                if (row.security_currency === "USD") {
+                                    convertedMarketValue = marketValue / parseFloat(exchangeRatesData.USD);
+                                    convertedPrice = price / parseFloat(exchangeRatesData.USD);
+                                } else if (row.security_currency === "EUR") {
+                                    convertedMarketValue = marketValue / parseFloat(exchangeRatesData.EUR);
+                                    convertedPrice = price / parseFloat(exchangeRatesData.EUR);
+                                }
+                            }
 
-                <div className="border rounded-lg p-6 bg-gray-100 shadow mt-6 mb-6">
-                    {exchangeRatesData ? (
-                        <div className="flex flex-col space-y-4">
-                            <p className="text-black text-lg">
-                                <span className="font-semibold">USD to CAD:</span> ${parseFloat(exchangeRatesData.USD).toFixed(6)}
-                            </p>
-                            {/* <p className="text-black text-lg">
-                                <span className="font-semibold">EUR to CAD:</span> ${parseFloat(exchangeRatesData.EUR).toFixed(6)}
-                            </p> */}
-                        </div>
+                            return (
+                                <TableRow key={row.ticker} sx={{ backgroundColor: index % 2 === 0 ? theme.palette.action.hover : 'inherit' }}>
+                                    <TableCell align="center">{row.name}</TableCell>
+                                    <TableCell align="center">{row.ticker}</TableCell>
+                                    <TableCell align="center">{row.shares_held}</TableCell>
+                                    <TableCell align="center">{convertedPrice.toFixed(2)}</TableCell>
+                                    <TableCell align="center">{convertedMarketValue.toFixed(2)}</TableCell>
+                                    <TableCell align="center">{row.fund}</TableCell>
+                                </TableRow>
+                            );
+                        })
                     ) : (
-                        <p className="text-black text-center">Fetching exchange rates...</p>
+                        <TableRow><TableCell colSpan={6} align="center"><Typography>No data available</Typography></TableCell></TableRow>
                     )}
-                </div>
+                </TableBody>
+            </Table>
+        </TableContainer>
 
-                {/* <div className="w-full bg-white shadow-md p-4 flex flex-col text-black text-lg"> */}
-                <div className="border rounded-lg p-6 bg-gray-100 shadow mt-6 mb-6 ">
-                    <div className="font-bold text-black">Total Portfolio Value: ${totalPortfolioValue.toFixed(2)}</div>
-                    <p className="text-sm text-gray-600">(Excluding dividends)</p>
-                    <div className="font-bold mt-2 text-black">Inception Return: {inceptionReturn.toFixed(2)}%</div>
-                    <p className="text-sm text-gray-600">(Since 2022-05-05)</p>
-                </div>
-            </div>
-        </div>
+                    <Box sx={{
+                width: '100%', 
+                maxWidth: 'xl',
+                padding: 2,
+                display: 'flex',
+                flexDirection: 'column',
+                gap: 2, // Gap between the boxes
+            }}>
+                <Box sx={{
+                    padding: 2,
+                    borderRadius: 2,
+                    backgroundColor: theme.palette.background.paper,
+                    border: '1px solid black', // Basic black border
+                    display: 'flex',
+                    flexDirection: 'column',
+                    alignItems: 'flex-start', // Left align content
+                }}>
+                    <Typography variant="body1" sx={{ mb: 2 }}>
+                        <strong>USD to CAD:</strong> ${exchangeRatesData?.USD ? parseFloat(exchangeRatesData.USD).toFixed(6) : '0.000000'}
+                    </Typography>
+                </Box>
+
+                <Box sx={{
+                    padding: 2,
+                    borderRadius: 2,
+                    backgroundColor: theme.palette.background.paper,
+                    border: '1px solid black', // Basic black border
+                    display: 'flex',
+                    flexDirection: 'column',
+                    alignItems: 'flex-start', // Left align content
+                }}>
+                    <Typography variant="body1" sx={{ mb: 2 }}>
+                        <strong>Total Portfolio Value:</strong> ${totalPortfolioValue.toFixed(2)}
+                    </Typography>
+
+                    <Typography variant="body2" sx={{ 
+                        mb: 2,
+                        fontSize: '0.9em',
+                        color: '#666666'
+                    }}>
+                        (Excluding dividends)
+                    </Typography>
+
+                    <Typography variant="body1" sx={{ mb: 2 }}>
+                        <strong>Inception Return:</strong> {inceptionReturn.toFixed(2)}%
+                    </Typography>
+
+                    <Typography variant="body2" sx={{ 
+                        fontSize: '0.9em',
+                        color: '#666666'
+                    }}>
+                        (Since 2022-05-05)
+                    </Typography>
+                </Box>
+            </Box>
+
+        </Paper>
+    </Box>
+
     );
 }
-export default function HoldingsPage() {
-    return (
-        <Suspense fallback={<div>Loading...</div>}>
-            <HoldingsContent />
-        </Suspense>
-    );
-}
-

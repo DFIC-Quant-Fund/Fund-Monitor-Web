@@ -1,7 +1,12 @@
 'use client';
 import {useState, useEffect, useCallback, Suspense} from 'react';
 import { useSearchParams, useRouter } from 'next/navigation';
+import { Box, Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Typography, InputAdornment,TextField,Button,CircularProgress,
+} from '@mui/material';
+import { DatePicker } from '@mui/x-date-pickers';
+import { Download } from '@mui/icons-material';
 import { API_BASE_URL } from '../../utils/apiBase';
+import theme from '../theme.js';
 
 interface PerformanceData {
     date: string;
@@ -18,7 +23,7 @@ interface ApiResponse {
     success: boolean;
 }
 
-function Performance() {
+export default function Performance() {
 
     const searchParams = useSearchParams();
     const router = useRouter();
@@ -76,14 +81,19 @@ function Performance() {
     }, [fetchData]);
 
     const formatReturn = (value: string | null) => {
-        if (value === null || value === undefined) return <span className="text-black">–</span>;
+        if (value === null) return <Typography variant="body2">–</Typography>;
+        
         const numberValue = parseFloat(value);
+        const color = numberValue > 0 ? theme.palette.success.main : 
+                     numberValue < 0 ? theme.palette.error.main : 
+                     theme.palette.text.secondary;
+        
         return (
-            <span className={numberValue > 0 ? 'text-green-600' : numberValue < 0 ? 'text-red-600' : 'text-black'}>
-                {numberValue.toFixed(4)}%
-            </span>
+          <Typography variant="body2" color={color}>
+            {numberValue.toFixed(4)}%
+          </Typography>
         );
-    };
+      };
 
     const downloadCSV = () => {
         if (performanceData.length === 0) return;
@@ -108,72 +118,48 @@ function Performance() {
     };
 
     return (
-        <div className="min-h-screen bg-white p-8 flex flex-col">
-            <div className="max-w-7xl mx-auto w-full flex flex-col flex-grow">
-                <div className="flex flex-col md:flex-row md:justify-between md:items-center mb-4">
-                    <h1 className="text-[#800000] text-4xl font-bold">Performance</h1>
-                    <div className="flex flex-col md:flex-row gap-4 mt-4 md:mt-0">
-                        <input 
-                            type="date" 
-                            value={selectedDate} 
-                            onChange={(e) => onDateChange(e.target.value)}
-                            min="1900-01-01" 
-                            max="2100-12-31"
-                            className="border px-3 py-2 rounded shadow text-black"
-                        />
-                        <button
-                            onClick={downloadCSV}
-                            className="bg-[#800000] text-white px-4 py-2 rounded hover:bg-[#600000] transition-colors"
-                        >
-                            Download CSV
-                        </button>
-                    </div>
-                </div>
-                <div className="w-full border rounded-lg overflow-x-auto mb-6">
-                    <table className="w-full border-collapse ">
-                        <thead className="sticky top-0 bg-white shadow-md z-10">
-                            <tr>
-                                <th className="border-b-2 border-[#800000] p-3 text-left text-[#800000]">Date</th>
-                                <th className="border-b-2 border-[#800000] p-3 text-left text-[#800000]">Inception Return</th>
-                                <th className="border-b-2 border-[#800000] p-3 text-left text-[#800000]">1 Day Return</th>
-                                <th className="border-b-2 border-[#800000] p-3 text-left text-[#800000]">1 Week Return</th>
-                                <th className="border-b-2 border-[#800000] p-3 text-left text-[#800000]">1 Month Return</th>
-                                <th className="border-b-2 border-[#800000] p-3 text-left text-[#800000]">1 Year Return</th>
-                                <th className="border-b-2 border-[#800000] p-3 text-left text-[#800000]">YTD Return</th>
-                            </tr>
-                        </thead>
-                        <tbody>
+        <Box sx={{ minHeight: '100vh', backgroundColor: theme.palette.background.default, p: 4 }}>
+            <Paper sx={{ maxWidth: 'xl', mx: 'auto', p: 3, borderRadius: 2, boxShadow: theme.shadows[3] }}>
+                <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 4 }}>
+                    <Typography variant="h4" fontWeight={800} sx={{ color: theme.palette.primary.main }}>
+                        Performance
+                    </Typography>
+                    <Button variant="contained" color="primary" startIcon={<Download />} onClick={downloadCSV} sx={{ backgroundColor: theme.palette.primary.main }}>
+                        Export
+                    </Button>
+                </Box>
+                <TableContainer component={Paper} sx={{ borderRadius: 2, boxShadow: theme.shadows[2], overflow: 'hidden', border: '2px solid black' }}>
+                    <Table stickyHeader>
+                        <TableHead>
+                            <TableRow sx={{ backgroundColor: theme.palette.grey[200], borderBottom: `2px solid ${theme.palette.primary.main}` }}>
+                                {['Date', 'Inception Return', '1 Day Return', '1 Week Return', '1 Month Return', '1 Year Return', 'YTD Return'].map(header => (
+                                    <TableCell key={header} align="center" sx={{ fontWeight: 'bold', color: theme.palette.primary.main, borderBottom: `2px solid ${theme.palette.primary.main}` }}>
+                                        {header}
+                                    </TableCell>
+                                ))}
+                            </TableRow>
+                        </TableHead>
+                        <TableBody>
                             {loading ? (
-                                <tr><td colSpan={7} className="p-3 text-gray-600 text-center">Loading data...</td></tr>
+                                <TableRow><TableCell colSpan={7} align="center"><CircularProgress color="primary" /></TableCell></TableRow>
                             ) : error ? (
-                                <tr><td colSpan={7} className="p-3 text-gray-600 text-center text-red-600">{error}</td></tr>
+                                <TableRow><TableCell colSpan={7} align="center"><Typography color="error">{error}</Typography></TableCell></TableRow>
                             ) : performanceData.length > 0 ? (
                                 performanceData.map((row, index) => (
-                                    <tr key={row.date} className={index % 2 === 0 ? 'bg-gray-50' : 'bg-white'}>
-                                        <td className="border-b border-gray-200 p-3 text-gray-900">{row.date}</td>
-                                        <td className="border-b border-gray-200 p-3">{formatReturn(row.inception_return)}</td>
-                                        <td className="border-b border-gray-200 p-3">{formatReturn(row.one_day_return)}</td>
-                                        <td className="border-b border-gray-200 p-3">{formatReturn(row.one_week_return)}</td>
-                                        <td className="border-b border-gray-200 p-3">{formatReturn(row.one_month_return)}</td>
-                                        <td className="border-b border-gray-200 p-3">{formatReturn(row.one_year_return)}</td>
-                                        <td className="border-b border-gray-200 p-3">{formatReturn(row.ytd_return)}</td>
-                                    </tr>
+                                    <TableRow key={row.date} sx={{ backgroundColor: index % 2 === 0 ? theme.palette.action.hover : 'inherit' }}>
+                                        <TableCell align="center">{row.date}</TableCell>
+                                        {[row.inception_return, row.one_day_return, row.one_week_return, row.one_month_return, row.one_year_return, row.ytd_return].map((val, idx) => (
+                                            <TableCell key={idx} align="center">{formatReturn(val)}</TableCell>
+                                        ))}
+                                    </TableRow>
                                 ))
                             ) : (
-                                <tr><td colSpan={7} className="p-3 text-gray-600 text-center">No data available.</td></tr>
+                                <TableRow><TableCell colSpan={7} align="center"><Typography>No data available</Typography></TableCell></TableRow>
                             )}
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-        </div>
+                        </TableBody>
+                    </Table>
+                </TableContainer>
+            </Paper>
+        </Box>
     );
-}
-
-export default function PerformancePage(){
-    return(
-        <Suspense fallback={<div>Loading...</div>}>
-            <Performance />
-        </Suspense>
-    )
 }

@@ -1,34 +1,69 @@
 "use client"; // Ensure this is a Client Component
 
 import { useRouter } from "next/navigation";
+import { Box, Typography, Select, MenuItem, TextField, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, CircularProgress, FormControl, InputLabel, ThemeProvider, Button } from '@mui/material';
 
 export default function Home() {
     const router = useRouter();
+        return (
+            <Box className="min-h-screen bg-white flex flex-col items-center justify-center">
+            <Typography variant="h1" sx={{ color: "#800000", fontSize: "6rem", fontWeight: 700, marginBottom: 6 }}>
+                DFIC
+            </Typography>
 
-    return (
-        <div className="min-h-screen bg-white flex flex-col items-center justify-center">
-            <h1 className="text-[#800000] text-6xl font-bold mb-6">DFIC</h1>
-
-            <div className="flex flex-col space-y-4">
-                <button 
+            <Box className="flex flex-col" sx={{ gap: 2 }}> {/* Using theme spacing here */}
+                <Button
                     onClick={() => router.push("/holdings")}
-                    className="bg-[#800000] text-white px-6 py-3 rounded-lg text-lg font-semibold hover:bg-[#600000] transition cursor-pointer"
+                    sx={{
+                        backgroundColor: "#800000",
+                        color: "#ffffff",
+                        paddingX: 6,
+                        paddingY: 3,
+                        borderRadius: 2,
+                        fontSize: "1rem",
+                        fontWeight: 600,
+                        '&:hover': {
+                            backgroundColor: "#600000",
+                        },
+                        transition: "background-color 0.3s",
+                    }}
                 >
                     Holdings
-                </button>
-                <button 
+                </Button>
+                <Button
                     onClick={() => router.push("/performance")}
-                    className="bg-[#800000] text-white px-6 py-3 rounded-lg text-lg font-semibold hover:bg-[#600000] transition cursor-pointer"
+                    sx={{
+                        backgroundColor: "#800000",
+                        color: "#ffffff",
+                        paddingX: 6,
+                        paddingY: 3,
+                        borderRadius: 2,
+                        fontSize: "1rem",
+                        fontWeight: 600,
+                        '&:hover': {
+                            backgroundColor: "#600000",
+                        },
+                        transition: "background-color 0.3s",
+                    }}
                 >
                     Performance
-                </button>
-                <button 
+                </Button>
+                <Button
                     disabled
-                    className="bg-gray-400 text-white px-6 py-3 rounded-lg text-lg font-semibold cursor-not-allowed"
+                    sx={{
+                        backgroundColor: "#d3d3d3",
+                        color: "#ffffff",
+                        paddingX: 6,
+                        paddingY: 3,
+                        borderRadius: 2,
+                        fontSize: "1rem",
+                        fontWeight: 600,
+                        cursor: "not-allowed",
+                    }}
                 >
                     Transactions (Coming Soon)
-                </button>
-            </div>
-        </div>
+                </Button>
+            </Box>
+        </Box>
     );
 }
