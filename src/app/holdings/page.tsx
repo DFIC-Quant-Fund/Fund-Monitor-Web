@@ -194,61 +194,63 @@ function HoldingsContent() {
 
     return (
         <>
-        <Header />
-        <Paper sx={{ width: '100vw',
-        height: '100vh', 
-        backgroundColor: 'white',
-        boxShadow: 'none', padding: 0, overflow: 'auto', borderRadius: 0 }}>
-        
-        {/* Holdings Section */}
-        <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 4, pl: 10, pr: 10, pt: 3 }}>
-            <Typography variant="h4" fontWeight={800} sx={{ color: theme.palette.primary.main }}>
-                Holdings
-            </Typography>
-            <Box sx={{ display: 'flex', gap: 2 }}>
-                <Box
-                    component="input"
-                    type="date"
-                    value={selectedDate || ""}
-                    onChange={(e) => onDateChange(e.target.value)}
-                    min="1900-01-01"
-                    max="2100-12-31"
-                    sx={{
-                        width: 180,
-                        height: 40,
-                        border: "1px solid #ccc",
-                        borderRadius: "8px",
-                        padding: "8px",
-                        outline: "none",
-                        "&:focus": {
-                            borderColor: "primary.main",
-                        },
-                    }}
-                />
-                <FormControl size="small">
-                    <Select
-                        value={selectedPortfolio}
-                        onChange={(e) => onPortfolioChange(e.target.value)}
-                        sx={{
-                            width: 180, height: 40,
-                            borderRadius: "8px",
-                            padding: "8px",
-                            marginLeft: 2,
-                        }}
-                    >
-                        <MenuItem value="core">Core Portfolio</MenuItem>
-                        <MenuItem value="benchmark">Benchmark Portfolio</MenuItem>
-                    </Select>
-                </FormControl>
-            </Box>
-        </Box>
+            <Header />
+            <Paper sx={{
+                width: '100vw',
+                height: '100vh',
+                backgroundColor: 'white',
+                boxShadow: 'none', padding: 0, overflow: 'auto', borderRadius: 0
+            }}>
 
-        {/* Table */}
-        {Object.keys(groupedByFund).map((fund) => (
-                    <Box key={fund} sx={{ mb: 4,  pl: 10, pr: 10 }}>
-                            <Typography
-                                variant="h5"
+                {/* Holdings Section */}
+                <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 4, pl: 10, pr: 10, pt: 3 }}>
+                    <Typography variant="h4" fontWeight={800} sx={{ color: theme.palette.primary.main }}>
+                        Holdings
+                    </Typography>
+                    <Box sx={{ display: 'flex', gap: 2 }}>
+                        <Box
+                            component="input"
+                            type="date"
+                            value={selectedDate || ""}
+                            onChange={(e) => onDateChange(e.target.value)}
+                            min="1900-01-01"
+                            max="2100-12-31"
+                            sx={{
+                                width: 180,
+                                height: 40,
+                                border: "1px solid #ccc",
+                                borderRadius: "8px",
+                                padding: "8px",
+                                outline: "none",
+                                "&:focus": {
+                                    borderColor: "primary.main",
+                                },
+                            }}
+                        />
+                        <FormControl size="small">
+                            <Select
+                                value={selectedPortfolio}
+                                onChange={(e) => onPortfolioChange(e.target.value)}
                                 sx={{
+                                    width: 180, height: 40,
+                                    borderRadius: "8px",
+                                    padding: "8px",
+                                    marginLeft: 2,
+                                }}
+                            >
+                                <MenuItem value="core">Core Portfolio</MenuItem>
+                                <MenuItem value="benchmark">Benchmark Portfolio</MenuItem>
+                            </Select>
+                        </FormControl>
+                    </Box>
+                </Box>
+
+                {/* Table */}
+                {Object.keys(groupedByFund).map((fund) => (
+                    <Box key={fund} sx={{ mb: 4, pl: 10, pr: 10 }}>
+                        <Typography
+                            variant="h5"
+                            sx={{
                                 fontWeight: 'bold',
                                 mb: 2,
                                 cursor: 'pointer',
@@ -267,15 +269,15 @@ function HoldingsContent() {
                                         color: '#ffffff', // White text on hover
                                     },
                                 },
-                                }}
-                            >
-                                <QueryStatsIcon sx={{ 
-                                    color: theme.palette.text.primary, 
-                                    transition: 'color 0.3s ease-in-out',
-                                    mr: 1 
-                                }} />
-                                {fund}
-                            </Typography>
+                            }}
+                        >
+                            <QueryStatsIcon sx={{
+                                color: theme.palette.text.primary,
+                                transition: 'color 0.3s ease-in-out',
+                                mr: 1
+                            }} />
+                            {fund}
+                        </Typography>
                         <TableContainer component={Paper}>
                             <Table stickyHeader sx={{ tableLayout: 'fixed', width: '100%' }}>
                                 <TableHead>
@@ -287,13 +289,13 @@ function HoldingsContent() {
                                             { label: 'Price (CAD)', key: 'price' },
                                             { label: 'Market Value (CAD)', key: 'market_value' }
                                         ].map(({ label, key }) => (
-                                            <TableCell 
-                                                key={key} 
-                                                onClick={() => handleSort(key)} 
+                                            <TableCell
+                                                key={key}
+                                                onClick={() => handleSort(key)}
                                                 align="center"
-                                                sx={{ 
-                                                    fontWeight: 'bold', 
-                                                    color: theme.palette.primary.main, 
+                                                sx={{
+                                                    fontWeight: 'bold',
+                                                    color: theme.palette.primary.main,
                                                     borderBottom: `2px solid ${theme.palette.primary.main}`,
                                                     cursor: 'pointer',
                                                 }}
@@ -331,11 +333,11 @@ function HoldingsContent() {
                                             }
                                             return (
                                                 <TableRow key={row.ticker} sx={{ backgroundColor: index % 2 === 0 ? theme.palette.action.hover : 'inherit' }}>
-                                                    <TableCell align="center" sx={{fontSize: '1rem' }}>{row.name}</TableCell>
-                                                    <TableCell align="center" sx={{fontSize: '1rem' }}>{row.ticker}</TableCell>
-                                                    <TableCell align="center" sx={{fontSize: '1rem' }}>{row.shares_held}</TableCell>
-                                                    <TableCell align="center" sx={{fontSize: '1rem' }}>{convertedPrice.toFixed(2)}</TableCell>
-                                                    <TableCell align="center" sx={{fontSize: '1rem' }}>{convertedMarketValue.toFixed(2)}</TableCell>
+                                                    <TableCell align="center" sx={{ fontSize: '1rem' }}>{row.name}</TableCell>
+                                                    <TableCell align="center" sx={{ fontSize: '1rem' }}>{row.ticker}</TableCell>
+                                                    <TableCell align="center" sx={{ fontSize: '1rem' }}>{row.shares_held}</TableCell>
+                                                    <TableCell align="center" sx={{ fontSize: '1rem' }}>{convertedPrice.toFixed(2)}</TableCell>
+                                                    <TableCell align="center" sx={{ fontSize: '1rem' }}>{convertedMarketValue.toFixed(2)}</TableCell>
                                                 </TableRow>
                                             );
                                         })
@@ -348,61 +350,61 @@ function HoldingsContent() {
                     </Box>
                 ))}
 
-            <Box sx={{
-                width: '100%', 
-                maxWidth: 'xl',
-                display: 'flex',
-                flexDirection: 'column',
-                gap: 2, // Gap between the boxes
-                pl: 10, pr: 10, pb:5
-            }}>
                 <Box sx={{
-                    borderRadius: 2, boxShadow: theme.shadows[2], overflow: 'hidden', 
-                    padding: 2,
-                    backgroundColor: theme.palette.background.paper,
+                    width: '100%',
+                    maxWidth: 'xl',
                     display: 'flex',
                     flexDirection: 'column',
-                    alignItems: 'flex-start', 
+                    gap: 2, // Gap between the boxes
+                    pl: 10, pr: 10, pb: 5
                 }}>
-                    <Typography variant="body1" sx={{ mb: 2 }}>
-                        <strong>USD to CAD:</strong> ${exchangeRatesData?.USD ? parseFloat(exchangeRatesData.USD).toFixed(6) : '0.000000'}
-                    </Typography>
-                </Box>
-
-                <Box sx={{
-                    borderRadius: 2, boxShadow: theme.shadows[2], overflow: 'hidden', 
-                    padding: 2,
-                    backgroundColor: theme.palette.background.paper,
-                    display: 'flex',
-                    flexDirection: 'column',
-                    alignItems: 'flex-start', 
-                }}>
-                    <Typography variant="body1" sx={{ mb: 2 }}>
-                        <strong>Total Portfolio Value:</strong> ${totalPortfolioValue.toFixed(2)}
-                    </Typography>
-
-                    <Typography variant="body2" sx={{ 
-                        mb: 2,
-                        fontSize: '0.9em',
-                        color: '#666666'
+                    <Box sx={{
+                        borderRadius: 2, boxShadow: theme.shadows[2], overflow: 'hidden',
+                        padding: 2,
+                        backgroundColor: theme.palette.background.paper,
+                        display: 'flex',
+                        flexDirection: 'column',
+                        alignItems: 'flex-start',
                     }}>
-                        (Excluding dividends)
-                    </Typography>
+                        <Typography variant="body1" sx={{ mb: 2 }}>
+                            <strong>USD to CAD:</strong> ${exchangeRatesData?.USD ? parseFloat(exchangeRatesData.USD).toFixed(6) : '0.000000'}
+                        </Typography>
+                    </Box>
 
-                    <Typography variant="body1" sx={{ mb: 2 }}>
-                        <strong>Inception Return:</strong> {inceptionReturn.toFixed(2)}%
-                    </Typography>
-
-                    <Typography variant="body2" sx={{ 
-                        fontSize: '0.9em',
-                        color: '#666666'
+                    <Box sx={{
+                        borderRadius: 2, boxShadow: theme.shadows[2], overflow: 'hidden',
+                        padding: 2,
+                        backgroundColor: theme.palette.background.paper,
+                        display: 'flex',
+                        flexDirection: 'column',
+                        alignItems: 'flex-start',
                     }}>
-                        (Since 2022-05-05)
-                    </Typography>
+                        <Typography variant="body1" sx={{ mb: 2 }}>
+                            <strong>Total Portfolio Value:</strong> ${totalPortfolioValue.toFixed(2)}
+                        </Typography>
+
+                        <Typography variant="body2" sx={{
+                            mb: 2,
+                            fontSize: '0.9em',
+                            color: '#666666'
+                        }}>
+                            (Excluding dividends)
+                        </Typography>
+
+                        <Typography variant="body1" sx={{ mb: 2 }}>
+                            <strong>Inception Return:</strong> {inceptionReturn.toFixed(2)}%
+                        </Typography>
+
+                        <Typography variant="body2" sx={{
+                            fontSize: '0.9em',
+                            color: '#666666'
+                        }}>
+                            (Since 2022-05-05)
+                        </Typography>
+                    </Box>
                 </Box>
-            </Box>
-        </Paper>
-    </>
+            </Paper>
+        </>
     );
 }
 
