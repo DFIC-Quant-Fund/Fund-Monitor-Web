@@ -117,7 +117,6 @@ function Performance() {
     };
 
     return (
-        <Box sx={{ minHeight: '100vh', backgroundColor: theme.palette.background.default, p: 4 }}>
             <Paper sx={{ maxWidth: 'xl', mx: 'auto', p: 3, borderRadius: 2, boxShadow: theme.shadows[3] }}>
                 <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 4 }}>
                     <Typography variant="h4" fontWeight={800} sx={{ color: theme.palette.primary.main }}>
@@ -137,7 +136,7 @@ function Performance() {
                     </Button>
                 </Box>
                 </Box>
-                <TableContainer component={Paper} sx={{ borderRadius: 2, boxShadow: theme.shadows[2], overflow: 'hidden', border: '2px solid black' }}>
+                <TableContainer component={Paper} sx={{ borderRadius: 2, boxShadow: theme.shadows[2], overflow: 'hidden' }}>
                     <Table stickyHeader>
                         <TableHead>
                             <TableRow sx={{ backgroundColor: theme.palette.grey[200], borderBottom: `2px solid ${theme.palette.primary.main}` }}>
@@ -169,7 +168,6 @@ function Performance() {
                     </Table>
                 </TableContainer>
             </Paper>
-        </Box>
     );
 }
 

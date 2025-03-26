@@ -186,8 +186,6 @@ function HoldingsContent() {
     const inceptionReturn = ((totalPortfolioValue - STARTING_VALUE) / STARTING_VALUE) * 100;
 
     return (
-
-        <Box sx={{ minHeight: '100vh', backgroundColor: theme.palette.background.default, p: 4 }}>
         <Paper sx={{ maxWidth: 'xl', mx: 'auto', p: 3, borderRadius: 2, boxShadow: theme.shadows[3] }}>
         
         {/* Holdings Section */}
@@ -197,7 +195,6 @@ function HoldingsContent() {
             </Typography>
             <Box sx={{ display: 'flex', gap: 2 }}>
                 <FormControl size="small">
-                    <InputLabel>Portfolio</InputLabel>
                     <Select
                         value={selectedPortfolio}
                         onChange={(e) => onPortfolioChange(e.target.value)}
@@ -224,7 +221,7 @@ function HoldingsContent() {
                         <Typography variant="h5" sx={{ fontWeight: 'bold', mb: 2 }}>
                             Fund: {fund}
                         </Typography>
-                        <TableContainer component={Paper} sx={{ borderRadius: 2, boxShadow: theme.shadows[2], overflow: 'hidden', border: '2px solid black' }}>
+                        <TableContainer component={Paper} sx={{ borderRadius: 2, boxShadow: theme.shadows[2], overflow: 'hidden' }}>
                             <Table stickyHeader>
                                 <TableHead>
                                     <TableRow sx={{ backgroundColor: theme.palette.grey[200], borderBottom: `2px solid ${theme.palette.primary.main}` }}>
@@ -278,7 +275,6 @@ function HoldingsContent() {
                                                     convertedPrice = price / parseFloat(exchangeRatesData.EUR);
                                                 }
                                             }
-
                                             return (
                                                 <TableRow key={row.ticker} sx={{ backgroundColor: index % 2 === 0 ? theme.palette.action.hover : 'inherit' }}>
                                                     <TableCell align="center">{row.name}</TableCell>
@@ -299,23 +295,20 @@ function HoldingsContent() {
                     </Box>
                 ))}
 
-
-                    <Box sx={{
+            <Box sx={{
                 width: '100%', 
                 maxWidth: 'xl',
-                padding: 2,
                 display: 'flex',
                 flexDirection: 'column',
                 gap: 2, // Gap between the boxes
             }}>
                 <Box sx={{
+                    borderRadius: 2, boxShadow: theme.shadows[2], overflow: 'hidden', 
                     padding: 2,
-                    borderRadius: 2,
                     backgroundColor: theme.palette.background.paper,
-                    border: '1px solid black', // Basic black border
                     display: 'flex',
                     flexDirection: 'column',
-                    alignItems: 'flex-start', // Left align content
+                    alignItems: 'flex-start', 
                 }}>
                     <Typography variant="body1" sx={{ mb: 2 }}>
                         <strong>USD to CAD:</strong> ${exchangeRatesData?.USD ? parseFloat(exchangeRatesData.USD).toFixed(6) : '0.000000'}
@@ -323,13 +316,12 @@ function HoldingsContent() {
                 </Box>
 
                 <Box sx={{
+                    borderRadius: 2, boxShadow: theme.shadows[2], overflow: 'hidden', 
                     padding: 2,
-                    borderRadius: 2,
                     backgroundColor: theme.palette.background.paper,
-                    border: '1px solid black', // Basic black border
                     display: 'flex',
                     flexDirection: 'column',
-                    alignItems: 'flex-start', // Left align content
+                    alignItems: 'flex-start', 
                 }}>
                     <Typography variant="body1" sx={{ mb: 2 }}>
                         <strong>Total Portfolio Value:</strong> ${totalPortfolioValue.toFixed(2)}
@@ -357,8 +349,6 @@ function HoldingsContent() {
             </Box>
 
         </Paper>
-    </Box>
-
     );
 }
 
