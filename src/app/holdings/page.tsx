@@ -206,20 +206,6 @@ function HoldingsContent() {
                 Holdings
             </Typography>
             <Box sx={{ display: 'flex', gap: 2 }}>
-                <FormControl size="small">
-                    <Select
-                        value={selectedPortfolio}
-                        onChange={(e) => onPortfolioChange(e.target.value)}
-                        sx={{
-                            width: 180, height: 40,
-                            borderRadius: "8px",
-                            padding: "8px",
-                        }}
-                    >
-                        <MenuItem value="core">Core Portfolio</MenuItem>
-                        <MenuItem value="benchmark">Benchmark Portfolio</MenuItem>
-                    </Select>
-                </FormControl>
                 <Box
                     component="input"
                     type="date"
@@ -234,12 +220,26 @@ function HoldingsContent() {
                         borderRadius: "8px",
                         padding: "8px",
                         outline: "none",
-                        marginLeft: 2,
                         "&:focus": {
                             borderColor: "primary.main",
                         },
                     }}
                 />
+                <FormControl size="small">
+                    <Select
+                        value={selectedPortfolio}
+                        onChange={(e) => onPortfolioChange(e.target.value)}
+                        sx={{
+                            width: 180, height: 40,
+                            borderRadius: "8px",
+                            padding: "8px",
+                            marginLeft: 2,
+                        }}
+                    >
+                        <MenuItem value="core">Core Portfolio</MenuItem>
+                        <MenuItem value="benchmark">Benchmark Portfolio</MenuItem>
+                    </Select>
+                </FormControl>
             </Box>
         </Box>
 
