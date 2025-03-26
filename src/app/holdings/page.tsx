@@ -249,30 +249,31 @@ function HoldingsContent() {
                 {Object.keys(groupedByFund).map((fund) => (
                     <Box key={fund} sx={{ mb: 4, pl: 10, pr: 10 }}>
                         <Typography
-                            variant="h5"
+                            variant="h6"
                             sx={{
                                 fontWeight: 'bold',
                                 mb: 2,
                                 cursor: 'pointer',
                                 padding: '4px 8px', // Adds padding for a button-like feel
                                 borderRadius: '4px', // Rounded corners
-                                backgroundColor: '#f2f2f2', // Light background color (button-like)
+                                backgroundColor: '#800000', // Light background color (button-like)
+                                color: '#ffffff', // White text on hover
                                 transition: 'all 0.3s ease-in-out',
                                 display: 'flex',
                                 alignItems: 'center',
                                 gap: .1,
                                 '&:hover': {
-                                    backgroundColor: '#800000', // Button-like background on hover
-                                    color: '#ffffff', // White text on hover
+                                    backgroundColor: '#f2f2f2', // Button-like background on hover
+                                    color: '#000000', // White text on hover
                                     boxShadow: '0 2px 8px rgba(0, 0, 0, 0.2)', // Adds shadow for depth
                                     '& svg': {
-                                        color: '#ffffff', // White text on hover
+                                        color: '#000000', // White text on hover
                                     },
                                 },
                             }}
                         >
                             <QueryStatsIcon sx={{
-                                color: theme.palette.text.primary,
+                                color: '#ffffff',
                                 transition: 'color 0.3s ease-in-out',
                                 mr: 1
                             }} />
