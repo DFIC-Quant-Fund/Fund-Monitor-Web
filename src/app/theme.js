@@ -64,13 +64,13 @@ const theme = createTheme({
         root: {
           backgroundColor: '#800000',
           color: '#ffffff',
-          padding: '10px 24px', // Padding to match your example (px-6 py-3)
-          fontSize: '1.125rem', // Match the 'text-lg' style
+          padding: '10px 24px', 
+          fontSize: '1.125rem',
           fontWeight: 600,
           borderRadius: '8px', // Rounded corners (rounded-lg)
           textTransform: 'none', // Prevent text from being uppercase by default
           '&:hover': {
-            backgroundColor: '#600000', // Hover color match with your example
+            backgroundColor: '#600000', // Hover color match 
           },
           '&:disabled': {
             backgroundColor: '#a8a7a7', // Disabled button color

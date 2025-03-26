@@ -3,7 +3,7 @@ import { useState, useEffect, useCallback, Suspense } from 'react';
 import { API_BASE_URL } from '../../utils/apiBase';
 import Header from '../components/heading';
 import { useSearchParams, useRouter } from 'next/navigation';
-import { Box, Typography, Select, MenuItem, TextField, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, CircularProgress, FormControl } from '@mui/material';
+import { Box, Typography, Select, MenuItem, TextField, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, CircularProgress, FormControl, Button } from '@mui/material';
 import theme from '../theme.js';
 
 // Interface for Holdings Data
@@ -221,9 +221,24 @@ function HoldingsContent() {
         {/* Table */}
         {Object.keys(groupedByFund).map((fund) => (
                     <Box key={fund} sx={{ mb: 4 }}>
-                        <Typography variant="h5" sx={{ fontWeight: 'bold', mb: 2 }}>
+                            <Typography
+                            variant="h5"
+                            sx={{
+                                fontWeight: 'bold',
+                                mb: 2,
+                                cursor: 'pointer',
+                                transition: 'all 0.3s ease-in-out',
+                                '&:hover': {
+                                backgroundColor: '#800000', // Button-like background on hover
+                                color: '#ffffff', // White text on hover
+                                padding: '4px 8px', // Slight padding like a button
+                                borderRadius: '4px', // Rounded corners for button effect
+                                },
+                            }}
+                            >
                             Fund: {fund}
-                        </Typography>
+                            </Typography>
+
                         <TableContainer component={Paper}>
                             <Table stickyHeader sx={{ tableLayout: 'fixed', width: '100%' }}>
                                 <TableHead>
