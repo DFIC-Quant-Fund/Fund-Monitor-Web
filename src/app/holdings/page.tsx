@@ -7,8 +7,6 @@ import { useSearchParams, useRouter } from 'next/navigation';
 import { Box, Typography, Select, MenuItem, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, CircularProgress, FormControl } from '@mui/material';
 import theme from '../theme';
 
-
-
 // Interface for Holdings Data
 interface HoldingData {
     fund: string;
@@ -256,6 +254,7 @@ function HoldingsContent() {
                     <Box key={fund} sx={{ mb: 4, pl: { xs: 2, sm: 10 }, pr: { xs: 2, sm: 10 } }}>
                         <Typography
                             variant="h6"
+                            onClick={() => router.push(`/holdings/${encodeURIComponent(fund)}`)}
                             sx={{
                                 fontWeight: 'bold',
                                 mb: 2,
