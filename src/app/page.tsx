@@ -1,34 +1,29 @@
 "use client"; // Ensure this is a Client Component
 
 import { useRouter } from "next/navigation";
+import { Box, Typography, Button, ThemeProvider } from '@mui/material';
+import theme from './theme';
 
 export default function Home() {
     const router = useRouter();
-
-    return (
-        <div className="min-h-screen bg-white flex flex-col items-center justify-center">
-            <h1 className="text-[#800000] text-6xl font-bold mb-6">DFIC</h1>
-
-            <div className="flex flex-col space-y-4">
-                <button 
-                    onClick={() => router.push("/holdings")}
-                    className="bg-[#800000] text-white px-6 py-3 rounded-lg text-lg font-semibold hover:bg-[#600000] transition cursor-pointer"
-                >
+        return (
+            <ThemeProvider theme={theme}>
+            <Box className="min-h-screen bg-white flex flex-col items-center justify-center">
+            <Typography variant="h1" sx={{ color: "#800000", fontSize: "3.75rem", fontWeight: 700, marginBottom:2 }}>
+                DFIC
+            </Typography>
+            <Box className="flex flex-col" sx={{ gap: 2 }}>
+                <Button onClick={() => router.push("/holdings")}>
                     Holdings
-                </button>
-                <button 
-                    onClick={() => router.push("/performance")}
-                    className="bg-[#800000] text-white px-6 py-3 rounded-lg text-lg font-semibold hover:bg-[#600000] transition cursor-pointer"
-                >
+                </Button>
+                <Button onClick={() => router.push("/performance")}>
                     Performance
-                </button>
-                <button 
-                    disabled
-                    className="bg-gray-400 text-white px-6 py-3 rounded-lg text-lg font-semibold cursor-not-allowed"
-                >
+                </Button>
+                <Button disabled>
                     Transactions (Coming Soon)
-                </button>
-            </div>
-        </div>
+                </Button>
+            </Box>
+        </Box>
+        </ThemeProvider>
     );
 }
