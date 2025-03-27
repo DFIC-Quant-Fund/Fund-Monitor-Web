@@ -5,7 +5,7 @@ import { Box, Paper, Table, TableBody, TableCell, TableContainer, TableHead, Tab
 } from '@mui/material';
 import { Download } from '@mui/icons-material';
 import { API_BASE_URL } from '../../utils/apiBase';
-import Header from '../components/heading';
+import Header from '../components/nav';
 import theme from '../theme';
 
 interface PerformanceData {
@@ -127,82 +127,98 @@ function Performance() {
 
     return (
         <>
-        <Header />
-        <Paper sx={{ width: '100vw',
-        height: '100vh', 
-        backgroundColor: 'white',
-        boxShadow: 'none', padding: 0, overflow: 'auto', borderRadius: 0 }}>
-                <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 4, pl: 10, pr: 10, pt:3}}>
-                    <Typography variant="h4" fontWeight={800} sx={{ color: theme.palette.primary.main }}>
+            <Header />
+            <Paper sx={{
+                width: '100vw',
+                height: '100vh',
+                backgroundColor: 'white',
+                boxShadow: 'none', padding: 0, overflow: 'auto', borderRadius: 0
+            }}>
+                <Box sx={{
+                    display: 'flex',
+                    flexDirection: { xs: 'column', sm: 'row' },
+                    justifyContent: 'space-between', alignItems: { xs: 'stretch', sm: 'center' }, mb: 4,
+                    pl: { xs: 2, sm: 10 },
+                    pr: { xs: 2, sm: 10 },
+                    pt: 3
+                }}>
+                    <Typography variant="h4" fontWeight={800} sx={{ color: theme.palette.primary.main, mb: { xs: 2, sm: 0 } }}>
                         Performance
                     </Typography>
-                <Box sx={{ display: 'flex', gap: 2 }}>
-                <Box
-                        component="input"
-                        type="date"
-                        value={selectedDate || ""}
-                        onChange={(e) => onDateChange(e.target.value)}
-                        min="1900-01-01"
-                        max="2100-12-31"
-                        sx={{
-                            width: 180,
-                            height: 40,
-                            border: "1px solid #ccc",
-                            borderRadius: "8px",
-                            padding: "8px",
-                            outline: "none",
-                            "&:focus": {
-                                borderColor: "primary.main",
-                            },
-                        }}
-                    />                
-                    <Button variant="contained" color="primary" startIcon={<Download />} onClick={downloadCSV} sx={{ backgroundColor: theme.palette.primary.main,  width: 180, height: 40, borderRadius: "8px", marginLeft: 2,
-                            padding: "8px", outline: "none" }}>
-                        Export
-                    </Button>
+                    <Box sx={{ display: 'flex', gap: 2, flexDirection: { xs: 'column', sm: 'row' }, width: { xs: '100%', sm: 'auto' } }}>
+                        <Box
+                            component="input"
+                            type="date"
+                            value={selectedDate || ""}
+                            onChange={(e) => onDateChange(e.target.value)}
+                            min="1900-01-01"
+                            max="2100-12-31"
+                            sx={{
+                                width: { xs: '100%', sm: 180 },
+                                height: 40,
+                                border: "1px solid #ccc",
+                                borderRadius: "8px",
+                                padding: "8px",
+                                outline: "none",
+                                "&:focus": {
+                                    borderColor: "primary.main",
+                                },
+                            }}
+                        />
+                        <Button variant="contained" color="primary" startIcon={<Download />} onClick={downloadCSV} sx={{
+                            backgroundColor: theme.palette.primary.main, width: { xs: '100%', sm: 180 }, height: 40, borderRadius: "8px",
+                            padding: "8px", outline: "none"
+                        }}>
+                            Export
+                        </Button>
+                    </Box>
                 </Box>
+                <Box sx={{ pl: { xs: 2, sm: 10 }, pr: { xs: 2, sm: 10 }, pb: 5 }}>
+                    <TableContainer component={Paper} sx={{ overflow: 'auto', maxWidth: '100%'}}>
+                        <Table stickyHeader sx={{ tableLayout: 'fixed', width: '100%', minWidth: '800px' }}>
+                            <TableHead>
+                                <TableRow sx={{ backgroundColor: theme.palette.grey[200], borderBottom: `2px solid ${theme.palette.primary.main}` }}>
+                                    {['Date', 'Inception Return', '1 Day Return', '1 Week Return', '1 Month Return', '1 Year Return', 'YTD Return'].map(header => (
+                                        <TableCell key={header} align="center" sx={{ fontWeight: 'bold', color: theme.palette.primary.main, borderBottom: `2px solid ${theme.palette.primary.main}`, fontSize: '1.1rem' }}>
+                                            {header}
+                                        </TableCell>
+                                    ))}
+                                </TableRow>
+                            </TableHead>
+                            <TableBody>
+                                {loading ? (
+                                    <TableRow><TableCell colSpan={7} align="center"><CircularProgress color="primary" /></TableCell></TableRow>
+                                ) : error ? (
+                                    <TableRow><TableCell colSpan={7} align="center"><Typography color="error">{error}</Typography></TableCell></TableRow>
+                                ) : performanceData.length > 0 ? (
+                                    performanceData.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((row, index) => (
+                                        <TableRow key={row.date} sx={{ backgroundColor: index % 2 === 0 ? theme.palette.action.hover : 'inherit' }}>
+                                            <TableCell align="center" sx={{ fontSize: '1.1rem' }}>{row.date}</TableCell>
+                                            {[row.inception_return, row.one_day_return, row.one_week_return, row.one_month_return, row.one_year_return, row.ytd_return].map((val, idx) => (
+                                                <TableCell key={idx} align="center" sx={{ fontSize: '1.1rem' }}>{formatReturn(val)}</TableCell>
+                                            ))}
+                                        </TableRow>
+                                    ))
+                                ) : (
+                                    <TableRow><TableCell colSpan={7} align="center"><Typography>No data available</Typography></TableCell></TableRow>
+                                )}
+                            </TableBody>
+                        </Table>
+                        <TablePagination
+                            rowsPerPageOptions={[50]}
+                            component="div"
+                            count={performanceData.length}
+                            rowsPerPage={rowsPerPage}
+                            page={page}
+                            onPageChange={handleChangePage}
+                            sx={{
+                                width: { xs: '100%', sm: 'auto' }  // Make pagination responsive
+                            }}
+                        />
+                    </TableContainer>
                 </Box>
-                <TableContainer component={Box} sx={{ overflow: 'hidden', pl: 10, pr: 10, pb:5 }}>
-                    <Table stickyHeader sx={{ tableLayout: 'fixed', width: '100%' }}>
-                        <TableHead>
-                            <TableRow sx={{ backgroundColor: theme.palette.grey[200], borderBottom: `2px solid ${theme.palette.primary.main}` }}>
-                                {['Date', 'Inception Return', '1 Day Return', '1 Week Return', '1 Month Return', '1 Year Return', 'YTD Return'].map(header => (
-                                    <TableCell key={header} align="center" sx={{ fontWeight: 'bold', color: theme.palette.primary.main, borderBottom: `2px solid ${theme.palette.primary.main}`, fontSize: '1.1rem' }}>
-                                        {header}
-                                    </TableCell>
-                                ))}
-                            </TableRow>
-                        </TableHead>
-                        <TableBody>
-                            {loading ? (
-                                <TableRow><TableCell colSpan={7} align="center"><CircularProgress color="primary" /></TableCell></TableRow>
-                            ) : error ? (
-                                <TableRow><TableCell colSpan={7} align="center"><Typography color="error">{error}</Typography></TableCell></TableRow>
-                            ) : performanceData.length > 0 ? (
-                                performanceData.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((row, index) => (
-                                    <TableRow key={row.date} sx={{ backgroundColor: index % 2 === 0 ? theme.palette.action.hover : 'inherit' }}>
-                                        <TableCell align="center" sx={{ fontSize: '1.1rem' }}>{row.date}</TableCell>
-                                        {[row.inception_return, row.one_day_return, row.one_week_return, row.one_month_return, row.one_year_return, row.ytd_return].map((val, idx) => (
-                                            <TableCell key={idx} align="center" sx={{ fontSize: '1.1rem' }}>{formatReturn(val)}</TableCell>
-                                        ))}
-                                    </TableRow>
-                                ))
-                            ) : (
-                                <TableRow><TableCell colSpan={7} align="center"><Typography>No data available</Typography></TableCell></TableRow>
-                            )}
-                        </TableBody>
-                    </Table>
-                    <TablePagination
-                    rowsPerPageOptions={[50]} 
-                    component="div"
-                    count={performanceData.length}
-                    rowsPerPage={rowsPerPage}
-                    page={page}
-                    onPageChange={handleChangePage}
-                    />
-                </TableContainer>
             </Paper>
-    </>
+        </>
     );
 }
 

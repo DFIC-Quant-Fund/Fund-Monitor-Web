@@ -2,13 +2,13 @@
 import QueryStatsIcon from '@mui/icons-material/QueryStats';
 import { useState, useEffect, useCallback, Suspense } from 'react';
 import { API_BASE_URL } from '../../utils/apiBase';
-import Header from '../components/heading';
+import Header from '../components/nav';
 import { useSearchParams, useRouter } from 'next/navigation';
 import { Box, Typography, Select, MenuItem, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, CircularProgress, FormControl } from '@mui/material';
 import theme from '../theme';
 
 
-  
+
 // Interface for Holdings Data
 interface HoldingData {
     fund: string;
@@ -203,11 +203,16 @@ function HoldingsContent() {
             }}>
 
                 {/* Holdings Section */}
-                <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 4, pl: 10, pr: 10, pt: 3 }}>
-                    <Typography variant="h4" fontWeight={800} sx={{ color: theme.palette.primary.main }}>
+                <Box sx={{ display: 'flex', 
+                    flexDirection: { xs: 'column', sm: 'row' },
+                    justifyContent: 'space-between', alignItems: { xs: 'stretch', sm: 'center' }, mb: 4, 
+                    pl: { xs: 2, sm: 10 }, 
+                    pr: { xs: 2, sm: 10 }, 
+                    pt: 3 }}>
+                    <Typography variant="h4" fontWeight={800} sx={{ color: theme.palette.primary.main, mb: { xs: 2, sm: 0 } }}>
                         Holdings
                     </Typography>
-                    <Box sx={{ display: 'flex', gap: 2 }}>
+                    <Box sx={{ display: 'flex', gap: 2, flexDirection: { xs: 'column', sm: 'row' }, width: { xs: '100%', sm: 'auto' } }}>
                         <Box
                             component="input"
                             type="date"
@@ -216,7 +221,7 @@ function HoldingsContent() {
                             min="1900-01-01"
                             max="2100-12-31"
                             sx={{
-                                width: 180,
+                                width: { xs: '100%', sm: 180 },
                                 height: 40,
                                 border: "1px solid #ccc",
                                 borderRadius: "8px",
@@ -227,15 +232,14 @@ function HoldingsContent() {
                                 },
                             }}
                         />
-                        <FormControl size="small">
+                        <FormControl size="small" > 
                             <Select
                                 value={selectedPortfolio}
                                 onChange={(e) => onPortfolioChange(e.target.value)}
                                 sx={{
-                                    width: 180, height: 40,
+                                    width: { xs: '100%', sm: 180 },
+                                    height: 40,
                                     borderRadius: "8px",
-                                    padding: "8px",
-                                    marginLeft: 2,
                                 }}
                             >
                                 <MenuItem value="core">Core Portfolio</MenuItem>
@@ -247,7 +251,7 @@ function HoldingsContent() {
 
                 {/* Table */}
                 {Object.keys(groupedByFund).map((fund) => (
-                    <Box key={fund} sx={{ mb: 4, pl: 10, pr: 10 }}>
+                    <Box key={fund} sx={{ mb: 4, pl: { xs: 2, sm: 10 }, pr: { xs: 2, sm: 10 } }}>
                         <Typography
                             variant="h6"
                             sx={{
@@ -279,8 +283,8 @@ function HoldingsContent() {
                             }} />
                             {fund}
                         </Typography>
-                        <TableContainer component={Paper}>
-                            <Table stickyHeader sx={{ tableLayout: 'fixed', width: '100%' }}>
+                        <TableContainer component={Paper} sx={{ overflowX: 'auto', maxWidth: '100%' }}>
+                            <Table stickyHeader sx={{ tableLayout: 'fixed', width: '100%', minWidth: '800px' }}>
                                 <TableHead>
                                     <TableRow sx={{ backgroundColor: theme.palette.grey[200], borderBottom: `2px solid ${theme.palette.primary.main}` }}>
                                         {[
@@ -357,7 +361,7 @@ function HoldingsContent() {
                     display: 'flex',
                     flexDirection: 'column',
                     gap: 2, // Gap between the boxes
-                    pl: 10, pr: 10, pb: 5
+                    pl: { xs: 2, sm: 10 }, pr: { xs: 2, sm: 10 }, pb: 5
                 }}>
                     <Box sx={{
                         borderRadius: 2, boxShadow: theme.shadows[2], overflow: 'hidden',
