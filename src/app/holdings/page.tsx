@@ -2,7 +2,7 @@
 import QueryStatsIcon from '@mui/icons-material/QueryStats';
 import { useState, useEffect, useCallback, Suspense } from 'react';
 import { API_BASE_URL } from '../../utils/apiBase';
-import Header from '../components/heading';
+import Header from '../components/nav';
 import { useSearchParams, useRouter } from 'next/navigation';
 import { Box, Typography, Select, MenuItem, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, CircularProgress, FormControl } from '@mui/material';
 import theme from '../theme';

@@ -5,7 +5,7 @@ import { Box, Paper, Table, TableBody, TableCell, TableContainer, TableHead, Tab
 } from '@mui/material';
 import { Download } from '@mui/icons-material';
 import { API_BASE_URL } from '../../utils/apiBase';
-import Header from '../components/heading';
+import Header from '../components/nav';
 import theme from '../theme';
 
 interface PerformanceData {
