@@ -210,10 +210,10 @@ function HoldingsContent() {
                     pr: { xs: 2, sm: 10 }, 
                     gap: 2,
                     pt: 3 }}>
-                    <Typography variant="h4" fontWeight={800} sx={{ color: theme.palette.primary.main }}>
+                    <Typography variant="h4" fontWeight={800} sx={{ color: theme.palette.primary.main, mb: { xs: 2, sm: 0 } }}>
                         Holdings
                     </Typography>
-                    <Box sx={{ display: 'flex', gap: 2 }}>
+                    <Box sx={{ display: 'flex', gap: 2, flexDirection: { xs: 'column', sm: 'row' }, width: { xs: '100%', sm: 'auto' } }}>
                         <Box
                             component="input"
                             type="date"
@@ -222,7 +222,7 @@ function HoldingsContent() {
                             min="1900-01-01"
                             max="2100-12-31"
                             sx={{
-                                width: 180,
+                                width: { xs: '100%', sm: 180 },
                                 height: 40,
                                 border: "1px solid #ccc",
                                 borderRadius: "8px",
@@ -233,15 +233,14 @@ function HoldingsContent() {
                                 },
                             }}
                         />
-                        <FormControl size="small">
+                        <FormControl size="small" > 
                             <Select
                                 value={selectedPortfolio}
                                 onChange={(e) => onPortfolioChange(e.target.value)}
                                 sx={{
-                                    width: 180, height: 40,
+                                    width: { xs: '100%', sm: 180 },
+                                    height: 40,
                                     borderRadius: "8px",
-                                    padding: "8px",
-                                    marginLeft: 2,
                                 }}
                             >
                                 <MenuItem value="core">Core Portfolio</MenuItem>

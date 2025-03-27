@@ -132,11 +132,11 @@ function Performance() {
         height: '100vh', 
         backgroundColor: 'white',
         boxShadow: 'none', padding: 0, overflow: 'auto', borderRadius: 0 }}>
-                <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 4, pl: 10, pr: 10, pt:3}}>
-                    <Typography variant="h4" fontWeight={800} sx={{ color: theme.palette.primary.main }}>
+                <Box sx={{ display: 'flex', flexDirection: { xs: 'column', sm: 'row' }, justifyContent: 'space-between', alignItems: { xs: 'stretch', sm: 'center' }, mb: 4, pl: { xs: 2, sm: 10 }, pr: { xs: 2, sm: 10 }, pt:3}}>
+                    <Typography variant="h4" fontWeight={800} sx={{ color: theme.palette.primary.main, mb: { xs: 2, sm: 0 } }}>
                         Performance
                     </Typography>
-                <Box sx={{ display: 'flex', gap: 2 }}>
+                <Box sx={{ display: 'flex', gap: 2, flexDirection: { xs: 'column', sm: 'row' }, width: { xs: '100%', sm: 'auto' } }}>
                 <Box
                         component="input"
                         type="date"
@@ -145,7 +145,7 @@ function Performance() {
                         min="1900-01-01"
                         max="2100-12-31"
                         sx={{
-                            width: 180,
+                            width: { xs: '100%', sm: 180 },
                             height: 40,
                             border: "1px solid #ccc",
                             borderRadius: "8px",
@@ -156,14 +156,14 @@ function Performance() {
                             },
                         }}
                     />                
-                    <Button variant="contained" color="primary" startIcon={<Download />} onClick={downloadCSV} sx={{ backgroundColor: theme.palette.primary.main,  width: 180, height: 40, borderRadius: "8px", marginLeft: 2,
+                    <Button variant="contained" color="primary" startIcon={<Download />} onClick={downloadCSV} sx={{ backgroundColor: theme.palette.primary.main,  width: { xs: '100%', sm: 180 }, height: 40, borderRadius: "8px",
                             padding: "8px", outline: "none" }}>
                         Export
                     </Button>
                 </Box>
                 </Box>
-                <TableContainer component={Box} sx={{ overflow: 'hidden', pl: 10, pr: 10, pb:5 }}>
-                    <Table stickyHeader sx={{ tableLayout: 'fixed', width: '100%' }}>
+                <TableContainer component={Box} sx={{ overflow: 'auto', maxWidth: '100%', pl: { xs: 2, sm: 10 }, pr: { xs: 2, sm: 10 } , pb:5 }}>
+                    <Table stickyHeader sx={{ tableLayout: 'fixed', width: '100%', minWidth: '800px' }}>
                         <TableHead>
                             <TableRow sx={{ backgroundColor: theme.palette.grey[200], borderBottom: `2px solid ${theme.palette.primary.main}` }}>
                                 {['Date', 'Inception Return', '1 Day Return', '1 Week Return', '1 Month Return', '1 Year Return', 'YTD Return'].map(header => (
@@ -199,6 +199,9 @@ function Performance() {
                     rowsPerPage={rowsPerPage}
                     page={page}
                     onPageChange={handleChangePage}
+                    sx={{
+                        width: { xs: '100%', sm: 'auto' }  // Make pagination responsive
+                    }}
                     />
                 </TableContainer>
             </Paper>
