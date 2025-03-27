@@ -4,7 +4,7 @@ import Image from 'next/image';
 export default function Header() {
   return (
     <nav className="bg-[#800000] text-white shadow-lg">
-      <div className="max-w-7xl mx-auto px-4">
+      <div className="mx-auto px-2 sm:px-18">
         <div className="flex justify-between items-center h-22 sm:h-22 py-2 sm:py-0">
           {/* Logo */}
           <Link href="/" className="flex items-center space-x-2">
