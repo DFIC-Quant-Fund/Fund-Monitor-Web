@@ -132,7 +132,12 @@ function Performance() {
         height: '100vh', 
         backgroundColor: 'white',
         boxShadow: 'none', padding: 0, overflow: 'auto', borderRadius: 0 }}>
-                <Box sx={{ display: 'flex', flexDirection: { xs: 'column', sm: 'row' }, justifyContent: 'space-between', alignItems: { xs: 'stretch', sm: 'center' }, mb: 4, pl: { xs: 2, sm: 10 }, pr: { xs: 2, sm: 10 }, pt:3}}>
+                <Box sx={{ display: 'flex', 
+                    flexDirection: { xs: 'column', sm: 'row' }, 
+                    justifyContent: 'space-between', alignItems: { xs: 'stretch', sm: 'center' }, mb: 4, 
+                    pl: { xs: 2, sm: 10 }, 
+                    pr: { xs: 2, sm: 10 }, 
+                    pt:3}}>
                     <Typography variant="h4" fontWeight={800} sx={{ color: theme.palette.primary.main, mb: { xs: 2, sm: 0 } }}>
                         Performance
                     </Typography>
