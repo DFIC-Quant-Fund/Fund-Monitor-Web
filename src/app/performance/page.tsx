@@ -54,7 +54,6 @@ function Performance() {
         setSelectedDate(newDate);
         setPage(0);
         updateURL(newDate);
-        setPage(0);
     };
 
     const fetchData = useCallback(async () => {
@@ -157,7 +156,7 @@ function Performance() {
                             },
                         }}
                     />                
-                    <Button variant="contained" color="primary" startIcon={<Download />} onClick={downloadCSV} sx={{ backgroundColor: theme.palette.primary.main,  width: 180, height: 40, borderRadius: "8px",
+                    <Button variant="contained" color="primary" startIcon={<Download />} onClick={downloadCSV} sx={{ backgroundColor: theme.palette.primary.main,  width: 180, height: 40, borderRadius: "8px", marginLeft: 2,
                             padding: "8px", outline: "none" }}>
                         Export
                     </Button>
