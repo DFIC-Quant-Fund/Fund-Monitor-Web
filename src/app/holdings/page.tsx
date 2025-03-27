@@ -205,10 +205,9 @@ function HoldingsContent() {
                 {/* Holdings Section */}
                 <Box sx={{ display: 'flex', 
                     flexDirection: { xs: 'column', sm: 'row' },
-                    justifyContent: 'space-between', alignItems: 'center', mb: 4, 
+                    justifyContent: 'space-between', alignItems: { xs: 'stretch', sm: 'center' }, mb: 4, 
                     pl: { xs: 2, sm: 10 }, 
                     pr: { xs: 2, sm: 10 }, 
-                    gap: 2,
                     pt: 3 }}>
                     <Typography variant="h4" fontWeight={800} sx={{ color: theme.palette.primary.main, mb: { xs: 2, sm: 0 } }}>
                         Holdings
