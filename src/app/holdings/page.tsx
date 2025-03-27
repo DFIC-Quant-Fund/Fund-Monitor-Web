@@ -337,8 +337,8 @@ function HoldingsContent() {
                                                     <TableCell align="center" sx={{ fontSize: '1rem' }}>{row.name}</TableCell>
                                                     <TableCell align="center" sx={{ fontSize: '1rem' }}>{row.ticker}</TableCell>
                                                     <TableCell align="center" sx={{ fontSize: '1rem' }}>{row.shares_held}</TableCell>
-                                                    <TableCell align="center" sx={{ fontSize: '1rem' }}>{convertedPrice.toFixed(2)}</TableCell>
-                                                    <TableCell align="center" sx={{ fontSize: '1rem' }}>{convertedMarketValue.toFixed(2)}</TableCell>
+                                                    <TableCell align="center" sx={{ fontSize: '1rem' }}>$ {convertedPrice.toFixed(2)}</TableCell>
+                                                    <TableCell align="center" sx={{ fontSize: '1rem' }}>$ {convertedMarketValue.toFixed(2)}</TableCell>
                                                 </TableRow>
                                             );
                                         })
