@@ -8,7 +8,7 @@ import { Box, Typography, Select, MenuItem, Table, TableBody, TableCell, TableCo
 import theme from '../theme';
 
 
-  
+
 // Interface for Holdings Data
 interface HoldingData {
     fund: string;
@@ -203,7 +203,10 @@ function HoldingsContent() {
             }}>
 
                 {/* Holdings Section */}
-                <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 4, pl: 10, pr: 10, pt: 3 }}>
+                <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 4, 
+                    pl: { xs: 2, sm: 10 }, 
+                    pr: { xs: 2, sm: 10 }, 
+                    pt: 3 }}>
                     <Typography variant="h4" fontWeight={800} sx={{ color: theme.palette.primary.main }}>
                         Holdings
                     </Typography>
@@ -247,7 +250,7 @@ function HoldingsContent() {
 
                 {/* Table */}
                 {Object.keys(groupedByFund).map((fund) => (
-                    <Box key={fund} sx={{ mb: 4, pl: 10, pr: 10 }}>
+                    <Box key={fund} sx={{ mb: 4, pl: { xs: 2, sm: 10 }, pr: { xs: 2, sm: 10 } }}>
                         <Typography
                             variant="h6"
                             sx={{
@@ -357,7 +360,7 @@ function HoldingsContent() {
                     display: 'flex',
                     flexDirection: 'column',
                     gap: 2, // Gap between the boxes
-                    pl: 10, pr: 10, pb: 5
+                    pl: { xs: 2, sm: 10 }, pr: { xs: 2, sm: 10 }, pb: 5
                 }}>
                     <Box sx={{
                         borderRadius: 2, boxShadow: theme.shadows[2], overflow: 'hidden',
