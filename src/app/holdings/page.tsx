@@ -203,9 +203,12 @@ function HoldingsContent() {
             }}>
 
                 {/* Holdings Section */}
-                <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 4, 
+                <Box sx={{ display: 'flex', 
+                    flexDirection: { xs: 'column', sm: 'row' },
+                    justifyContent: 'space-between', alignItems: 'center', mb: 4, 
                     pl: { xs: 2, sm: 10 }, 
                     pr: { xs: 2, sm: 10 }, 
+                    gap: 2,
                     pt: 3 }}>
                     <Typography variant="h4" fontWeight={800} sx={{ color: theme.palette.primary.main }}>
                         Holdings
@@ -282,8 +285,8 @@ function HoldingsContent() {
                             }} />
                             {fund}
                         </Typography>
-                        <TableContainer component={Paper}>
-                            <Table stickyHeader sx={{ tableLayout: 'fixed', width: '100%' }}>
+                        <TableContainer component={Paper} sx={{ overflowX: 'auto', maxWidth: '100%' }}>
+                            <Table stickyHeader sx={{ tableLayout: 'fixed', width: '100%', minWidth: '800px' }}>
                                 <TableHead>
                                     <TableRow sx={{ backgroundColor: theme.palette.grey[200], borderBottom: `2px solid ${theme.palette.primary.main}` }}>
                                         {[
