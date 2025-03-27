@@ -25,7 +25,7 @@ interface HoldingData {
 }
 
 interface SortConfig {
-    key:  string | null;
+    key: string | null;
     direction: 'asc' | 'desc';
 }
 
@@ -63,7 +63,7 @@ function HoldingsContent() {
     const [error, setError] = useState('');
     const [exchangeRatesData, setExchangeRatesData] = useState<ExchangeRates | null>(null);
     const [sortConfig, setSortConfig] = useState<SortConfig>({ key: null, direction: 'asc' });
-// setting default prev to asc 
+    // setting default prev to asc 
     const STARTING_VALUE = 101644.99;
 
     // Update url when selection changes
@@ -77,7 +77,7 @@ function HoldingsContent() {
     // Updates url when there are missing params
     useEffect(() => {
         if (!urlDate || !urlPortfolio) {
-          updateURL(selectedDate, selectedPortfolio);
+            updateURL(selectedDate, selectedPortfolio);
         }
     }, [urlDate, urlPortfolio, selectedDate, selectedPortfolio, updateURL]);
 
@@ -203,12 +203,14 @@ function HoldingsContent() {
             }}>
 
                 {/* Holdings Section */}
-                <Box sx={{ display: 'flex', 
+                <Box sx={{
+                    display: 'flex',
                     flexDirection: { xs: 'column', sm: 'row' },
-                    justifyContent: 'space-between', alignItems: { xs: 'stretch', sm: 'center' }, mb: 4, 
-                    pl: { xs: 2, sm: 10 }, 
-                    pr: { xs: 2, sm: 10 }, 
-                    pt: 3 }}>
+                    justifyContent: 'space-between', alignItems: { xs: 'stretch', sm: 'center' }, mb: 4,
+                    pl: { xs: 2, sm: 10 },
+                    pr: { xs: 2, sm: 10 },
+                    pt: 3
+                }}>
                     <Typography variant="h4" fontWeight={800} sx={{ color: theme.palette.primary.main, mb: { xs: 2, sm: 0 } }}>
                         Holdings
                     </Typography>
@@ -232,7 +234,7 @@ function HoldingsContent() {
                                 },
                             }}
                         />
-                        <FormControl size="small" > 
+                        <FormControl size="small" >
                             <Select
                                 value={selectedPortfolio}
                                 onChange={(e) => onPortfolioChange(e.target.value)}

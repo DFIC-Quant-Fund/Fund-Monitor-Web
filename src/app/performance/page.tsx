@@ -1,7 +1,8 @@
 'use client';
-import {useState, useEffect, useCallback, Suspense} from 'react';
+import { useState, useEffect, useCallback, Suspense } from 'react';
 import { useSearchParams, useRouter } from 'next/navigation';
-import { Box, Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Typography,Button,CircularProgress, TablePagination,
+import {
+    Box, Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Typography, Button, CircularProgress, TablePagination,
 } from '@mui/material';
 import { Download } from '@mui/icons-material';
 import { API_BASE_URL } from '../../utils/apiBase';
@@ -45,7 +46,7 @@ function Performance() {
     // Updates url when no params are present
     useEffect(() => {
         if (!urlDate) {
-          updateURL(selectedDate);
+            updateURL(selectedDate);
         }
     }, [urlDate, selectedDate, updateURL]);
 
@@ -83,18 +84,18 @@ function Performance() {
 
     const formatReturn = (value: string | null) => {
         if (value === null) return <Typography variant="body2" sx={{ fontSize: '1rem' }}>–</Typography>;
-        
+
         const numberValue = parseFloat(value);
-        const color = numberValue > 0 ? theme.palette.success.main : 
-                     numberValue < 0 ? theme.palette.error.main : 
-                     theme.palette.text.secondary;
-        
+        const color = numberValue > 0 ? theme.palette.success.main :
+            numberValue < 0 ? theme.palette.error.main :
+                theme.palette.text.secondary;
+
         return (
-          <Typography variant="body2" sx={{ fontSize: '1.1rem' }} color={color}>
-            {numberValue.toFixed(4)}%
-          </Typography>
+            <Typography variant="body2" sx={{ fontSize: '1.1rem' }} color={color}>
+                {numberValue.toFixed(4)}%
+            </Typography>
         );
-      };
+    };
 
     const downloadCSV = () => {
         if (performanceData.length === 0) return;
@@ -174,7 +175,7 @@ function Performance() {
                     </Box>
                 </Box>
                 <Box sx={{ pl: { xs: 2, sm: 10 }, pr: { xs: 2, sm: 10 }, pb: 5 }}>
-                    <TableContainer component={Paper} sx={{ overflow: 'auto', maxWidth: '100%'}}>
+                    <TableContainer component={Paper} sx={{ overflow: 'auto', maxWidth: '100%' }}>
                         <Table stickyHeader sx={{ tableLayout: 'fixed', width: '100%', minWidth: '800px' }}>
                             <TableHead>
                                 <TableRow sx={{ backgroundColor: theme.palette.grey[200], borderBottom: `2px solid ${theme.palette.primary.main}` }}>
@@ -222,8 +223,8 @@ function Performance() {
     );
 }
 
-export default function PerformancePage(){
-    return(
+export default function PerformancePage() {
+    return (
         <Suspense fallback={<div>Loading...</div>}>
             <Performance />
         </Suspense>
