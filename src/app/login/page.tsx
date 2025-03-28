@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
-import Loading from "../loading"; // Import your loading component
+import Loading from "../components/loading"; // Import your loading component
 
 export default function Login() {
     const [email, setEmail] = useState("");
