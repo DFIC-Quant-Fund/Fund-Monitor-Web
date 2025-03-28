@@ -9,7 +9,6 @@ import Loading from './components/loading';
 export default function Home() {
     const router = useRouter();
     const [isAuthenticated, setIsAuthenticated] = useState<boolean | null>(null); // Start with null to represent loading
-    const [authLoading, setAuthLoading] = useState(true); // New loading state for auth check
     
 
     useEffect(() => {

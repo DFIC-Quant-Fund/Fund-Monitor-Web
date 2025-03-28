@@ -3,7 +3,7 @@
 import { useState, useEffect } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import Loading from "../components/loading"; // Import your loading component
-import { Box, Typography, Button, ThemeProvider } from '@mui/material';
+import { Button, ThemeProvider } from '@mui/material';
 import theme from '../theme';
 
 
