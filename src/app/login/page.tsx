@@ -3,6 +3,9 @@
 import { useState, useEffect } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import Loading from "../components/loading"; // Import your loading component
+import { Box, Typography, Button, ThemeProvider } from '@mui/material';
+import theme from '../theme';
+
 
 export default function Login() {
     const [email, setEmail] = useState("");
@@ -65,12 +68,11 @@ export default function Login() {
                         required
                         autoComplete="current-password" 
                     />
-                    <button
-                        type="submit"
-                        className="w-full bg-[#800000] text-white p-3 rounded-lg font-semibold hover:bg-[#600000] transition"
-                    >
-                        Login
-                    </button>
+                    <ThemeProvider theme={theme}>
+                        <Button type="submit" className="w-full bg-[#800000] text-white p-3 rounded-lg font-semibold hover:bg-[#600000] transition">
+                            Login
+                        </Button>
+                    </ThemeProvider>
                 </form>
             </div>
         </div>
