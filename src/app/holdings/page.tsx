@@ -6,6 +6,8 @@ import Header from '../components/nav';
 import { useSearchParams, useRouter } from 'next/navigation';
 import { Box, Typography, Select, MenuItem, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, CircularProgress, FormControl } from '@mui/material';
 import theme from '../theme';
+import Loading from '../components/loading';
+
 
 
 
@@ -63,8 +65,20 @@ function HoldingsContent() {
     const [error, setError] = useState('');
     const [exchangeRatesData, setExchangeRatesData] = useState<ExchangeRates | null>(null);
     const [sortConfig, setSortConfig] = useState<SortConfig>({ key: null, direction: 'asc' });
+    const [authLoading, setAuthLoading] = useState(true); // New loading state for auth check
+
     // setting default prev to asc 
     const STARTING_VALUE = 101644.99;
+
+    // Authentication check useEffect
+    useEffect(() => {
+        const token = localStorage.getItem('auth');
+        if (!token) {
+            router.push('/login?redirect=%2Fholdings'); 
+        } else {
+            setAuthLoading(false); // Authentication check complete
+        }
+    }, [router]);
 
     // Update url when selection changes
     const updateURL = useCallback((date: string, portfolio: string) => {
@@ -74,13 +88,14 @@ function HoldingsContent() {
         router.push(`/holdings?${params.toString()}`, { scroll: false });
     }, [router]);
 
+
     // Updates url when there are missing params
     useEffect(() => {
-        if (!urlDate || !urlPortfolio) {
+        if (!authLoading && (!urlDate || !urlPortfolio)) {
             updateURL(selectedDate, selectedPortfolio);
         }
-    }, [urlDate, urlPortfolio, selectedDate, selectedPortfolio, updateURL]);
-
+    }, [authLoading, urlDate, urlPortfolio, selectedDate, selectedPortfolio, updateURL]);
+    
     // Update on change to portfolio
     const onPortfolioChange = (newPortfolio: string) => {
         setSelectedPortfolio(newPortfolio);
@@ -134,9 +149,11 @@ function HoldingsContent() {
     }, [selectedDate, selectedPortfolio]);
 
     useEffect(() => {
-        fetchExchangeRates();
-        fetchData();
-    }, [urlDate, urlPortfolio, fetchExchangeRates, fetchData]);
+        if (!authLoading) {
+            fetchExchangeRates();
+            fetchData();
+        }
+    }, [authLoading, urlDate, urlPortfolio, fetchExchangeRates, fetchData]);
 
     // Convert holdings market values and price to CAD
     const totalPortfolioValue = holdingsData.reduce((acc, row) => {
@@ -191,6 +208,14 @@ function HoldingsContent() {
 
     // Calculate Inception Return
     const inceptionReturn = ((totalPortfolioValue - STARTING_VALUE) / STARTING_VALUE) * 100;
+
+    if (authLoading) {
+        return (
+            <>
+                <Loading /> 
+            </>
+        );
+    }
 
     return (
         <>

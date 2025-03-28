@@ -7,7 +7,9 @@ import {
 import { Download } from '@mui/icons-material';
 import { API_BASE_URL } from '../../utils/apiBase';
 import Header from '../components/nav';
+import Loading from "../components/loading";
 import theme from '../theme';
+
 
 interface PerformanceData {
     date: string;
@@ -35,6 +37,18 @@ function Performance() {
     const [selectedDate, setSelectedDate] = useState(urlDate || baseDate);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState('');
+    const [authLoading, setAuthLoading] = useState(true); // New loading state for auth check
+
+    // Authentication check useEffect
+    useEffect(() => {
+        const token = localStorage.getItem('auth');
+        if (!token) {
+            router.push('/login?redirect=%2Fperformance'); 
+        } else {
+            setAuthLoading(false); // Authentication check complete
+        }
+    }, [router]);
+
 
     // Update url when selection changes
     const updateURL = useCallback((date: string) => {
@@ -45,10 +59,10 @@ function Performance() {
 
     // Updates url when no params are present
     useEffect(() => {
-        if (!urlDate) {
+        if (!authLoading && !urlDate) {
             updateURL(selectedDate);
         }
-    }, [urlDate, selectedDate, updateURL]);
+    }, [authLoading, urlDate, selectedDate, updateURL]);
 
     // Update on change to date
     const onDateChange = (newDate: string) => {
@@ -78,9 +92,12 @@ function Performance() {
         setLoading(false);
     }, [selectedDate]);
 
+    // Fetch data when the component is loaded and auth check is done
     useEffect(() => {
-        fetchData();
-    }, [fetchData]);
+        if (!authLoading) {
+            fetchData();
+        }
+    }, [authLoading, fetchData]);
 
     const formatReturn = (value: string | null) => {
         if (value === null) return <Typography variant="body2" sx={{ fontSize: '1rem' }}>–</Typography>;
@@ -125,6 +142,14 @@ function Performance() {
     const handleChangePage = (event: unknown, newPage: number) => {
         setPage(newPage);
     };
+
+    if (authLoading) {
+        return (
+            <>
+                <Loading /> 
+            </>
+        );
+    }
 
     return (
         <>
