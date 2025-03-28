@@ -1,28 +1,36 @@
 "use client"; 
 
 import { useState, useEffect } from "react";
-import { useRouter, useSearchParams } from "next/navigation";
-import Loading from "../components/loading"; // Import your loading component
+import { useRouter } from "next/navigation";
+import Loading from "../components/loading";
 import { Button, ThemeProvider } from '@mui/material';
 import theme from '../theme';
-
-export const dynamic = "force-dynamic";
 
 export default function Login() {
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
-    const [authLoading, setAuthLoading] = useState(true); // ✅ Added auth loading state
+    const [authLoading, setAuthLoading] = useState(true);
     const router = useRouter();
-    const searchParams = useSearchParams();
-    const redirectPath = searchParams.get("redirect") || "/";
+    const [redirectPath, setRedirectPath] = useState("/");
 
-    // check if user is already logged in, redirect if true
     useEffect(() => {
-        const token = localStorage.getItem("auth");
-        if (token) {
-            router.push(redirectPath); 
+        if (typeof window !== "undefined") {
+            const searchParams = new URLSearchParams(window.location.search);
+            setRedirectPath(searchParams.get("redirect") || "/");
+        }
+    }, []);
+
+    // Check authentication
+    useEffect(() => {
+        if (typeof window !== "undefined") {
+            const token = localStorage.getItem("auth");
+            if (token) {
+                router.push(redirectPath); 
+            } else {
+                setAuthLoading(false);
+            }
         } else {
-            setAuthLoading(false); // Finish auth check
+            setAuthLoading(false);
         }
     }, [router, redirectPath]);
 
