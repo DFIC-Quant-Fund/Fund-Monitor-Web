@@ -7,8 +7,8 @@ import { Button, ThemeProvider } from '@mui/material';
 import theme from '../theme';
 
 export default function Login() {
-    const [email, setEmail] = useState("admin@dfic.com");
-    const [password, setPassword] = useState("admin");
+    const [email, setEmail] = useState("admin@dfic.com"); //del later
+    const [password, setPassword] = useState("admin"); //del later
     const [authLoading, setAuthLoading] = useState(true);
     const router = useRouter();
     const [redirectPath, setRedirectPath] = useState("/");
