@@ -6,6 +6,7 @@ import Loading from "../components/loading"; // Import your loading component
 import { Button, ThemeProvider } from '@mui/material';
 import theme from '../theme';
 
+export const dynamic = "force-dynamic";
 
 export default function Login() {
     const [email, setEmail] = useState("");
@@ -69,12 +70,15 @@ export default function Login() {
                         autoComplete="current-password" 
                     />
                     <ThemeProvider theme={theme}>
-                        <Button type="submit" className="w-full bg-[#800000] text-white p-3 rounded-lg font-semibold hover:bg-[#600000] transition">
+                        <Button
+                            type="submit"
+                            className="w-full bg-[#800000] text-white p-3 rounded-lg font-semibold hover:bg-[#600000] transition"
+                        >
                             Login
                         </Button>
                     </ThemeProvider>
                 </form>
             </div>
         </div>
-    );    
+    );
 }
