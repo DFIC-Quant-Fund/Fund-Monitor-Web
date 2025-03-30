@@ -18,7 +18,7 @@ export default function Home() {
         } else {
             setIsAuthenticated(true);
         }
-    }, []);
+    }, [router]);
 
     if (!isAuthenticated) {
         return (

@@ -250,7 +250,7 @@ function Performance() {
 
 export default function PerformancePage() {
     return (
-        <Suspense fallback={<div>Loading...</div>}>
+        <Suspense fallback={<Loading />}>
             <Performance />
         </Suspense>
     )

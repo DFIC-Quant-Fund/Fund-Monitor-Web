@@ -442,7 +442,7 @@ function HoldingsContent() {
 
 export default function HoldingsPage() {
     return (
-        <Suspense fallback={<div>Loading...</div>}>
+        <Suspense fallback={<Loading />}>
             <HoldingsContent />
         </Suspense>
     );
