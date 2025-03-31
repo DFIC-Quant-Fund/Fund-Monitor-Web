@@ -24,6 +24,10 @@ interface HoldingData {
     ticker: string;
     trading_date: string;
     type: string;
+    purchase_price: string;
+    book_value: string;
+    PnL_CAD: string;
+    PnL_Pct: string;
 }
 
 interface SortConfig {
@@ -319,7 +323,11 @@ function HoldingsContent() {
                                             { label: 'Ticker', key: 'ticker' },
                                             { label: 'Shares', key: 'shares_held' },
                                             { label: 'Price (CAD)', key: 'price' },
-                                            { label: 'Market Value (CAD)', key: 'market_value' }
+                                            { label: 'Market Value (CAD)', key: 'market_value' },
+                                            { label: 'Purchase Price (CAD)', key: 'purchase_price' },
+                                            { label: 'Book Value (CAD)', key: 'book_value' },
+                                            { label: 'PnL (CAD)', key: 'PnL_CAD' },
+                                            { label: 'PnL %', key: 'PnL_Pct' }
                                         ].map(({ label, key }) => (
                                             <TableCell
                                                 key={key}
@@ -369,7 +377,17 @@ function HoldingsContent() {
                                                     <TableCell align="center" sx={{ fontSize: '1rem' }}>{row.ticker}</TableCell>
                                                     <TableCell align="center" sx={{ fontSize: '1rem' }}>{row.shares_held}</TableCell>
                                                     <TableCell align="center" sx={{ fontSize: '1rem' }}>$ {convertedPrice.toFixed(2)}</TableCell>
+                                                    <TableCell align="center" sx={{ fontSize: '1rem' }}>$ {parseFloat(row.purchase_price).toFixed(2)}</TableCell>
+                                                    <TableCell align="center" sx={{ fontSize: '1rem' }}>$ {parseFloat(row.book_value).toFixed(2)}</TableCell>
                                                     <TableCell align="center" sx={{ fontSize: '1rem' }}>$ {convertedMarketValue.toFixed(2)}</TableCell>
+                                                    <TableCell align="center" sx={{ 
+                                                        fontSize: '1rem',
+                                                        color: parseFloat(row.PnL_CAD) >= 0 ? 'success.main' : 'error.main'
+                                                    }}>$ {parseFloat(row.PnL_CAD).toFixed(2)}</TableCell>
+                                                    <TableCell align="center" sx={{ 
+                                                        fontSize: '1rem',
+                                                        color: parseFloat(row.PnL_Pct) >= 0 ? 'success.main' : 'error.main'
+                                                    }}>{parseFloat(row.PnL_Pct).toFixed(2)}%</TableCell>
                                                 </TableRow>
                                             );
                                         })
