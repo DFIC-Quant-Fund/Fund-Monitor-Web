@@ -58,7 +58,6 @@ export default function Header() {
                         </Link>
                     </div>
 
-                    {/* Logout */}
                     <Link
                         href="/login"
                         onClick={() => {
