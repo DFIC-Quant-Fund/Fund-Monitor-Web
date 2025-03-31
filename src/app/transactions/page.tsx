@@ -160,7 +160,7 @@ function Transactions() {
                     pt: 3
                 }}>
                     <Typography variant="h4" fontWeight={800} sx={{ color: theme.palette.primary.main, mb: { xs: 2, sm: 0 } }}>
-                        Holdings
+                        Transactions
                     </Typography>
                     <Box sx={{ display: 'flex', gap: 2, flexDirection: { xs: 'column', sm: 'row' }, width: { xs: '100%', sm: 'auto' } }}>
 
