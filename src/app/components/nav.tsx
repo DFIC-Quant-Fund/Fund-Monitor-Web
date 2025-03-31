@@ -1,7 +1,9 @@
-import Link from 'next/link';
-import Image from 'next/image';
+import Link from "next/link";
+import Image from "next/image";
+import { useRouter } from "next/navigation";
 
 export default function Header() {
+    const router = useRouter();
     return (
         <nav className="bg-[#800000] text-white shadow-lg">
             <div className="mx-auto px-2 sm:px-18">
@@ -57,18 +59,20 @@ export default function Header() {
                     </div>
 
                     {/* Logout */}
-                    <button
+                    <Link
+                        href="/login"
                         onClick={() => {
-                            // logout functionality
+                            localStorage.removeItem("auth");
+                            router.push("/login");
                         }}
                         className="
-              hidden sm:inline-block
-              px-3 py-2 rounded-md text-base font-bold 
-              hover:bg-[#600000] transition-colors duration-200
-            "
+                px-2 py-1 rounded-md text-xs font-bold 
+                hover:bg-[#600000] transition-colors duration-200
+                sm:px-3 sm:py-2 sm:text-base
+              "
                     >
                         Logout
-                    </button>
+                    </Link>
                 </div>
             </div>
         </nav>
