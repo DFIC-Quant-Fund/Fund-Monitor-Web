@@ -1,7 +1,7 @@
 'use client';
-import { useParams, useSearchParams } from 'next/navigation';
+import { useParams } from 'next/navigation';
 import Header from '../../components/nav';
-import { Paper, Typography, Box, TextField, Grid, CardContent, Card, Tooltip, TableBody, Table, TableCell, TableContainer, TableRow, Icon, TableHead } from '@mui/material';
+import { Paper, Typography, Box, Grid, CardContent, Card, TableBody, Table, TableCell, TableContainer, TableRow, Button, CircularProgress } from '@mui/material';
 import theme from '../../theme';
 import { useState, useEffect, useCallback } from 'react';
 import { API_BASE_URL } from '@/utils/apiBase';
@@ -70,10 +70,10 @@ function FundContent() {
     const params = useParams<{ fund: string }>();
     const fundName = params?.fund;
 
-    const searchParams = useSearchParams();
-    const urlDate = searchParams.get('date');
-    const defaultDate = calculateDate('month');  // Changed from baseDate
-    const [selectedDate, setSelectedDate] = useState(urlDate || defaultDate);
+    // const searchParams = useSearchParams();
+    // const urlDate = searchParams.get('date');
+    const defaultDate = calculateDate('3months');
+    const [selectedDate, setSelectedDate] = useState(defaultDate);
 
     const [fundThesis, setFundThesis] = useState<FundThesis[]>([]);
     const [selectedFund] = useState(fundName);
@@ -127,7 +127,7 @@ function FundContent() {
         } finally {
             setLoading(false);
         }
-    }, [selectedDate]);
+    }, [selectedDate, selectedFund]);
 
     const fetchFundHoldings = useCallback(async () => {
         setLoading(true);
@@ -149,7 +149,7 @@ function FundContent() {
         } finally {
             setLoading(false);
         }
-    }, [selectedDate]);
+    }, [selectedDate, selectedFund]);
 
     const fetchFundHighlights = useCallback(async () => {
         setLoading(true);
@@ -171,7 +171,7 @@ function FundContent() {
         } finally {
             setLoading(false);
         }
-    }, [selectedDate]);
+    }, [selectedDate, selectedFund]);
 
     useEffect(() => {
         fetchFundThesis();
@@ -183,7 +183,7 @@ function FundContent() {
             fetchFundHoldings();
             fetchFundHighlights();
         }
-    }, [selectedDate, fetchFundPortfolio, fetchFundHoldings, fetchFundHighlights]);
+    }, [selectedDate, selectedFund, fetchFundPortfolio, fetchFundHoldings, fetchFundHighlights]);
     
     const formattedPortfolioData = portfolioData
     .map(item => ({
@@ -211,20 +211,28 @@ function FundContent() {
                     <Typography variant="h4" fontWeight={800} sx={{ color: theme.palette.primary.main, mb: 4 }}>
                         {decodeURIComponent(fundName || 'broken')}
                     </Typography>
-                    {fundThesis
-                        .filter((thesis) => thesis.name === decodeURIComponent(fundName || ''))
-                        .map((thesis) => (
-                            <Card key={thesis.name} sx={{ marginBottom: 4, boxShadow: 3, borderRadius: 2 }}>
-                                <CardContent>
-                                    <Typography variant="h6" component="div" gutterBottom sx={{ fontWeight: 'bold', color: theme.palette.primary.main }}>
-                                        Fund Overview
-                                    </Typography>
-                                    <Typography variant="body1" sx={{ fontSize: '1.1rem', lineHeight: 1.6 }}>
-                                        {thesis.thesis}
-                                    </Typography>
-                                </CardContent>
-                            </Card>
-                        ))}
+                    {loading ? (
+                        <Card sx={{ marginBottom: 4, boxShadow: 3, borderRadius: 2 }}>
+                            <CardContent sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', minHeight: '200px' }}>
+                                <CircularProgress sx={{ color: theme.palette.primary.main }} />
+                            </CardContent>
+                        </Card>
+                    ) : (
+                        fundThesis
+                            .filter((thesis) => thesis.name === decodeURIComponent(fundName || ''))
+                            .map((thesis) => (
+                                <Card key={thesis.name} sx={{ marginBottom: 4, boxShadow: 3, borderRadius: 2 }}>
+                                    <CardContent>
+                                        <Typography variant="h6" component="div" gutterBottom sx={{ fontWeight: 'bold', color: theme.palette.primary.main }}>
+                                            Fund Overview
+                                        </Typography>
+                                        <Typography variant="body1" sx={{ fontSize: '1.1rem', lineHeight: 1.6 }}>
+                                            {thesis.thesis}
+                                        </Typography>
+                                    </CardContent>
+                                </Card>
+                            ))
+                    )}
                     <Card sx={{ marginBottom: 2, boxShadow: 3, borderRadius: 2 }} >
                         <CardContent>
                             <Box sx={{
@@ -232,31 +240,78 @@ function FundContent() {
                                 flexDirection: { xs: 'column', sm: 'row' },
                                 justifyContent: 'space-between', alignItems: { xs: 'stretch', sm: 'center' }, mb: 4,
                                 pl: { xs: 1 },
-                                pr: { xs: 2, sm: 10 },
-                                pt: 3
+                                pr: { xs: 0, sm: 'auto' },
+                                pt: 3,
+                                gap: 2
                             }}>
                                 <Typography variant="h6" component="div" gutterBottom sx={{ fontWeight: 'bold', color: theme.palette.primary.main }}>
                                     Fund Performance
                                 </Typography>
-                                <Box
-                                    component="input"
-                                    type="date"
-                                    value={selectedDate || ""}
-                                    onChange={(e) => setSelectedDate(e.target.value)}
-                                    min="1900-01-01"
-                                    max="2100-12-31"
-                                    sx={{
-                                        width: { xs: '100%', sm: 180 },
-                                        height: 40,
-                                        border: "1px solid #ccc",
-                                        borderRadius: "8px",
-                                        padding: "8px",
-                                        outline: "none",
-                                        "&:focus": {
-                                            borderColor: "primary.main",
-                                        },
-                                    }}
-                                />
+
+                                <Box sx={{
+                                    display: 'flex',
+                                    flexDirection: { xs: 'column', sm: 'row' },
+                                    gap: 1,
+                                    width: { xs: '100%', sm: 'auto' },
+                                }}>
+
+                                    <Box sx={{
+                                        display: 'flex',
+                                        flexDirection: { xs: 'column', sm: 'row' },
+                                        gap: 1,
+                                        width: { xs: '100%', sm: 'auto' },
+                                    }}>
+                                        {[
+                                            { label: '1W', period: 'week' },
+                                            { label: '1M', period: 'month' },
+                                            { label: '3M', period: '3months' },
+                                            { label: '1Y', period: 'year' }
+                                        ].map(({ label, period }) => (
+                                            <Button
+                                                key={period}
+                                                variant="outlined"
+                                                size="small"
+                                                onClick={() => setSelectedDate(calculateDate(period as 'week' | 'month' | '3months' | 'year'))}
+                                                sx={{
+                                                    minWidth: '60px',
+                                                    height: '40px',
+                                                    borderRadius: "8px",
+                                                    borderColor: selectedDate === calculateDate(period as 'week' | 'month' | '3months' | 'year')
+                                                        ? theme.palette.primary.main
+                                                        : '#ccc',
+                                                    color: selectedDate === calculateDate(period as 'week' | 'month' | '3months' | 'year')
+                                                        ? theme.palette.primary.main
+                                                        : 'inherit',
+                                                    '&:hover': {
+                                                        borderColor: theme.palette.primary.main,
+                                                    }
+                                                }}
+                                            >
+                                                {label}
+                                            </Button>
+                                        ))}
+                                    </Box>
+                                    <Box
+                                        component="input"
+                                        type="date"
+                                        value={selectedDate || ""}
+                                        onChange={(e) => setSelectedDate(e.target.value)}
+                                        min="1900-01-01"
+                                        max="2100-12-31"
+                                        sx={{
+                                            width: { xs: '100%', sm: 180 },
+                                            height: 40,
+                                            border: "1px solid #ccc",
+                                            borderRadius: "8px",
+                                            padding: "8px",
+                                            outline: "none",
+                                            "&:focus": {
+                                                borderColor: "primary.main",
+                                            },
+                                        }}
+                                    />
+
+                                </Box>
                             </Box>
                             <Grid container spacing={2}>
                                 <Grid item xs={12} md={6}>
