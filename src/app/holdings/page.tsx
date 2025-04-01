@@ -281,6 +281,7 @@ function HoldingsContent() {
                     <Box key={fund} sx={{ mb: 4, pl: { xs: 2, sm: 10 }, pr: { xs: 2, sm: 10 } }}>
                         <Typography
                             variant="h6"
+                            onClick={() => router.push(`/holdings/${encodeURIComponent(fund)}`)}
                             sx={{
                                 fontWeight: 'bold',
                                 mb: 2,
