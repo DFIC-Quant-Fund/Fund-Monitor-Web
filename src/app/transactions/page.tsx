@@ -4,7 +4,7 @@ import { useSearchParams, useRouter } from 'next/navigation';
 import {Box, Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Typography, Button, CircularProgress,
     TablePagination, Select, MenuItem, FormControl} from '@mui/material';
 import { Download } from '@mui/icons-material';
-//import { API_BASE_URL } from '../../utils/apiBase';
+import { API_BASE_URL } from '../../utils/apiBase';
 import Header from '../components/nav';
 import Loading from "../components/loading";
 import theme from '../theme';
@@ -28,6 +28,11 @@ interface ApiResponse {
     success: boolean;
 }
 
+interface SortConfig {
+    key: string | null;
+    direction: 'asc' | 'desc';
+}
+
 function Transactions() {
     const searchParams = useSearchParams();
     const router = useRouter();
@@ -40,6 +45,7 @@ function Transactions() {
     const [authLoading, setAuthLoading] = useState(true);
     const [page, setPage] = useState(0);
     const rowsPerPage = 50;
+    const [sortConfig, setSortConfig] = useState<SortConfig>({ key: null, direction: 'asc' });
 
     // Authentication check
     useEffect(() => {
@@ -51,25 +57,23 @@ function Transactions() {
         }
     }, [router]);
 
-    // Update URL when selection changes
+    useEffect(() => {
+        if (!searchParams.get('portfolio')) {
+            router.push('/transactions?portfolio=core', { scroll: false });
+        }
+    }, [router, searchParams]);
+
     const updateURL = useCallback((portfolio: string) => {
         const params = new URLSearchParams();
         params.set('portfolio', portfolio);
         router.push(`/transactions?${params.toString()}`, { scroll: false });
     }, [router]);
 
-    // Updates URL when no params are present
-    useEffect(() => {
-        if (!authLoading && !urlPortfolio) {
-            updateURL(selectedPortfolio);
-        }
-    }, [authLoading, urlPortfolio, selectedPortfolio, updateURL]);
-
     const fetchData = useCallback(async () => {
         setLoading(true);
         setError('');
         try {
-            const url = `http://127.0.0.1:5555/api/transactions?portfolio=${selectedPortfolio}`;
+            const url = `${API_BASE_URL}/api/transactions?portfolio=${selectedPortfolio}`;
             const response = await fetch(url);
             const data: ApiResponse = await response.json();
 
@@ -137,9 +141,43 @@ function Transactions() {
       const day = dateObj.getDate().toString().padStart(2, '0');
       const month = (dateObj.getMonth() + 1).toString().padStart(2, '0');
       const year = dateObj.getFullYear();
-      return `${day}-${month}-${year}`;
-};
+      return `${year}-${month}-${day}`;
+    };
 
+    const sortData = (data: TransactionData[]) => {
+        // If no key, return the data unsorted
+        if (!sortConfig || !sortConfig.key) return data;
+        if (!sortConfig.key) return data;
+
+        return [...data].sort((a, b) => {
+            let aValue: string | number = a[sortConfig.key as keyof TransactionData];
+            let bValue: string | number = b[sortConfig.key as keyof TransactionData];
+
+            // Convert to numbers for numerical columns
+            if (sortConfig.key === 'shares' || sortConfig.key === 'price') {
+                aValue = parseFloat(aValue as string) || 0;
+                bValue = parseFloat(bValue as string) || 0;
+            }
+
+            if (sortConfig.key === 'date') {
+                aValue = new Date(aValue as string).getTime();
+                bValue = new Date(bValue as string).getTime();
+            }
+
+            if (aValue < bValue) return sortConfig.direction === 'asc' ? -1 : 1;
+            if (aValue > bValue) return sortConfig.direction === 'asc' ? 1 : -1;
+            return 0;
+        });
+    };
+
+    const handleSort = (key: string) => {
+        setSortConfig(prevConfig => ({
+            key,
+            direction: prevConfig.key === key && prevConfig.direction === 'asc' ? 'desc' : 'asc'
+        }));
+    };
+
+    const sortedData = sortData(transactionsData);
 
     return (
         <>
@@ -191,12 +229,38 @@ function Transactions() {
                     <TableContainer component={Paper} sx={{ overflow: 'auto', maxWidth: '100%' }}>
                         <Table stickyHeader sx={{ tableLayout: 'fixed', width: '100%', minWidth: '800px' }}>
                             <TableHead>
+
                                 <TableRow sx={{ backgroundColor: theme.palette.grey[200], borderBottom: `2px solid ${theme.palette.primary.main}` }}>
-                                    {['Date', 'Security Name', 'Ticker', 'Type', 'Action', 'Shares', 'Price', 'Currency', 'Portfolio', 'Fund'].map(header => (
-                                        <TableCell key={header} align="center" sx={{ fontWeight: 'bold', color: theme.palette.primary.main, borderBottom: `2px solid ${theme.palette.primary.main}`, fontSize: '1.1rem' }}>
-                                            {header}
-                                        </TableCell>
-                                    ))}
+                                        {[
+                                            { label: 'Date', key: 'date' },
+                                            { label: 'Ticker', key: 'ticker' },
+                                            { label: 'Security Name', key: 'name' },
+                                            { label: 'Type', key: 'type' },
+                                            { label: 'Action', key: 'action' },
+                                            { label: 'Shares', key: 'shares' },
+                                            { label: 'Price', key: 'price' },
+                                            { label: 'Currency', key: 'currency' },
+                                            { label: 'Fund', key: 'fund' }
+                                        ].map(({ label, key }) => (
+                                            <TableCell
+                                                key={key}
+                                                onClick={() => handleSort(key)}
+                                                align="center"
+                                                sx={{
+                                                    fontWeight: 'bold',
+                                                    color: theme.palette.primary.main,
+                                                    borderBottom: `2px solid ${theme.palette.primary.main}`,
+                                                    cursor: 'pointer',
+                                                }}
+                                            >
+                                                <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '1.1rem' }}>
+                                                    {label}
+                                                    {sortConfig.key === key && (
+                                                        <span>{sortConfig.direction === 'asc' ? '↑' : '↓'}</span>
+                                                    )}
+                                                </Box>
+                                            </TableCell>
+                                        ))}
                                 </TableRow>
                             </TableHead>
                             <TableBody>
@@ -212,12 +276,12 @@ function Transactions() {
                                             <Typography color="error">{error}</Typography>
                                         </TableCell>
                                     </TableRow>
-                                ) : transactionsData.length > 0 ? (
-                                    transactionsData.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((row, index) => (
-                                      <TableRow key={`${row.transaction_id}-${index}`} sx={{ backgroundColor: index % 2 === 0 ? theme.palette.action.hover : 'inherit' }}>
+                                ) : sortedData.length > 0 ? (
+                                    sortedData.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((row, index) => (
+                                      <TableRow key={row.transaction_id} sx={{ backgroundColor: index % 2 === 0 ? theme.palette.action.hover : 'inherit' }}>
                                         <TableCell align="center" sx={{ fontSize: '1rem' }}>{formatDate(row.date)}</TableCell>
-                                        <TableCell align="center" sx={{ fontSize: '1rem' }}>{row.name}</TableCell>
                                         <TableCell align="center" sx={{ fontSize: '1rem' }}>{row.ticker}</TableCell>
+                                        <TableCell align="center" sx={{ fontSize: '1rem' }}>{row.name}</TableCell>
                                         <TableCell align="center" sx={{ fontSize: '1rem' }}>{row.type}</TableCell>
                                         <TableCell align="center" sx={{ fontSize: '1rem',
                                             color: row.action === 'BUY' ? theme.palette.success.main :
@@ -226,7 +290,6 @@ function Transactions() {
                                         <TableCell align="center" sx={{ fontSize: '1rem' }}>{row.shares.toLocaleString()}</TableCell>
                                         <TableCell align="center" sx={{ fontSize: '1rem' }}>{Number(row.price).toFixed(2)}</TableCell>
                                         <TableCell align="center" sx={{ fontSize: '1rem' }}>{row.currency}</TableCell>
-                                        <TableCell align="center" sx={{ fontSize: '1rem', textTransform: 'capitalize' }}>{row.portfolio}</TableCell>
                                         <TableCell align="center" sx={{ fontSize: '1rem' }}>{row.fund}</TableCell>
                                       </TableRow>
                                     ))
@@ -260,7 +323,7 @@ function Transactions() {
 
 export default function TransactionsPage() {
     return (
-        <Suspense fallback={<div>Loading...</div>}>
+        <Suspense fallback={<Loading />}>
             <Transactions />
         </Suspense>
     );
