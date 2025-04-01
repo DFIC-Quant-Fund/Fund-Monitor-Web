@@ -1,8 +1,10 @@
 'use client';
 import { useState, useEffect, useCallback, Suspense } from 'react';
 import { useSearchParams, useRouter } from 'next/navigation';
-import {Box, Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Typography, Button, CircularProgress,
-    TablePagination, Select, MenuItem, FormControl} from '@mui/material';
+import {
+    Box, Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Typography, Button, CircularProgress,
+    TablePagination, Select, MenuItem, FormControl
+} from '@mui/material';
 import { Download } from '@mui/icons-material';
 import { API_BASE_URL } from '../../utils/apiBase';
 import Header from '../components/nav';
@@ -58,7 +60,7 @@ function Transactions() {
     }, [router]);
 
     useEffect(() => {
-        if (!searchParams.get('portfolio')) {
+        if (!authLoading && !searchParams.get('portfolio')) {
             router.push('/transactions?portfolio=core', { scroll: false });
         }
     }, [router, searchParams]);
@@ -137,11 +139,11 @@ function Transactions() {
     }
 
     const formatDate = (dateStr: string) => {
-      const dateObj = new Date(dateStr);
-      const day = dateObj.getDate().toString().padStart(2, '0');
-      const month = (dateObj.getMonth() + 1).toString().padStart(2, '0');
-      const year = dateObj.getFullYear();
-      return `${year}-${month}-${day}`;
+        const dateObj = new Date(dateStr);
+        const day = dateObj.getDate().toString().padStart(2, '0');
+        const month = (dateObj.getMonth() + 1).toString().padStart(2, '0');
+        const year = dateObj.getFullYear();
+        return `${year}-${month}-${day}`;
     };
 
     const sortData = (data: TransactionData[]) => {
@@ -229,38 +231,37 @@ function Transactions() {
                     <TableContainer component={Paper} sx={{ overflow: 'auto', maxWidth: '100%' }}>
                         <Table stickyHeader sx={{ tableLayout: 'fixed', width: '100%', minWidth: '800px' }}>
                             <TableHead>
-
                                 <TableRow sx={{ backgroundColor: theme.palette.grey[200], borderBottom: `2px solid ${theme.palette.primary.main}` }}>
-                                        {[
-                                            { label: 'Date', key: 'date' },
-                                            { label: 'Ticker', key: 'ticker' },
-                                            { label: 'Security Name', key: 'name' },
-                                            { label: 'Type', key: 'type' },
-                                            { label: 'Action', key: 'action' },
-                                            { label: 'Shares', key: 'shares' },
-                                            { label: 'Price', key: 'price' },
-                                            { label: 'Currency', key: 'currency' },
-                                            { label: 'Fund', key: 'fund' }
-                                        ].map(({ label, key }) => (
-                                            <TableCell
-                                                key={key}
-                                                onClick={() => handleSort(key)}
-                                                align="center"
-                                                sx={{
-                                                    fontWeight: 'bold',
-                                                    color: theme.palette.primary.main,
-                                                    borderBottom: `2px solid ${theme.palette.primary.main}`,
-                                                    cursor: 'pointer',
-                                                }}
-                                            >
-                                                <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '1.1rem' }}>
-                                                    {label}
-                                                    {sortConfig.key === key && (
-                                                        <span>{sortConfig.direction === 'asc' ? '↑' : '↓'}</span>
-                                                    )}
-                                                </Box>
-                                            </TableCell>
-                                        ))}
+                                    {[
+                                        { label: 'Date', key: 'date' },
+                                        { label: 'Ticker', key: 'ticker' },
+                                        { label: 'Security Name', key: 'name' },
+                                        { label: 'Type', key: 'type' },
+                                        { label: 'Action', key: 'action' },
+                                        { label: 'Shares', key: 'shares' },
+                                        { label: 'Price', key: 'price' },
+                                        { label: 'Currency', key: 'currency' },
+                                        { label: 'Fund', key: 'fund' }
+                                    ].map(({ label, key }) => (
+                                        <TableCell
+                                            key={key}
+                                            onClick={() => handleSort(key)}
+                                            align="center"
+                                            sx={{
+                                                fontWeight: 'bold',
+                                                color: theme.palette.primary.main,
+                                                borderBottom: `2px solid ${theme.palette.primary.main}`,
+                                                cursor: 'pointer',
+                                            }}
+                                        >
+                                            <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '1.1rem' }}>
+                                                {label}
+                                                {sortConfig.key === key && (
+                                                    <span>{sortConfig.direction === 'asc' ? '↑' : '↓'}</span>
+                                                )}
+                                            </Box>
+                                        </TableCell>
+                                    ))}
                                 </TableRow>
                             </TableHead>
                             <TableBody>
@@ -278,20 +279,21 @@ function Transactions() {
                                     </TableRow>
                                 ) : sortedData.length > 0 ? (
                                     sortedData.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((row, index) => (
-                                      <TableRow key={row.transaction_id} sx={{ backgroundColor: index % 2 === 0 ? theme.palette.action.hover : 'inherit' }}>
-                                        <TableCell align="center" sx={{ fontSize: '1rem' }}>{formatDate(row.date)}</TableCell>
-                                        <TableCell align="center" sx={{ fontSize: '1rem' }}>{row.ticker}</TableCell>
-                                        <TableCell align="center" sx={{ fontSize: '1rem' }}>{row.name}</TableCell>
-                                        <TableCell align="center" sx={{ fontSize: '1rem' }}>{row.type}</TableCell>
-                                        <TableCell align="center" sx={{ fontSize: '1rem',
-                                            color: row.action === 'BUY' ? theme.palette.success.main :
-                                                  row.action === 'SELL' ? theme.palette.error.main : 'inherit'
-                                          }}>{row.action}</TableCell>
-                                        <TableCell align="center" sx={{ fontSize: '1rem' }}>{row.shares.toLocaleString()}</TableCell>
-                                        <TableCell align="center" sx={{ fontSize: '1rem' }}>{Number(row.price).toFixed(2)}</TableCell>
-                                        <TableCell align="center" sx={{ fontSize: '1rem' }}>{row.currency}</TableCell>
-                                        <TableCell align="center" sx={{ fontSize: '1rem' }}>{row.fund}</TableCell>
-                                      </TableRow>
+                                        <TableRow key={row.transaction_id} sx={{ backgroundColor: index % 2 === 0 ? theme.palette.action.hover : 'inherit' }}>
+                                            <TableCell align="center" sx={{ fontSize: '1rem' }}>{formatDate(row.date)}</TableCell>
+                                            <TableCell align="center" sx={{ fontSize: '1rem' }}>{row.ticker}</TableCell>
+                                            <TableCell align="center" sx={{ fontSize: '1rem' }}>{row.name}</TableCell>
+                                            <TableCell align="center" sx={{ fontSize: '1rem' }}>{row.type}</TableCell>
+                                            <TableCell align="center" sx={{
+                                                fontSize: '1rem',
+                                                color: row.action === 'BUY' ? theme.palette.success.main :
+                                                    row.action === 'SELL' ? theme.palette.error.main : 'inherit'
+                                            }}>{row.action}</TableCell>
+                                            <TableCell align="center" sx={{ fontSize: '1rem' }}>{row.shares.toLocaleString()}</TableCell>
+                                            <TableCell align="center" sx={{ fontSize: '1rem' }}>{Number(row.price).toFixed(2)}</TableCell>
+                                            <TableCell align="center" sx={{ fontSize: '1rem' }}>{row.currency}</TableCell>
+                                            <TableCell align="center" sx={{ fontSize: '1rem' }}>{row.fund}</TableCell>
+                                        </TableRow>
                                     ))
 
                                 ) : (
