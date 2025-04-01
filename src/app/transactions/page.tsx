@@ -235,7 +235,7 @@ function Transactions() {
                                     {[
                                         { label: 'Date', key: 'date' },
                                         { label: 'Ticker', key: 'ticker' },
-                                        { label: 'Security Name', key: 'name' },
+                                        { label: 'Name', key: 'name' },
                                         { label: 'Type', key: 'type' },
                                         { label: 'Action', key: 'action' },
                                         { label: 'Shares', key: 'shares' },
