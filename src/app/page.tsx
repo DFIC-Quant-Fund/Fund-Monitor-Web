@@ -41,13 +41,15 @@ export default function Home() {
                     <Button onClick={() => router.push("/performance")}>
                         Performance
                     </Button>
-                    <Button disabled>
-                        Transactions (Coming Soon)
+                    <Button onClick={() => router.push("/transactions")}>
+                        Transactions
                     </Button>
                     <Button onClick={() => {
                         localStorage.removeItem("auth");
                         router.push("/login");
-                    }}>
+                    }}
+                            sx={{ minWidth: '250px' }}
+                    >
                         Logout
                     </Button>
                 </Box>
