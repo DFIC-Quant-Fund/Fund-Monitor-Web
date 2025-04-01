@@ -60,7 +60,7 @@ function Transactions() {
     }, [router]);
 
     useEffect(() => {
-        if (!authLoading && !searchParams.get('portfolio')) {
+        if (!authLoading || !searchParams.get('portfolio')) {
             router.push('/transactions?portfolio=core', { scroll: false });
         }
     }, [router, searchParams]);
