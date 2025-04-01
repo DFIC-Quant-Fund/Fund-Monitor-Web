@@ -74,6 +74,8 @@ interface PnLData {
 interface PnLApiResponse {
     data: PnLData[];
     success: boolean;
+}
+
 interface LatestDateApiResponse {
     trading_date: string;
 }
@@ -92,9 +94,7 @@ function HoldingsContent() {
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState('');
     const [exchangeRatesData, setExchangeRatesData] = useState<ExchangeRates | null>(null);
-    // const [transactionData, setTransactionData] = useState<TransactionData[]>([]);
     const [pnlData, setPnLData] = useState<PnLData[]>([]);
-    // const [purchasePriceData, setPurchasePriceData] = useState<PurchasePriceData[]>([]);
     const [sortConfig, setSortConfig] = useState<SortConfig>({ key: null, direction: 'asc' });
     const [authLoading, setAuthLoading] = useState(true); // New loading state for auth check
 
@@ -231,10 +231,9 @@ function HoldingsContent() {
         if (!authLoading && selectedDate) {
             fetchExchangeRates();
             fetchData();
-            // fetchTransactionData();
             fetchPnLData();
         }
-    }, [authLoading, urlDate, urlPortfolio, fetchExchangeRates, fetchData, fetchPnLData]);
+    }, [authLoading, urlDate, urlPortfolio, selectedDate,fetchExchangeRates, fetchData, fetchPnLData]);
 
     // Convert holdings market values and price to CAD
     const totalPortfolioValue = holdingsData.reduce((acc, row) => {
@@ -294,11 +293,6 @@ function HoldingsContent() {
     const getPnLData = useCallback((ticker: string) => {
         return pnlData.find(item => item.ticker === ticker);
     }, [pnlData]);
-
-    // // Helper function to get purchase price data for a ticker
-    // const getPurchasePriceData = useCallback((ticker: string) => {
-    //     return purchasePriceData.find(item => item.ticker === ticker);
-    // }, [purchasePriceData]);
 
     if (authLoading) {
         return (
