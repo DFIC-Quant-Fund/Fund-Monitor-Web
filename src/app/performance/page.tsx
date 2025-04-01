@@ -109,7 +109,7 @@ function Performance() {
 
         return (
             <Typography variant="body2" sx={{ fontSize: '1.1rem' }} color={color}>
-                {numberValue.toFixed(4)}%
+                {numberValue.toFixed(2)}%
             </Typography>
         );
     };
