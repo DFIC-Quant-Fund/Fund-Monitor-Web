@@ -109,7 +109,7 @@ function Performance() {
 
         return (
             <Typography variant="body2" sx={{ fontSize: '1.1rem' }} color={color}>
-                {numberValue.toFixed(4)}%
+                {numberValue.toFixed(2)}%
             </Typography>
         );
     };
@@ -204,7 +204,7 @@ function Performance() {
                         <Table stickyHeader sx={{ tableLayout: 'fixed', width: '100%', minWidth: '800px' }}>
                             <TableHead>
                                 <TableRow sx={{ backgroundColor: theme.palette.grey[200], borderBottom: `2px solid ${theme.palette.primary.main}` }}>
-                                    {['Date', 'Inception Return', '1 Day Return', '1 Week Return', '1 Month Return', '1 Year Return', 'YTD Return'].map(header => (
+                                    {['Date', 'Inception Return', '1-Day Return', '1-Week Return', '1-Month Return', '1-Year Return', 'YTD Return'].map(header => (
                                         <TableCell key={header} align="center" sx={{ fontWeight: 'bold', color: theme.palette.primary.main, borderBottom: `2px solid ${theme.palette.primary.main}`, fontSize: '1.1rem' }}>
                                             {header}
                                         </TableCell>
@@ -219,9 +219,9 @@ function Performance() {
                                 ) : performanceData.length > 0 ? (
                                     performanceData.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((row, index) => (
                                         <TableRow key={row.date} sx={{ backgroundColor: index % 2 === 0 ? theme.palette.action.hover : 'inherit' }}>
-                                            <TableCell align="center" sx={{ fontSize: '1.1rem' }}>{row.date}</TableCell>
+                                            <TableCell align="center" sx={{ fontSize: '1rem' }}>{row.date}</TableCell>
                                             {[row.inception_return, row.one_day_return, row.one_week_return, row.one_month_return, row.one_year_return, row.ytd_return].map((val, idx) => (
-                                                <TableCell key={idx} align="center" sx={{ fontSize: '1.1rem' }}>{formatReturn(val)}</TableCell>
+                                                <TableCell key={idx} align="center" sx={{ fontSize: '1rem' }}>{formatReturn(val)}</TableCell>
                                             ))}
                                         </TableRow>
                                     ))
