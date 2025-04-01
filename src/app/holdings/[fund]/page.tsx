@@ -211,28 +211,20 @@ function FundContent() {
                     <Typography variant="h4" fontWeight={800} sx={{ color: theme.palette.primary.main, mb: 4 }}>
                         {decodeURIComponent(fundName || 'broken')}
                     </Typography>
-                    {loading ? (
-                        <Card sx={{ marginBottom: 4, boxShadow: 3, borderRadius: 2 }}>
-                            <CardContent sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', minHeight: '200px' }}>
-                                <CircularProgress sx={{ color: theme.palette.primary.main }} />
-                            </CardContent>
-                        </Card>
-                    ) : (
-                        fundThesis
-                            .filter((thesis) => thesis.name === decodeURIComponent(fundName || ''))
-                            .map((thesis) => (
-                                <Card key={thesis.name} sx={{ marginBottom: 4, boxShadow: 3, borderRadius: 2 }}>
-                                    <CardContent>
-                                        <Typography variant="h6" component="div" gutterBottom sx={{ fontWeight: 'bold', color: theme.palette.primary.main }}>
-                                            Fund Overview
-                                        </Typography>
-                                        <Typography variant="body1" sx={{ fontSize: '1.1rem', lineHeight: 1.6 }}>
-                                            {thesis.thesis}
-                                        </Typography>
-                                    </CardContent>
-                                </Card>
-                            ))
-                    )}
+                    {fundThesis
+                        .filter((thesis) => thesis.name === decodeURIComponent(fundName || ''))
+                        .map((thesis) => (
+                            <Card key={thesis.name} sx={{ marginBottom: 4, boxShadow: 3, borderRadius: 2 }}>
+                                <CardContent>
+                                    <Typography variant="h6" component="div" gutterBottom sx={{ fontWeight: 'bold', color: theme.palette.primary.main }}>
+                                        Fund Overview
+                                    </Typography>
+                                    <Typography variant="body1" sx={{ fontSize: '1.1rem', lineHeight: 1.6 }}>
+                                        {thesis.thesis}
+                                    </Typography>
+                                </CardContent>
+                            </Card>
+                        ))}
                     <Card sx={{ marginBottom: 2, boxShadow: 3, borderRadius: 2 }} >
                         <CardContent>
                             <Box sx={{
@@ -368,7 +360,11 @@ function FundContent() {
                                 <Grid item xs={12}>
                                     <Paper elevation={2} sx={{ padding: 2, border: '1px solid #e0e0e0' }}>
                                         <Typography variant="h6" sx={{ mb: 2 }}>Highlights</Typography>
-                                        {fundHighlights && (
+                                        {loading ? (
+                                            <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', minHeight: '200px' }}>
+                                                <CircularProgress sx={{ color: theme.palette.primary.main }} />
+                                            </Box>
+                                        ) : fundHighlights ? (
                                             <TableContainer component={Paper}>
                                                 <Table>
                                                     <TableBody>
@@ -393,6 +389,8 @@ function FundContent() {
                                                     </TableBody>
                                                 </Table>
                                             </TableContainer>
+                                        ) : (
+                                            <Typography>No highlights data available</Typography>
                                         )}
                                     </Paper>
                                 </Grid>
