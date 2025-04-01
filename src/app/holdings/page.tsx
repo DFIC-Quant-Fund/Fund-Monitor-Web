@@ -9,8 +9,6 @@ import theme from '../theme';
 import Loading from '../components/loading';
 
 
-
-
 // Interface for Holdings Data
 interface HoldingData {
     fund: string;
@@ -43,26 +41,6 @@ interface ExchangeRates {
     date: string;
 }
 
-// interface TransactionData {
-//     action: string;
-//     currency: string;
-//     fund: string;
-//     name: string;
-//     portfolio: string;
-//     price: string;
-//     shares: string;
-//     ticker: string;
-//     transaction_id: number;
-//     type: string;
-// }
-
-// interface TransactionDataApiResponse {
-//     data: TransactionData[];
-//     success: boolean;
-// }
-
-
-
 interface ExchangeRatesApiResponse {
     data: ExchangeRates;
     success: boolean;
@@ -93,28 +71,10 @@ interface PnLData {
     pnl_percentage: number;
 }
 
-// interface PurchasePriceData {
-//     ticker: string;
-//     name: string;
-//     type: string;
-//     geography: string;
-//     sector: string;
-//     fund: string;
-//     currency: string;
-//     avg_purchase_price: number;
-//     total_shares: number;
-//     number_of_purchases: number;
-// }
-
 interface PnLApiResponse {
     data: PnLData[];
     success: boolean;
 }
-
-// interface PurchasePriceApiResponse {
-//     data: PurchasePriceData[];
-//     success: boolean;
-// }
 
 function HoldingsContent() {
 
@@ -198,21 +158,6 @@ function HoldingsContent() {
         }
     }, [selectedDate]);
 
-    // const fetchTransactionData = useCallback(async () => {
-    //     try {
-    //         const response = await fetch(`${API_BASE_URL}/api/transactions?portfolio=${selectedPortfolio}`);
-    //         const data: TransactionDataApiResponse = await response.json();
-
-    //         if (data.success && data.data) {
-    //             setTransactionData(data.data);
-    //         } else {
-    //             setTransactionData([]);
-    //         }
-    //     } catch (error) {
-    //         console.error('Error fetching transaction data:', error);
-    //     }
-    // }, [selectedPortfolio]);
-
     const fetchPnLData = useCallback(async () => {
         try {
             const response = await fetch(`${API_BASE_URL}/api/holdings/pnl?portfolio=${selectedPortfolio}&date=${selectedDate}`);
@@ -228,22 +173,6 @@ function HoldingsContent() {
             setPnLData([]);
         }
     }, [selectedDate, selectedPortfolio]);
-
-    // const fetchPurchasePriceData = useCallback(async () => {
-    //     try {
-    //         const response = await fetch(`${API_BASE_URL}/api/transactions/purchase-prices?portfolio=${selectedPortfolio}`);
-    //         const data: PurchasePriceApiResponse = await response.json();
-
-    //         if (data.success && data.data) {
-    //             setPurchasePriceData(data.data);
-    //         } else {
-    //             setPurchasePriceData([]);
-    //         }
-    //     } catch (error) {
-    //         console.error('Error fetching purchase price data:', error);
-    //         setPurchasePriceData([]);
-    //     }
-    // }, [selectedPortfolio]);
 
     const fetchData = useCallback(async () => {
         setLoading(true);
