@@ -183,7 +183,6 @@ function HoldingsContent() {
         }
     }, [authLoading, fetchLatestDate]);
 
-    // Second useEffect for data fetching, dependent on selectedDate being set
     useEffect(() => {
         if (!authLoading && selectedDate) {
             fetchExchangeRates();
