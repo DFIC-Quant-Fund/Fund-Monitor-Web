@@ -204,7 +204,7 @@ function Performance() {
                         <Table stickyHeader sx={{ tableLayout: 'fixed', width: '100%', minWidth: '800px' }}>
                             <TableHead>
                                 <TableRow sx={{ backgroundColor: theme.palette.grey[200], borderBottom: `2px solid ${theme.palette.primary.main}` }}>
-                                    {['Date', 'Inception Return', '1 Day Return', '1 Week Return', '1 Month Return', '1 Year Return', 'YTD Return'].map(header => (
+                                    {['Date', 'Inception Return', '1-Day Return', '1-Week Return', '1-Month Return', '1-Year Return', 'YTD Return'].map(header => (
                                         <TableCell key={header} align="center" sx={{ fontWeight: 'bold', color: theme.palette.primary.main, borderBottom: `2px solid ${theme.palette.primary.main}`, fontSize: '1.1rem' }}>
                                             {header}
                                         </TableCell>
