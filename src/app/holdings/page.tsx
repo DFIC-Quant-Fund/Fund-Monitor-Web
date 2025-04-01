@@ -9,8 +9,6 @@ import theme from '../theme';
 import Loading from '../components/loading';
 
 
-
-
 // Interface for Holdings Data
 interface HoldingData {
     fund: string;
@@ -24,6 +22,10 @@ interface HoldingData {
     ticker: string;
     trading_date: string;
     type: string;
+    purchase_price: string;
+    book_value: string;
+    PnL_CAD: string;
+    PnL_Pct: string;
 }
 
 interface SortConfig {
@@ -49,6 +51,31 @@ interface HoldingsApiResponse {
     success: boolean;
 }
 
+// New interfaces for PnL and Purchase Price data
+interface PnLData {
+    ticker: string;
+    name: string;
+    type: string;
+    geography: string;
+    sector: string;
+    fund: string;
+    currency: string;
+    shares_held: number;
+    market_value: number;
+    total_purchase_cost: number;
+    total_shares_purchased: number;
+    number_of_purchases: number;
+    average_purchase_price: number;
+    book_value: number;
+    pnl: number;
+    pnl_percentage: number;
+}
+
+interface PnLApiResponse {
+    data: PnLData[];
+    success: boolean;
+}
+
 interface LatestDateApiResponse {
     trading_date: string;
 }
@@ -67,6 +94,7 @@ function HoldingsContent() {
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState('');
     const [exchangeRatesData, setExchangeRatesData] = useState<ExchangeRates | null>(null);
+    const [pnlData, setPnLData] = useState<PnLData[]>([]);
     const [sortConfig, setSortConfig] = useState<SortConfig>({ key: null, direction: 'asc' });
     const [authLoading, setAuthLoading] = useState(true); // New loading state for auth check
 
@@ -131,6 +159,22 @@ function HoldingsContent() {
         }
     }, [selectedDate]);
 
+    const fetchPnLData = useCallback(async () => {
+        try {
+            const response = await fetch(`${API_BASE_URL}/api/holdings/pnl?portfolio=${selectedPortfolio}&date=${selectedDate}`);
+            const data: PnLApiResponse = await response.json();
+
+            if (data.success && data.data) {
+                setPnLData(data.data);
+            } else {
+                setPnLData([]);
+            }
+        } catch (error) {
+            console.error('Error fetching PnL data:', error);
+            setPnLData([]);
+        }
+    }, [selectedDate, selectedPortfolio]);
+
     // Fetch latest date
     const fetchLatestDate = useCallback(async () => {
         try {
@@ -187,8 +231,9 @@ function HoldingsContent() {
         if (!authLoading && selectedDate) {
             fetchExchangeRates();
             fetchData();
+            fetchPnLData();
         }
-    }, [authLoading, selectedDate, fetchExchangeRates, fetchData]);
+    }, [authLoading, urlDate, urlPortfolio, selectedDate,fetchExchangeRates, fetchData, fetchPnLData]);
 
     // Convert holdings market values and price to CAD
     const totalPortfolioValue = holdingsData.reduce((acc, row) => {
@@ -243,6 +288,11 @@ function HoldingsContent() {
 
     // Calculate Inception Return
     const inceptionReturn = ((totalPortfolioValue - STARTING_VALUE) / STARTING_VALUE) * 100;
+
+    // Helper function to get PnL data for a ticker
+    const getPnLData = useCallback((ticker: string) => {
+        return pnlData.find(item => item.ticker === ticker);
+    }, [pnlData]);
 
     if (authLoading) {
         return (
@@ -355,7 +405,11 @@ function HoldingsContent() {
                                             { label: 'Ticker', key: 'ticker' },
                                             { label: 'Shares', key: 'shares_held' },
                                             { label: 'Price (CAD)', key: 'price' },
-                                            { label: 'Market Value (CAD)', key: 'market_value' }
+                                            { label: 'Purchase Price (CAD)', key: 'purchase_price' },
+                                            { label: 'Book Value (CAD)', key: 'book_value' },
+                                            { label: 'Market Value (CAD)', key: 'market_value' },
+                                            { label: 'PnL (CAD)', key: 'PnL_CAD' },
+                                            { label: 'PnL %', key: 'PnL_Pct' }
                                         ].map(({ label, key }) => (
                                             <TableCell
                                                 key={key}
@@ -380,37 +434,62 @@ function HoldingsContent() {
                                 </TableHead>
                                 <TableBody>
                                     {loading ? (
-                                        <TableRow><TableCell colSpan={6} align="center"><CircularProgress color="primary" /></TableCell></TableRow>
+                                        <TableRow><TableCell colSpan={9} align="center"><CircularProgress color="primary" /></TableCell></TableRow>
                                     ) : error ? (
-                                        <TableRow><TableCell colSpan={6} align="center"><Typography color="error">{error}</Typography></TableCell></TableRow>
+                                        <TableRow><TableCell colSpan={9} align="center"><Typography color="error">{error}</Typography></TableCell></TableRow>
                                     ) : groupedByFund[fund].length > 0 ? (
                                         sortData(groupedByFund[fund]).map((row, index) => {
                                             const marketValue = parseFloat(row.market_value);
                                             const price = parseFloat(row.price);
                                             let convertedMarketValue = marketValue;
                                             let convertedPrice = price;
+                                            const pnlData = getPnLData(row.ticker);
+                                            const purchasePrice = Number(pnlData?.average_purchase_price ?? 0);
+                                            const bookValue = Number(pnlData?.book_value ?? 0);
+                                            const pnlPercentage = ((marketValue - bookValue) / bookValue) * 100;
+                                            const pnlValue = marketValue - bookValue;
+                                            let convertedPurchasePrice = purchasePrice;
+                                            let convertedBookValue = bookValue;
+                                            let convertedPnl = pnlValue;
 
                                             if (exchangeRatesData) {
                                                 if (row.security_currency === "USD") {
                                                     convertedMarketValue = marketValue / parseFloat(exchangeRatesData.USD);
                                                     convertedPrice = price / parseFloat(exchangeRatesData.USD);
+                                                    convertedPurchasePrice = purchasePrice/ parseFloat(exchangeRatesData.USD);
+                                                    convertedBookValue = bookValue / parseFloat(exchangeRatesData.USD);
+                                                    convertedPnl = pnlValue / parseFloat(exchangeRatesData.USD);
                                                 } else if (row.security_currency === "EUR") {
                                                     convertedMarketValue = marketValue / parseFloat(exchangeRatesData.EUR);
                                                     convertedPrice = price / parseFloat(exchangeRatesData.EUR);
+                                                    convertedPurchasePrice = purchasePrice / parseFloat(exchangeRatesData.EUR);
+                                                    convertedBookValue = bookValue / parseFloat(exchangeRatesData.EUR);
+                                                    convertedPnl = pnlValue / parseFloat(exchangeRatesData.EUR);
                                                 }
                                             }
+
                                             return (
                                                 <TableRow key={row.ticker} sx={{ backgroundColor: index % 2 === 0 ? theme.palette.action.hover : 'inherit' }}>
                                                     <TableCell align="center" sx={{ fontSize: '1rem' }}>{row.name}</TableCell>
                                                     <TableCell align="center" sx={{ fontSize: '1rem' }}>{row.ticker}</TableCell>
                                                     <TableCell align="center" sx={{ fontSize: '1rem' }}>{row.shares_held}</TableCell>
                                                     <TableCell align="center" sx={{ fontSize: '1rem' }}>$ {convertedPrice.toFixed(2)}</TableCell>
-                                                    <TableCell align="center" sx={{ fontSize: '1rem' }}>$ {convertedMarketValue.toFixed(2)}</TableCell>
+                                                    <TableCell align="center" sx={{ fontSize: '1rem' }}>$ {convertedPurchasePrice.toFixed(2)}</TableCell>
+                                                    <TableCell align="center" sx={{ fontSize: '1rem' }}>$ {convertedBookValue.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</TableCell>
+                                                    <TableCell align="center" sx={{ fontSize: '1rem' }}>$ {convertedMarketValue.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</TableCell>
+                                                    <TableCell align="center" sx={{ 
+                                                        fontSize: '1rem',
+                                                        color: convertedPnl >= 0 ? 'success.main' : 'error.main'
+                                                    }}>$ {convertedPnl.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</TableCell>
+                                                    <TableCell align="center" sx={{ 
+                                                        fontSize: '1rem',
+                                                        color: pnlPercentage >= 0 ? 'success.main' : 'error.main'
+                                                    }}>{pnlPercentage.toFixed(2)}%</TableCell>
                                                 </TableRow>
                                             );
                                         })
                                     ) : (
-                                        <TableRow><TableCell colSpan={6} align="center"><Typography>No data available</Typography></TableCell></TableRow>
+                                        <TableRow><TableCell colSpan={9} align="center"><Typography>No data available</Typography></TableCell></TableRow>
                                     )}
                                 </TableBody>
                             </Table>
