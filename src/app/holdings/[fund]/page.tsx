@@ -1,7 +1,7 @@
 'use client';
 import { useParams } from 'next/navigation';
 import Header from '../../components/nav';
-import { Paper, Typography, Box, TextField, Grid, CardContent, Card, Tooltip, TableBody, Table, TableCell, TableContainer, TableRow, Icon } from '@mui/material';
+import { Paper, Typography, Box, TextField, Grid, CardContent, Card, Tooltip, TableBody, Table, TableCell, TableContainer, TableRow, Icon, TableHead } from '@mui/material';
 import theme from '../../theme';
 import { useState, useEffect, useCallback } from 'react';
 import { API_BASE_URL } from '@/utils/apiBase';
@@ -288,62 +288,36 @@ function FundContent() {
                                 </Paper>
                             </Grid>
                             <Grid item xs={12}>
-                                <Paper elevation={2} sx={{ padding: 2, border: '1px solid #e0e0e0' }}>
-                                    <Typography variant="h6" sx={{ mb: 2 }}>Highlights</Typography>
-                                    {fundHighlights && (
-                                        <Grid container spacing={2}> 
-                                        <Grid item xs={12} sm={6} md={3}> 
-                                            <Card sx={{ height: '100%' }}>
-                                            <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', p:2, height: '100%'}}>
-                                            <Typography variant="subtitle2" sx={{ mt: 1, fontWeight: 'bold' }}>
-                                                Total Trades
-                                                </Typography>
-                                                <Typography variant="h6" sx={{ mt: 1 }}> 
-                                                {fundHighlights.total_trades}
-                                                </Typography>
-                                            </Box>
-                                            </Card>
-                                        </Grid>
-                                        <Grid item xs={12} sm={6} md={3}>
-                                            <Card>
-                                            <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', p:2, height: '100%'}}>
-                                            <Typography variant="subtitle2" sx={{ mt: 1, fontWeight: 'bold' }}>
-                                                Assets
-                                                </Typography>
-                                                <Typography variant="h6" sx={{ mt: 1 }}>
-                                                {fundHighlights.assets}
-                                                </Typography>
-                                            </Box>
-                                            </Card>
-                                        </Grid>
-                                        <Grid item xs={12} sm={6} md={3}>
-                                            <Card>
-                                            <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', p:2, height: '100%'}}>
-                                            <Typography variant="subtitle2" sx={{ mt: 1, fontWeight: 'bold' }}>
-                                            Investments
-                                            </Typography>
-                                            <Typography variant="h6" sx={{ mt: 1 }}>
-                                            ${(fundHighlights.investments ? parseFloat(fundHighlights.investments).toFixed(2) : '0.00').toLocaleString()}
-                                            </Typography>
-                                            </Box>
-                                            </Card>
-                                        </Grid>
-                                        <Grid item xs={12} sm={6} md={3}>
-                                            <Card>
-                                            <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', p:2, height: '100%'}}>
-                                            <Typography variant="subtitle2" sx={{ mt: 1, fontWeight: 'bold' }}>
-                                                Sectors
-                                                </Typography>
-                                                <Typography variant="h6" sx={{ mt: 1 }}>
-                                                {fundHighlights.sectors}
-                                                </Typography>
-                                            </Box>
-                                            </Card>
-                                        </Grid>
-                                        </Grid>
-                                    )}
-                                </Paper>
-                            </Grid>
+    <Paper elevation={2} sx={{ padding: 2, border: '1px solid #e0e0e0' }}>
+        <Typography variant="h6" sx={{ mb: 2 }}>Highlights</Typography>
+        {fundHighlights && (
+            <TableContainer component={Paper}>
+                <Table>
+                    <TableBody>
+                        <TableRow>
+                            <TableCell sx={{ fontWeight: 'bold' }}>Total Trades</TableCell>
+                            <TableCell align="left">{fundHighlights.total_trades}</TableCell>
+                        </TableRow>
+                        <TableRow>
+                            <TableCell sx={{ fontWeight: 'bold' }}>Assets</TableCell>
+                            <TableCell align="left">{fundHighlights.assets}</TableCell>
+                        </TableRow>
+                        <TableRow>
+                            <TableCell sx={{ fontWeight: 'bold' }}>Investments</TableCell>
+                            <TableCell align="left">
+                                ${fundHighlights.investments ? parseFloat(fundHighlights.investments).toFixed(2).toLocaleString() : '0.00'}
+                            </TableCell>
+                        </TableRow>
+                        <TableRow>
+                            <TableCell sx={{ fontWeight: 'bold' }}>Sectors</TableCell>
+                            <TableCell align="left">{fundHighlights.sectors}</TableCell>
+                        </TableRow>
+                    </TableBody>
+                </Table>
+            </TableContainer>
+        )}
+    </Paper>
+</Grid>
                         </Grid>
                         </CardContent>
                     </Card>
