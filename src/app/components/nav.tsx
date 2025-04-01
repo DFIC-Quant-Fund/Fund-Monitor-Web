@@ -46,13 +46,8 @@ export default function Header() {
                             className="
                 px-2 py-1 rounded-md text-xs font-bold 
                 hover:bg-[#600000] transition-colors duration-200
-                cursor-not-allowed opacity-50
                 sm:px-3 sm:py-2 sm:text-base
               "
-                            onClick={(e) => {
-                                e.preventDefault(); // disabled navigation for now
-                            }}
-                            aria-disabled="true"
                         >
                             Transactions
                         </Link>
