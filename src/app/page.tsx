@@ -47,7 +47,9 @@ export default function Home() {
                     <Button onClick={() => {
                         localStorage.removeItem("auth");
                         router.push("/login");
-                    }}>
+                    }}
+                            sx={{ minWidth: '250px' }}
+                    >
                         Logout
                     </Button>
                 </Box>

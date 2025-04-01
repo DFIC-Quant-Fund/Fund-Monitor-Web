@@ -267,7 +267,7 @@ function Transactions() {
                             <TableBody>
                                 {loading ? (
                                     <TableRow>
-                                        <TableCell colSpan={10} align="center">
+                                        <TableCell colSpan={9} align="center">
                                             <CircularProgress color="primary" />
                                         </TableCell>
                                     </TableRow>
@@ -290,7 +290,7 @@ function Transactions() {
                                                     row.action === 'SELL' ? theme.palette.error.main : 'inherit'
                                             }}>{row.action}</TableCell>
                                             <TableCell align="center" sx={{ fontSize: '1rem' }}>{row.shares.toLocaleString()}</TableCell>
-                                            <TableCell align="center" sx={{ fontSize: '1rem' }}>{Number(row.price).toFixed(2)}</TableCell>
+                                            <TableCell align="center" sx={{ fontSize: '1rem' }}>$ {Number(row.price).toFixed(2)}</TableCell>
                                             <TableCell align="center" sx={{ fontSize: '1rem' }}>{row.currency}</TableCell>
                                             <TableCell align="center" sx={{ fontSize: '1rem' }}>{row.fund}</TableCell>
                                         </TableRow>
