@@ -475,12 +475,12 @@ function HoldingsContent() {
                                                     <TableCell align="center" sx={{ fontSize: '1rem' }}>{row.shares_held}</TableCell>
                                                     <TableCell align="center" sx={{ fontSize: '1rem' }}>$ {convertedPrice.toFixed(2)}</TableCell>
                                                     <TableCell align="center" sx={{ fontSize: '1rem' }}>$ {convertedPurchasePrice.toFixed(2)}</TableCell>
-                                                    <TableCell align="center" sx={{ fontSize: '1rem' }}>$ {convertedBookValue.toFixed(2)}</TableCell>
-                                                    <TableCell align="center" sx={{ fontSize: '1rem' }}>$ {convertedMarketValue.toFixed(2)}</TableCell>
+                                                    <TableCell align="center" sx={{ fontSize: '1rem' }}>$ {convertedBookValue.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</TableCell>
+                                                    <TableCell align="center" sx={{ fontSize: '1rem' }}>$ {convertedMarketValue.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</TableCell>
                                                     <TableCell align="center" sx={{ 
                                                         fontSize: '1rem',
                                                         color: convertedPnl >= 0 ? 'success.main' : 'error.main'
-                                                    }}>$ {convertedPnl.toFixed(2)}</TableCell>
+                                                    }}>$ {convertedPnl.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</TableCell>
                                                     <TableCell align="center" sx={{ 
                                                         fontSize: '1rem',
                                                         color: pnlPercentage >= 0 ? 'success.main' : 'error.main'
