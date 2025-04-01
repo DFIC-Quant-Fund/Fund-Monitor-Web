@@ -219,9 +219,9 @@ function Performance() {
                                 ) : performanceData.length > 0 ? (
                                     performanceData.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((row, index) => (
                                         <TableRow key={row.date} sx={{ backgroundColor: index % 2 === 0 ? theme.palette.action.hover : 'inherit' }}>
-                                            <TableCell align="center" sx={{ fontSize: '1.1rem' }}>{row.date}</TableCell>
+                                            <TableCell align="center" sx={{ fontSize: '1rem' }}>{row.date}</TableCell>
                                             {[row.inception_return, row.one_day_return, row.one_week_return, row.one_month_return, row.one_year_return, row.ytd_return].map((val, idx) => (
-                                                <TableCell key={idx} align="center" sx={{ fontSize: '1.1rem' }}>{formatReturn(val)}</TableCell>
+                                                <TableCell key={idx} align="center" sx={{ fontSize: '1rem' }}>{formatReturn(val)}</TableCell>
                                             ))}
                                         </TableRow>
                                     ))
