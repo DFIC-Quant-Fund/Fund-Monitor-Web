@@ -49,6 +49,10 @@ interface HoldingsApiResponse {
     success: boolean;
 }
 
+interface LatestDateApiResponse {
+    trading_date: string;
+}
+
 function HoldingsContent() {
 
     // Getting parameters from url
@@ -57,10 +61,9 @@ function HoldingsContent() {
     const urlDate = searchParams.get('date');
     const urlPortfolio = searchParams.get('portfolio');
 
-    const baseDate = new Date(Date.now() - 86400000).toLocaleDateString('en-CA');
     const [holdingsData, setHoldingsData] = useState<HoldingData[]>([]);
     const [selectedPortfolio, setSelectedPortfolio] = useState(urlPortfolio || 'core');
-    const [selectedDate, setSelectedDate] = useState(urlDate || baseDate);
+    const [selectedDate, setSelectedDate] = useState(urlDate || '');
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState('');
     const [exchangeRatesData, setExchangeRatesData] = useState<ExchangeRates | null>(null);
@@ -91,7 +94,7 @@ function HoldingsContent() {
 
     // Updates url when there are missing params
     useEffect(() => {
-        if (!authLoading && (!urlDate || !urlPortfolio)) {
+        if (!authLoading && (!urlDate || !urlPortfolio) && selectedDate) {
             updateURL(selectedDate, selectedPortfolio);
         }
     }, [authLoading, urlDate, urlPortfolio, selectedDate, selectedPortfolio, updateURL]);
@@ -128,6 +131,31 @@ function HoldingsContent() {
         }
     }, [selectedDate]);
 
+    // Fetch latest date
+    const fetchLatestDate = useCallback(async () => {
+        try {
+            const response = await fetch(`${API_BASE_URL}/api/latest-date`);
+            const data: LatestDateApiResponse = await response.json();
+            
+            // Convert the date string to YYYY-MM-DD format
+            const date = new Date(data.trading_date);
+            date.setMinutes(date.getMinutes() + date.getTimezoneOffset());
+            const formattedDate = date.toLocaleDateString('en-CA');
+            
+            // Only set selectedDate if there's no urlDate
+            if (!urlDate) {
+                setSelectedDate(formattedDate);
+            }
+        } catch (error) {
+            console.error('Error fetching latest date:', error);
+            const yesterday = new Date(Date.now() - 86400000);
+            const fallbackDate = yesterday.toLocaleDateString('en-CA');
+            if (!urlDate) {
+                setSelectedDate(fallbackDate);
+            }
+        }
+    }, [urlDate]);
+
     const fetchData = useCallback(async () => {
         setLoading(true);
         setError('');
@@ -148,12 +176,19 @@ function HoldingsContent() {
         setLoading(false);
     }, [selectedDate, selectedPortfolio]);
 
+    // First useEffect to fetch latest date when component mounts
     useEffect(() => {
         if (!authLoading) {
+            fetchLatestDate();
+        }
+    }, [authLoading, fetchLatestDate]);
+
+    useEffect(() => {
+        if (!authLoading && selectedDate) {
             fetchExchangeRates();
             fetchData();
         }
-    }, [authLoading, urlDate, urlPortfolio, fetchExchangeRates, fetchData]);
+    }, [authLoading, selectedDate, fetchExchangeRates, fetchData]);
 
     // Convert holdings market values and price to CAD
     const totalPortfolioValue = holdingsData.reduce((acc, row) => {
