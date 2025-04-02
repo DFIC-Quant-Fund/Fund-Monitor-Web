@@ -197,10 +197,10 @@ function FundContent() {
     }))
     .sort((a, b) => new Date(a.trading_date).getTime() - new Date(b.trading_date).getTime());
     
-    const processedHoldings = holdingsOverview.map(item => ({
+    const processedHoldings = (holdingsOverview.map(item => ({
         ticker: item.ticker,  
         value: parseFloat(item.ticker_holdings)
-    }));
+    }))).filter(item => item.value > 0);
 
 
     return (
