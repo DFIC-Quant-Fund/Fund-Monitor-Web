@@ -1,9 +1,7 @@
 'use client';
 import { useState, useEffect, useCallback, Suspense } from 'react';
 import { useSearchParams, useRouter } from 'next/navigation';
-import {
-    Box, Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Typography, Button, CircularProgress, TablePagination,
-} from '@mui/material';
+import { Box, Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Typography, Button, CircularProgress, TablePagination, Select, MenuItem, FormControl } from '@mui/material';
 import { Download } from '@mui/icons-material';
 import { API_BASE_URL } from '../../utils/apiBase';
 import Header from '../components/nav';
@@ -32,8 +30,10 @@ function Performance() {
     const router = useRouter();
     const urlDate = searchParams.get('date')
     const baseDate = new Date(Date.now() - 86400000).toLocaleDateString('en-CA');
+    const urlPortfolio = searchParams.get('portfolio');
 
     const [performanceData, setPerformanceData] = useState<PerformanceData[]>([]);
+    const [selectedPortfolio, setSelectedPortfolio] = useState(urlPortfolio || 'core');
     const [selectedDate, setSelectedDate] = useState(urlDate || baseDate);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState('');
@@ -51,31 +51,38 @@ function Performance() {
 
 
     // Update url when selection changes
-    const updateURL = useCallback((date: string) => {
+    const updateURL = useCallback((date: string, portfolio: string) => {
         const params = new URLSearchParams();
         params.set('date', date);
+        params.set('portfolio', portfolio);
         router.push(`/performance?${params.toString()}`, { scroll: false });
     }, [router]);
 
-    // Updates url when no params are present
+    // Updates url when there are missing params
     useEffect(() => {
-        if (!authLoading && !urlDate) {
-            updateURL(selectedDate);
+        if (!authLoading && (!urlDate || !urlPortfolio) && selectedDate) {
+            updateURL(selectedDate, selectedPortfolio);
         }
-    }, [authLoading, urlDate, selectedDate, updateURL]);
+    }, [authLoading, urlDate, urlPortfolio, selectedDate, selectedPortfolio, updateURL]);
+    
+    // Update on change to portfolio
+    const onPortfolioChange = (newPortfolio: string) => {
+        setSelectedPortfolio(newPortfolio);
+        updateURL(selectedDate, newPortfolio);
+    };
 
     // Update on change to date
     const onDateChange = (newDate: string) => {
         setSelectedDate(newDate);
         setPage(0);
-        updateURL(newDate);
+        updateURL(newDate, selectedPortfolio);
     };
 
     const fetchData = useCallback(async () => {
         setLoading(true);
         setError('');
         try {
-            const url = `${API_BASE_URL}/api/performance?date=${selectedDate}`;
+            const url = `${API_BASE_URL}/api/performance?portfolio=${selectedPortfolio}&date=${selectedDate}`;
             const response = await fetch(url);
             const data: ApiResponse = await response.json();
 
@@ -90,7 +97,7 @@ function Performance() {
             setError('Failed to fetch data. Please try again.');
         }
         setLoading(false);
-    }, [selectedDate]);
+    }, [selectedDate, selectedPortfolio]);
 
     // Fetch data when the component is loaded and auth check is done
     useEffect(() => {
@@ -191,6 +198,20 @@ function Performance() {
                                 },
                             }}
                         />
+                        <FormControl size="small" >
+                            <Select
+                                value={selectedPortfolio}
+                                onChange={(e) => onPortfolioChange(e.target.value)}
+                                sx={{
+                                    width: { xs: '100%', sm: 180 },
+                                    height: 40,
+                                    borderRadius: "8px",
+                                }}
+                            >
+                                <MenuItem value="core">Core Portfolio</MenuItem>
+                                <MenuItem value="benchmark">Benchmark Portfolio</MenuItem>
+                            </Select>
+                        </FormControl>
                         <Button variant="contained" color="primary" startIcon={<Download />} onClick={downloadCSV} sx={{
                             backgroundColor: theme.palette.primary.main, width: { xs: '100%', sm: 180 }, height: 40, borderRadius: "8px",
                             padding: "8px", outline: "none"
