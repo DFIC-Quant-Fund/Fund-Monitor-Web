@@ -261,16 +261,50 @@ function HoldingsContent() {
     const sortData = (data: HoldingData[]) => {
         // If no key, return the data unsorted
         if (!sortConfig || !sortConfig.key) return data;
-        if (!sortConfig.key) return data;
 
         return [...data].sort((a, b) => {
-            let aValue: string | number = a[sortConfig.key as keyof HoldingData];
-            let bValue: string | number = b[sortConfig.key as keyof HoldingData];
+            let aValue: string | number;
+            let bValue: string | number;
 
-            // Convert to numbers for numerical columns
-            if (sortConfig.key === 'shares_held' || sortConfig.key === 'price' || sortConfig.key === 'market_value') {
-                aValue = parseFloat(aValue as string) || 0;
-                bValue = parseFloat(bValue as string) || 0;
+            // Handle special cases for calculated values
+            if (sortConfig.key === 'purchase_price') {
+                const aPnlData = getPnLData(a.ticker);
+                const bPnlData = getPnLData(b.ticker);
+                aValue = Number(aPnlData?.average_purchase_price ?? 0);
+                bValue = Number(bPnlData?.average_purchase_price ?? 0);
+            } else if (sortConfig.key === 'book_value') {
+                const aPnlData = getPnLData(a.ticker);
+                const bPnlData = getPnLData(b.ticker);
+                aValue = Number(aPnlData?.book_value ?? 0);
+                bValue = Number(bPnlData?.book_value ?? 0);
+            } else if (sortConfig.key === 'PnL_CAD') {
+                const aPnlData = getPnLData(a.ticker);
+                const bPnlData = getPnLData(b.ticker);
+                const aMarketValue = parseFloat(a.market_value);
+                const bMarketValue = parseFloat(b.market_value);
+                const aBookValue = Number(aPnlData?.book_value ?? 0);
+                const bBookValue = Number(bPnlData?.book_value ?? 0);
+                aValue = aMarketValue - aBookValue;
+                bValue = bMarketValue - bBookValue;
+            } else if (sortConfig.key === 'PnL_Pct') {
+                const aPnlData = getPnLData(a.ticker);
+                const bPnlData = getPnLData(b.ticker);
+                const aMarketValue = parseFloat(a.market_value);
+                const bMarketValue = parseFloat(b.market_value);
+                const aBookValue = Number(aPnlData?.book_value ?? 0);
+                const bBookValue = Number(bPnlData?.book_value ?? 0);
+                aValue = aBookValue === 0 ? 0 : ((aMarketValue - aBookValue) / aBookValue) * 100;
+                bValue = bBookValue === 0 ? 0 : ((bMarketValue - bBookValue) / bBookValue) * 100;
+            } else {
+                // Original logic for other columns
+                aValue = a[sortConfig.key as keyof HoldingData];
+                bValue = b[sortConfig.key as keyof HoldingData];
+                
+                // Convert to numbers for numerical columns
+                if (sortConfig.key === 'shares_held' || sortConfig.key === 'price' || sortConfig.key === 'market_value') {
+                    aValue = parseFloat(aValue as string) || 0;
+                    bValue = parseFloat(bValue as string) || 0;
+                }
             }
 
             if (aValue < bValue) return sortConfig.direction === 'asc' ? -1 : 1;
