@@ -456,7 +456,7 @@ function HoldingsContent() {
                                                 if (row.security_currency === "USD") {
                                                     convertedMarketValue = marketValue / parseFloat(exchangeRatesData.USD);
                                                     convertedPrice = price / parseFloat(exchangeRatesData.USD);
-                                                    convertedPurchasePrice = purchasePrice/ parseFloat(exchangeRatesData.USD);
+                                                    convertedPurchasePrice = purchasePrice / parseFloat(exchangeRatesData.USD);
                                                     convertedBookValue = bookValue / parseFloat(exchangeRatesData.USD);
                                                     convertedPnl = pnlValue / parseFloat(exchangeRatesData.USD);
                                                 } else if (row.security_currency === "EUR") {
@@ -477,11 +477,11 @@ function HoldingsContent() {
                                                     <TableCell align="center" sx={{ fontSize: '1rem' }}>$ {convertedPurchasePrice.toFixed(2)}</TableCell>
                                                     <TableCell align="center" sx={{ fontSize: '1rem' }}>$ {convertedBookValue.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</TableCell>
                                                     <TableCell align="center" sx={{ fontSize: '1rem' }}>$ {convertedMarketValue.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</TableCell>
-                                                    <TableCell align="center" sx={{ 
+                                                    <TableCell align="center" sx={{
                                                         fontSize: '1rem',
                                                         color: convertedPnl >= 0 ? 'success.main' : 'error.main'
                                                     }}>$ {convertedPnl.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</TableCell>
-                                                    <TableCell align="center" sx={{ 
+                                                    <TableCell align="center" sx={{
                                                         fontSize: '1rem',
                                                         color: pnlPercentage >= 0 ? 'success.main' : 'error.main'
                                                     }}>{pnlPercentage.toFixed(2)}%</TableCell>
