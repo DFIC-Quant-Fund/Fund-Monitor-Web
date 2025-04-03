@@ -3,13 +3,12 @@ import { useParams } from 'next/navigation';
 import Header from '../../components/nav';
 import { Paper, Typography, Box, Grid, CardContent, Card, TableBody, Table, TableCell, TableContainer, TableRow, Button, CircularProgress } from '@mui/material';
 import theme from '../../theme';
-import { useState, useEffect, useCallback, JSX } from 'react';
+import { useState, useEffect, useCallback} from 'react';
 import { API_BASE_URL } from '@/utils/apiBase';
 import { LineChart, CartesianGrid, XAxis, YAxis, Line, Cell, Pie, PieChart, Legend } from 'recharts';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
-import TextField, { FilledTextFieldProps, OutlinedTextFieldProps, StandardTextFieldProps, TextFieldVariants } from '@mui/material/TextField';
 
 interface FundThesis {
     name: string;
@@ -219,13 +218,13 @@ function FundContent() {
         value: parseFloat(item.ticker_holdings)
     }))).filter(item => item.value > 0);
 
-    const handleDateChange = (newValue: Date | null) => {
+    const handleDateChange = (newValue: Date | null): void => {
         if (newValue) {
             setSelectedDate(newValue.toISOString().split("T")[0]); // Convert Date to YYYY-MM-DD string
         }
     };
 
-    const isWeekend = (date: { getDay: () => any; }) => {
+    const isWeekend = (date: Date) => {
         const day = date.getDay();
         return day === 0 || day === 6;
     };
@@ -327,6 +326,7 @@ function FundContent() {
                                                 width: { xs: '100%', sm: 'auto' },
                                                 height: 40, 
                                                 borderRadius: "12px", 
+                                                
                                             }
                                         }
                                     }}
