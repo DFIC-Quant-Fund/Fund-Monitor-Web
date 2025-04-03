@@ -3,9 +3,12 @@ import { useParams } from 'next/navigation';
 import Header from '../../components/nav';
 import { Paper, Typography, Box, Grid, CardContent, Card, TableBody, Table, TableCell, TableContainer, TableRow, Button, CircularProgress } from '@mui/material';
 import theme from '../../theme';
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useCallback} from 'react';
 import { API_BASE_URL } from '@/utils/apiBase';
 import { LineChart, CartesianGrid, XAxis, YAxis, Line, Cell, Pie, PieChart, Legend } from 'recharts';
+import { DatePicker } from '@mui/x-date-pickers/DatePicker';
+import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
+import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
 
 interface FundThesis {
     name: string;
@@ -52,18 +55,31 @@ interface FundThesisApiResponse {
 // helper 
 const calculateDate = (period: 'week' | 'month' | '3months' | 'year') => {
     const today = new Date();
+    let calculatedDate;
+    
     switch (period) {
         case 'week':
-            return new Date(today.setDate(today.getDate() - 7)).toLocaleDateString('en-CA');
+            calculatedDate = new Date(today.setDate(today.getDate() - 7));
+            break;
         case 'month':
-            return new Date(today.setMonth(today.getMonth() - 1)).toLocaleDateString('en-CA');
+            calculatedDate = new Date(today.setMonth(today.getMonth() - 1));
+            break;
         case '3months':
-            return new Date(today.setMonth(today.getMonth() - 3)).toLocaleDateString('en-CA');
+            calculatedDate = new Date(today.setMonth(today.getMonth() - 3));
+            break;
         case 'year':
-            return new Date(today.setFullYear(today.getFullYear() - 1)).toLocaleDateString('en-CA');
+            calculatedDate = new Date(today.setFullYear(today.getFullYear() - 1));
+            break;
         default:
-            return new Date().toLocaleDateString('en-CA');
+            calculatedDate = new Date();
     }
+    
+    // Ensure the date is a weekday (Monday-Friday)
+    while (calculatedDate.getDay() === 0 || calculatedDate.getDay() === 6) {
+        calculatedDate.setDate(calculatedDate.getDate() - 1); // Move back to the previous weekday
+    }
+    
+    return calculatedDate.toLocaleDateString('en-CA');
 };
 
 function FundContent() {
@@ -197,12 +213,22 @@ function FundContent() {
     }))
     .sort((a, b) => new Date(a.trading_date).getTime() - new Date(b.trading_date).getTime());
     
-    const processedHoldings = holdingsOverview.map(item => ({
+    const processedHoldings = (holdingsOverview.map(item => ({
         ticker: item.ticker,  
         value: parseFloat(item.ticker_holdings)
-    }));
+    }))).filter(item => item.value > 0);
 
+    const handleDateChange = (newValue: Date | null): void => {
+        if (newValue) {
+            setSelectedDate(newValue.toISOString().split("T")[0]); // Convert Date to YYYY-MM-DD string
+        }
+    };
 
+    const isWeekend = (date: Date) => {
+        const day = date.getDay();
+        return day === 0 || day === 6;
+    };
+    
     return (
         <>
             <Header />
@@ -239,7 +265,6 @@ function FundContent() {
                                 <Typography variant="h6" component="div" gutterBottom sx={{ fontWeight: 'bold', color: theme.palette.primary.main }}>
                                     Fund Performance
                                 </Typography>
-
                                 <Box sx={{
                                     display: 'flex',
                                     flexDirection: { xs: 'column', sm: 'row' },
@@ -283,30 +308,35 @@ function FundContent() {
                                             </Button>
                                         ))}
                                     </Box>
-                                    <Box
-                                        component="input"
-                                        type="date"
-                                        value={selectedDate || ""}
-                                        onChange={(e) => setSelectedDate(e.target.value)}
-                                        min="1900-01-01"
-                                        max="2100-12-31"
-                                        sx={{
-                                            width: { xs: '100%', sm: 180 },
-                                            height: 40,
-                                            border: "1px solid #ccc",
-                                            borderRadius: "8px",
-                                            padding: "8px",
-                                            outline: "none",
-                                            "&:focus": {
-                                                borderColor: "primary.main",
-                                            },
-                                        }}
-                                    />
 
-                                </Box>
+                                    <LocalizationProvider dateAdapter={AdapterDateFns}>
+                                <DatePicker
+                                    label="Select a Date"
+                                    value={selectedDate ? new Date(selectedDate) : null} // Convert string to Date
+                                    onChange={handleDateChange}
+                                    shouldDisableDate={isWeekend} // Disables weekends
+                                    minDate={new Date(2000, 0, 1)} 
+                                    maxDate={new Date(2050, 0, 1)} 
+                                    slotProps={{
+                                        textField: {
+                                            variant: "outlined",
+                                            sx: {
+                                                flexDirection: { xs: 'column', sm: 'row' },
+                                                gap: 1,
+                                                width: { xs: '100%', sm: 'auto' },
+                                                height: 40, 
+                                                borderRadius: "12px", 
+                                                
+                                            }
+                                        }
+                                    }}
+                                />
+                            </LocalizationProvider>
+
+                            </Box>
                             </Box>
                             <Grid container spacing={2}>
-                                <Grid item xs={12} md={6}>
+                                <Grid size={{ xs: 12, md: 6 }}>
                                     <Paper elevation={2} sx={{ padding: 2, border: '1px solid #e0e0e0' }}>
                                         <Typography variant="h6">Fund Value</Typography>
                                         <LineChart
@@ -329,7 +359,7 @@ function FundContent() {
                                         </LineChart>
                                     </Paper>
                                 </Grid>
-                                <Grid item xs={12} md={6}>
+                                <Grid size={{ xs: 12, md: 6 }}>
                                     <Paper elevation={2} sx={{ padding: 2, border: '1px solid #e0e0e0' }}>
                                         <Typography variant="h6">Holdings Overview</Typography>
                                         {processedHoldings.length > 0 ? (
@@ -343,7 +373,6 @@ function FundContent() {
                                                     outerRadius={80}
                                                     dataKey="value"
                                                 >
-                                                    {/* color */}
                                                     {processedHoldings.map((entry, index) => (
                                                         <Cell
                                                             key={`cell-${index}`}
@@ -357,7 +386,7 @@ function FundContent() {
                                         )}
                                     </Paper>
                                 </Grid>
-                                <Grid item xs={12}>
+                                <Grid size={{ xs: 12 }}>
                                     <Paper elevation={2} sx={{ padding: 2, border: '1px solid #e0e0e0' }}>
                                         <Typography variant="h6" sx={{ mb: 2 }}>Highlights</Typography>
                                         {loading ? (
