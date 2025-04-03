@@ -9,13 +9,13 @@
     "lint": "next lint"
   },
   "dependencies": {
-    "@date-io/date-fns": "^3.2.1",
+    "date-fns": "2.30.0",
+    "@date-io/date-fns": "2.16.0", 
+    "@mui/x-date-pickers": "6.11.8", 
+    "@mui/material": "5.15.15",
     "@emotion/react": "^11.14.0",
     "@emotion/styled": "^11.14.0",
     "@mui/icons-material": "^6.4.9",
-    "@mui/material": "^6.4.10",
-    "@mui/x-date-pickers": "^7.28.2",
-    "date-fns": "^4.1.0",
     "next": "^15.2.3",
     "react": "^19.1.0",
     "react-csv": "^2.2.2",
