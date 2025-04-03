@@ -561,7 +561,7 @@ function HoldingsContent() {
                         alignItems: 'flex-start',
                     }}>
                         <Typography variant="body1" sx={{ mb: 2 }}>
-                            <strong>Total Portfolio Value:</strong> ${totalPortfolioValue.toFixed(2)}
+                            <strong>Total Portfolio Value:</strong> ${totalPortfolioValue.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
                         </Typography>
 
                         <Typography variant="body2" sx={{
