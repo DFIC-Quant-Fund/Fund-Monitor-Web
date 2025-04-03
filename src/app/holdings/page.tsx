@@ -7,6 +7,8 @@ import { useSearchParams, useRouter } from 'next/navigation';
 import { Box, Typography, Select, MenuItem, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, CircularProgress, FormControl } from '@mui/material';
 import theme from '../theme';
 import Loading from '../components/loading';
+// import { AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Legend } from 'recharts';
+import StackedAreaChart from './weightsChart';
 
 
 // Interface for Holdings Data
@@ -550,6 +552,38 @@ function HoldingsContent() {
                         <Typography variant="body1" sx={{ mb: 2 }}>
                             <strong>USD to CAD:</strong> ${exchangeRatesData?.USD ? parseFloat(exchangeRatesData.USD).toFixed(6) : '0.000000'}
                         </Typography>
+                    </Box>
+
+                    <Box sx={{
+                        display: 'flex',
+                        flexDirection: 'column',
+                        gap: 2,
+                        width: '100%',
+                        justifyContent: 'space-between'
+                    }}>
+                        <Box sx={{ flex: 1 }}>
+                            <StackedAreaChart
+                                title="Geography Weights Over Time"
+                                apiUrl={`${API_BASE_URL}/api/holdings/sector-weights-geography?portfolio=${selectedPortfolio}&date=${selectedDate}`}
+                                categoryKey="geography"
+                            />
+                        </Box>
+
+                        <Box sx={{ flex: 1 }}>
+                            <StackedAreaChart
+                                title="Sector Weights Over Time"
+                                apiUrl={`${API_BASE_URL}/api/holdings/sector-weights-sector?portfolio=${selectedPortfolio}&date=${selectedDate}`}
+                                categoryKey="sector"
+                            />
+                        </Box>
+
+                        <Box sx={{ flex: 1 }}>
+                            <StackedAreaChart
+                                title="Fund Weights Over Time"
+                                apiUrl={`${API_BASE_URL}/api/holdings/sector-weights-fund?portfolio=${selectedPortfolio}&date=${selectedDate}`}
+                                categoryKey="fund"
+                            />
+                        </Box>
                     </Box>
 
                     <Box sx={{
