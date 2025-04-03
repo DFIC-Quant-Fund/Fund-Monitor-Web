@@ -336,7 +336,7 @@ function FundContent() {
                             </Box>
                             </Box>
                             <Grid container spacing={2}>
-                                <Grid item xs={12} md={6}>
+                                <Grid size={{ xs: 12, md: 6 }}>
                                     <Paper elevation={2} sx={{ padding: 2, border: '1px solid #e0e0e0' }}>
                                         <Typography variant="h6">Fund Value</Typography>
                                         <LineChart
@@ -359,7 +359,7 @@ function FundContent() {
                                         </LineChart>
                                     </Paper>
                                 </Grid>
-                                <Grid item xs={12} md={6}>
+                                <Grid size={{ xs: 12, md: 6 }}>
                                     <Paper elevation={2} sx={{ padding: 2, border: '1px solid #e0e0e0' }}>
                                         <Typography variant="h6">Holdings Overview</Typography>
                                         {processedHoldings.length > 0 ? (
@@ -386,7 +386,7 @@ function FundContent() {
                                         )}
                                     </Paper>
                                 </Grid>
-                                <Grid item xs={12}>
+                                <Grid size={{ xs: 12 }}>
                                     <Paper elevation={2} sx={{ padding: 2, border: '1px solid #e0e0e0' }}>
                                         <Typography variant="h6" sx={{ mb: 2 }}>Highlights</Typography>
                                         {loading ? (
