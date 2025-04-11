@@ -7,7 +7,6 @@ import { useSearchParams, useRouter } from 'next/navigation';
 import { Box, Typography, Select, MenuItem, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, CircularProgress, FormControl } from '@mui/material';
 import theme from '../theme';
 import Loading from '../components/loading';
-import StackedAreaChart from './weightsChart';
 
 
 // Interface for Holdings Data
@@ -592,29 +591,6 @@ function HoldingsContent() {
                         width: '100%',
                         justifyContent: 'space-between'
                     }}>
-                        <Box sx={{ flex: 1 }}>
-                            <StackedAreaChart
-                                title="Geography Weights Over Time"
-                                apiUrl={`${API_BASE_URL}/api/holdings/sector-weights-geography?portfolio=${selectedPortfolio}&date=${selectedDate}`}
-                                categoryKey="geography"
-                            />
-                        </Box>
-
-                        <Box sx={{ flex: 1 }}>
-                            <StackedAreaChart
-                                title="Sector Weights Over Time"
-                                apiUrl={`${API_BASE_URL}/api/holdings/sector-weights-sector?portfolio=${selectedPortfolio}&date=${selectedDate}`}
-                                categoryKey="sector"
-                            />
-                        </Box>
-
-                        <Box sx={{ flex: 1 }}>
-                            <StackedAreaChart
-                                title="Fund Weights Over Time"
-                                apiUrl={`${API_BASE_URL}/api/holdings/sector-weights-fund?portfolio=${selectedPortfolio}&date=${selectedDate}`}
-                                categoryKey="fund"
-                            />
-                        </Box>
                     </Box>                    
                 </Box>
             </Paper>
