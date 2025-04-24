@@ -354,60 +354,76 @@ function HoldingsContent() {
       
             {/* Title + date/portfolio picker + metrics button */}
             <Box
-            sx={{
+              sx={{
                 display: 'flex',
-                alignItems: 'center',
+                flexDirection: { xs: 'column', sm: 'row' },
+                alignItems: { xs: 'flex-start', sm: 'center' },
                 justifyContent: 'space-between',
-                pl: { xs: 2, sm: 10 },
-                pr: { xs: 2, sm: 10 },
+                px: { xs: 2, sm: 10 },
                 pt: 3,
-                mb: 4,
-            }}
+                mb: 4
+              }}
             >
-            {/* Left: Page title */}
-            <Typography variant="h4" fontWeight={800} sx={{ color: theme.palette.primary.main }}>
+              <Typography
+                variant="h4"
+                fontWeight={800}
+                sx={{ color: theme.palette.primary.main }}
+              >
                 Holdings
-            </Typography>
+              </Typography>
 
-            {/* Right: controls */}
-            <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
-                <Box
-                component="input"
-                type="date"
-                value={selectedDate}
-                onChange={e => onDateChange(e.target.value)}
+              <Box
                 sx={{
-                    width: 180,
+                  display: 'flex',
+                  flexDirection: { xs: 'column', sm: 'row' },
+                  gap: 2,
+                  width: { xs: '100%', sm: 'auto' },
+                  mt: { xs: 2, sm: 0 },
+                  justifyContent: 'flex-end'
+                }}
+              >
+                <Box
+                  component="input"
+                  type="date"
+                  value={selectedDate}
+                  onChange={e => onDateChange(e.target.value)}
+                  sx={{
+                    width: { xs: '100%', sm: 180 },
                     height: 40,
                     border: '1px solid #ccc',
                     borderRadius: '8px',
-                    p: '8px',
-                    '&:focus': { borderColor: 'primary.main' },
-                }}
+                    p: '8px'
+                  }}
                 />
-                <FormControl size="small" sx={{ minWidth: 180 }}>
-                <Select
+
+                <FormControl size="small" sx={{ width: { xs: '100%', sm: 180 } }}>
+                  <Select
                     value={selectedPortfolio}
                     onChange={e => onPortfolioChange(e.target.value)}
                     sx={{ height: 40, borderRadius: '8px' }}
-                >
+                  >
                     <MenuItem value="core">Core Portfolio</MenuItem>
                     <MenuItem value="benchmark">Benchmark Portfolio</MenuItem>
-                </Select>
+                  </Select>
                 </FormControl>
-                <Link href={`/holdings/metrics?date=${selectedDate}&portfolio=${selectedPortfolio}`} passHref>
-                <Button
+
+                <Link
+                  href={`/holdings/metrics?date=${selectedDate}&portfolio=${selectedPortfolio}`}
+                  passHref
+                >
+                  <Button
                     variant="contained"
                     sx={{
-                    backgroundColor: '#800000',
-                    '&:hover': { backgroundColor: '#660000' },
-                    color: 'white',
+                      backgroundColor: '#800000',
+                      '&:hover': { backgroundColor: '#660000' },
+                      color: 'white',
+                      width: { xs: '100%', sm: 'auto' }
                     }}
-                >
+                  >
                     Metrics
-                </Button>
+                  </Button>
                 </Link>
-            </Box>
+              </Box>
             </Box>
       
             {/* Summary cards */}

@@ -87,106 +87,117 @@ function HoldingsMetricsContent() {
         }}
       >
         {/* header bar */}
-        <Box sx={{ pl: { xs: 2, sm: 10 }, pr: { xs: 2, sm: 10 }, pt: 3, mb: 4 }}>
-          <Box sx={{ display: 'flex', alignItems: 'center' }}>
-            {/* Title */}
-            <Typography
-              variant="h4"
-              fontWeight={800}
-              sx={{ color: '#800000', flexShrink: 0 }}
-            >
-              Holdings Metrics
-            </Typography>
+        <Box
+          sx={{
+            display: 'flex',
+            flexDirection: { xs: 'column', sm: 'row' }, 
+            alignItems: { xs: 'flex-start', sm: 'center' },
+            justifyContent: 'space-between',
+            pl: { xs: 2, sm: 10 },
+            pr: { xs: 2, sm: 10 },
+            pt: 3,
+            mb: 4,
+          }}
+        >
+          <Typography variant="h4" fontWeight={800} sx={{ color: '#800000', mb: { xs: 2, sm: 0 } }}>
+            Holdings Metrics
+          </Typography>
+
+          <Box
+            sx={{
+              display: 'flex',
+              flexDirection: { xs: 'column', sm: 'row' },
+              alignItems: 'stretch',
+              gap: 2,
+              flexWrap: 'wrap', 
+              width: { xs: '100%', sm: 'auto' },
+            }}
+          >
+            {/* start date */}
             <Box
+              component="input"
+              type="date"
+              value={startDate}
+              onChange={e => setStartDate(e.target.value)}
               sx={{
-                display: 'flex',
-                alignItems: 'center',
-                gap: 2,
-                ml: 'auto',
-                flexWrap: 'wrap',
+                width: { xs: '100%', sm: 160 },
+                height: 40,
+                border: '1px solid #ccc',
+                borderRadius: 1,
+                px: 1,
+              }}
+            />
+
+            {/* end date */}
+            <Box
+              component="input"
+              type="date"
+              value={endDate}
+              onChange={e => setEndDate(e.target.value)}
+              sx={{
+                width: { xs: '100%', sm: 160 },
+                height: 40,
+                border: '1px solid #ccc',
+                borderRadius: 1,
+                px: 1,
+              }}
+            />
+
+            {/* portfolio selector */}
+            <FormControl
+              size="small"
+              sx={{ width: { xs: '100%', sm: 160 } }}
+            >
+              <Select
+                value={portfolio}
+                onChange={e => setPortfolio(e.target.value)}
+                sx={{ height: 40, borderRadius: 1 }}
+              >
+                <MenuItem value="core">Core Portfolio</MenuItem>
+                <MenuItem value="benchmark">Benchmark Portfolio</MenuItem>
+              </Select>
+            </FormControl>
+
+            {/* export button  */}
+            <Button
+              variant="contained"
+              startIcon={<Download />}
+              onClick={exportMetrics}
+              sx={{
+                width: { xs: '100%', sm: 160 },
+                height: 40,
+                borderRadius: 1,
+                backgroundColor: '#800000',
+                '&:hover': { backgroundColor: '#660000' },
+                textTransform: 'uppercase',
+                color: 'white',
               }}
             >
-              {/* start date */}
-              <Box
-                component="input"
-                type="date"
-                value={startDate}
-                onChange={e => setStartDate(e.target.value)}
-                sx={{
-                  width: 160,
-                  height: 40,
-                  border: '1px solid #ccc',
-                  borderRadius: 1,
-                  px: 1,
-                }}
-              />
+              Export
+            </Button>
 
-              {/* end date */}
-              <Box
-                component="input"
-                type="date"
-                value={endDate}
-                onChange={e => setEndDate(e.target.value)}
-                sx={{
-                  width: 160,
-                  height: 40,
-                  border: '1px solid #ccc',
-                  borderRadius: 1,
-                  px: 1,
-                }}
-              />
-
-              {/* portfolio selector */}
-              <FormControl size="small" sx={{ minWidth: 160 }}>
-                <Select
-                  value={portfolio}
-                  onChange={e => setPortfolio(e.target.value)}
-                  sx={{ height: 40, borderRadius: 1 }}
-                >
-                  <MenuItem value="core">Core Portfolio</MenuItem>
-                  <MenuItem value="benchmark">Benchmark Portfolio</MenuItem>
-                </Select>
-              </FormControl>
-
-              {/* export button  */}
+            {/* view holdings */}
+            <Link
+              href={`/holdings?date=${endDate}&portfolio=${portfolio}`}
+              passHref
+              style={{ textDecoration: 'none' }}
+            >
               <Button
+                fullWidth={false}
                 variant="contained"
-                color="primary"
-                startIcon={<Download />}
-                onClick={exportMetrics}
                 sx={{
-                  width: 160,
+                  width: { xs: '100%', sm: 160 },
                   height: 40,
                   borderRadius: 1,
                   backgroundColor: '#800000',
+                  '&:hover': { backgroundColor: '#660000' },
                   textTransform: 'uppercase',
+                  color: 'white',
                 }}
               >
-                Export
+                Holdings
               </Button>
-
-              {/* view holdings */}
-              <Link
-                href={`/holdings?date=${endDate}&portfolio=${portfolio}`}
-                passHref
-                style={{ textDecoration: 'none' }}
-              >
-                <Button
-                  variant="contained"
-                  sx={{
-                    backgroundColor: '#800000',
-                    '&:hover': { backgroundColor: '#660000' },
-                    color: 'white',
-                    textTransform: 'uppercase',
-                    width: 160,
-                    height: 40,
-                    borderRadius: 1,
-                  }}
-                >
-                  Holdings
-                </Button>
-              </Link>
-            </Box>
+            </Link>
           </Box>
         </Box>
 
