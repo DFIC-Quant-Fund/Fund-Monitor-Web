@@ -3,27 +3,27 @@ import { useState, useEffect, useCallback, Suspense } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import Link from 'next/link';
 import Header from '../../components/nav';
-import {Box, Paper, Typography, Button, FormControl, Select, MenuItem,} 
-from '@mui/material';
+import { Box, Paper, Typography, Button, FormControl, Select, MenuItem, }
+    from '@mui/material';
 import { Download } from '@mui/icons-material';
 import Loading from '../../components/loading';
 import StackedAreaChart from '../weightsChart';
 import { API_BASE_URL } from '../../../utils/apiBase';
 
 function HoldingsMetricsContent() {
-  const router = useRouter();
-  const params = useSearchParams();
+    const router = useRouter();
+    const params = useSearchParams();
 
-  const urlStart = params.get('start_date');
-  const urlEnd   = params.get('end_date');
-  const urlPort  = params.get('portfolio');
+    const urlStart = params.get('start_date');
+    const urlEnd = params.get('end_date');
+    const urlPort = params.get('portfolio');
 
-  const INCEPTION_DATE = '2022-05-02';
+    const INCEPTION_DATE = '2022-05-02';
 
-  const [startDate, setStartDate]     = useState(urlStart || INCEPTION_DATE);
-  const [endDate, setEndDate]         = useState(urlEnd   || '');
-  const [portfolio, setPortfolio]     = useState(urlPort  || 'core');
-  const [authLoading, setAuthLoading] = useState(true);
+    const [startDate, setStartDate] = useState(urlStart || INCEPTION_DATE);
+    const [endDate, setEndDate] = useState(urlEnd || '');
+    const [portfolio, setPortfolio] = useState(urlPort || 'core');
+    const [authLoading, setAuthLoading] = useState(true);
 
     // Authentication check
     useEffect(() => {
@@ -35,42 +35,42 @@ function HoldingsMetricsContent() {
         }
     }, [router]);
 
-  const fetchLatestDate = useCallback(async () => {
-    const res = await fetch(`${API_BASE_URL}/api/latest-date`);
-    const json = await res.json();
-    if (json.trading_date) {
-      const d = new Date(json.trading_date);
-      d.setMinutes(d.getMinutes() + d.getTimezoneOffset());
-      setEndDate(d.toISOString().slice(0, 10));
-    }
-  }, []);
+    const fetchLatestDate = useCallback(async () => {
+        const res = await fetch(`${API_BASE_URL}/api/latest-date`);
+        const json = await res.json();
+        if (json.trading_date) {
+            const d = new Date(json.trading_date);
+            d.setMinutes(d.getMinutes() + d.getTimezoneOffset());
+            setEndDate(d.toISOString().slice(0, 10));
+        }
+    }, []);
 
-  useEffect(() => {
-    if (!authLoading && !urlEnd) {
-      fetchLatestDate();
-    }
-  }, [authLoading, urlEnd, fetchLatestDate]);
+    useEffect(() => {
+        if (!authLoading && !urlEnd) {
+            fetchLatestDate();
+        }
+    }, [authLoading, urlEnd, fetchLatestDate]);
 
-  // Sync URL on any change
-  const syncUrl = useCallback(() => {
-    const q = new URLSearchParams();
-    q.set('start_date', startDate);
-    q.set('end_date', endDate);
-    q.set('portfolio', portfolio);
-    router.replace(`/holdings/metrics?${q.toString()}`, { scroll: false });
-  }, [router, startDate, endDate, portfolio]);
+    // Sync URL on any change
+    const syncUrl = useCallback(() => {
+        const q = new URLSearchParams();
+        q.set('start_date', startDate);
+        q.set('end_date', endDate);
+        q.set('portfolio', portfolio);
+        router.replace(`/holdings/metrics?${q.toString()}`, { scroll: false });
+    }, [router, startDate, endDate, portfolio]);
 
-  useEffect(() => {
-    if (!authLoading && endDate) {
-      syncUrl();
-    }
-  }, [authLoading, syncUrl, endDate]);
+    useEffect(() => {
+        if (!authLoading && endDate) {
+            syncUrl();
+        }
+    }, [authLoading, syncUrl, endDate]);
 
-  const exportMetrics = () => {
-    console.log('export metrics for', { startDate, endDate, portfolio });
-  };
+    const exportMetrics = () => {
+        console.log('export metrics for', { startDate, endDate, portfolio });
+    };
 
-  if (authLoading) return <Loading />;
+    if (authLoading) return <Loading />;
 
   return (
     <>
