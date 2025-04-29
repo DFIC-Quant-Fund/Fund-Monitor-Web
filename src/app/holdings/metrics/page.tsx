@@ -3,8 +3,7 @@ import { useState, useEffect, useCallback, Suspense } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import Link from 'next/link';
 import Header from '../../components/nav';
-import { Box, Paper, Typography, Button, FormControl, Select, MenuItem, }
-    from '@mui/material';
+import { Box, Paper, Typography, Button, FormControl, Select, MenuItem, } from '@mui/material';
 import { Download } from '@mui/icons-material';
 import Loading from '../../components/loading';
 import StackedAreaChart from '../weightsChart';

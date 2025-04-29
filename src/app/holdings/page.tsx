@@ -408,7 +408,7 @@ function HoldingsContent() {
                 </FormControl>
 
                 <Link
-                  href={`/holdings/metrics?date=${selectedDate}&portfolio=${selectedPortfolio}`}
+                  href={`/holdings/metrics?end_date=${selectedDate}&portfolio=${selectedPortfolio}`}
                   passHref
                 >
                   <Button
