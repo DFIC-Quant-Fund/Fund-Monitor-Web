@@ -4,10 +4,10 @@ import { useState, useEffect, useCallback, Suspense } from 'react';
 import { API_BASE_URL } from '../../utils/apiBase';
 import Header from '../components/nav';
 import { useSearchParams, useRouter } from 'next/navigation';
-import { Box, Typography, Select, MenuItem, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, CircularProgress, FormControl } from '@mui/material';
+import { Box, Typography, Select, MenuItem, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, CircularProgress, FormControl, Button } from '@mui/material';
 import theme from '../theme';
 import Loading from '../components/loading';
-import StackedAreaChart from './weightsChart';
+import Link from 'next/link';
 
 
 // Interface for Holdings Data
@@ -339,285 +339,251 @@ function HoldingsContent() {
 
     return (
         <>
-            <Header />
-            <Paper sx={{
-                width: '100vw',
-                height: '100vh',
-                backgroundColor: 'white',
-                boxShadow: 'none', padding: 0, overflow: 'auto', borderRadius: 0
-            }}>
+          <Header />
+          <Paper
+            sx={{
+              width: '100vw',
+              height: '100vh',
+              backgroundColor: 'white',
+              boxShadow: 'none',
+              padding: 0,
+              overflow: 'auto',
+              borderRadius: 0,
+            }}
+          >
+      
+            {/* Title + date/portfolio picker + metrics button */}
+            <Box
+              sx={{
+                display: 'flex',
+                flexDirection: { xs: 'column', sm: 'row' },
+                alignItems: { xs: 'flex-start', sm: 'center' },
+                justifyContent: 'space-between',
+                px: { xs: 2, sm: 10 },
+                pt: 3,
+                mb: 4
+              }}
+            >
+              <Typography
+                variant="h4"
+                fontWeight={800}
+                sx={{ color: theme.palette.primary.main }}
+              >
+                Holdings
+              </Typography>
 
-                {/* Holdings Section */}
-                <Box sx={{
+              <Box
+                sx={{
+                  display: 'flex',
+                  flexDirection: { xs: 'column', sm: 'row' },
+                  gap: 2,
+                  width: { xs: '100%', sm: 'auto' },
+                  mt: { xs: 2, sm: 0 },
+                  justifyContent: 'flex-end'
+                }}
+              >
+                <Box
+                  component="input"
+                  type="date"
+                  value={selectedDate}
+                  onChange={e => onDateChange(e.target.value)}
+                  sx={{
+                    width: { xs: '100%', sm: 180 },
+                    height: 40,
+                    border: '1px solid #ccc',
+                    borderRadius: '8px',
+                    p: '8px'
+                  }}
+                />
+
+                <FormControl size="small" sx={{ width: { xs: '100%', sm: 180 } }}>
+                  <Select
+                    value={selectedPortfolio}
+                    onChange={e => onPortfolioChange(e.target.value)}
+                    sx={{ height: 40, borderRadius: '8px' }}
+                  >
+                    <MenuItem value="core">Core Portfolio</MenuItem>
+                    <MenuItem value="benchmark">Benchmark Portfolio</MenuItem>
+                  </Select>
+                </FormControl>
+
+                <Link
+                  href={`/holdings/metrics?end_date=${selectedDate}&portfolio=${selectedPortfolio}`}
+                  passHref
+                >
+                  <Button
+                    variant="contained"
+                    sx={{
+                      width: { xs: '100%', sm: 160 },
+                      height: 40,
+                      borderRadius: "8px",
+                      backgroundColor: '#800000',
+                      '&:hover': { backgroundColor: '#660000' },
+                      color: 'white',
+                    }}
+                  >
+                    Metrics
+                  </Button>
+                </Link>
+              </Box>
+            </Box>
+      
+            {/* Summary cards */}
+            <Box
+              sx={{
+                pl: { xs: 2, sm: 10 },
+                pr: { xs: 2, sm: 10 },
+                pb: 5,
+                display: 'flex',
+                flexDirection: { xs: 'column', sm: 'row' },
+                gap: 2,
+              }}
+            >
+              <Paper sx={{ p: 2, flex: 1, boxShadow: 2 }}>
+                <Typography>
+                  <strong>USD to CAD:</strong>{' '}
+                  {exchangeRatesData?.USD
+                    ? `$${parseFloat(exchangeRatesData.USD).toFixed(6)}`
+                    : '—'}
+                </Typography>
+              </Paper>
+              <Paper sx={{ p: 2, flex: 1, boxShadow: 2 }}>
+                <Typography>
+                  <strong>Total Portfolio Value:</strong>{' '}
+                  ${totalPortfolioValue.toLocaleString(undefined, { minimumFractionDigits: 2 })}
+                </Typography>
+                <Typography variant="body2" color="text.secondary">
+                  (Excluding dividends)
+                </Typography>
+                <Typography sx={{ mt: 1 }}>
+                  <strong>Inception Return:</strong> {inceptionReturn.toFixed(2)}%
+                </Typography>
+                <Typography variant="body2" color="text.secondary">
+                  (Since 2022-05-05)
+                </Typography>
+              </Paper>
+            </Box>
+      
+            {/* Table */}
+            {Object.keys(groupedByFund).map((fund) => (
+              <Box key={fund} sx={{ mb: 4, pl: { xs: 2, sm: 10 }, pr: { xs: 2, sm: 10 } }}>
+                <Typography
+                  variant="h6"
+                  onClick={() => router.push(`/holdings/${encodeURIComponent(fund)}`)}
+                  sx={{
+                    fontWeight: 'bold',
+                    mb: 2,
+                    cursor: 'pointer',
+                    padding: '4px 8px',
+                    borderRadius: '4px',
+                    backgroundColor: '#800000',
+                    color: '#ffffff',
                     display: 'flex',
-                    flexDirection: { xs: 'column', sm: 'row' },
-                    justifyContent: 'space-between', alignItems: { xs: 'stretch', sm: 'center' }, mb: 4,
-                    pl: { xs: 2, sm: 10 },
-                    pr: { xs: 2, sm: 10 },
-                    pt: 3
-                }}>
-                    <Typography variant="h4" fontWeight={800} sx={{ color: theme.palette.primary.main, mb: { xs: 2, sm: 0 } }}>
-                        Holdings
-                    </Typography>
-                    <Box sx={{ display: 'flex', gap: 2, flexDirection: { xs: 'column', sm: 'row' }, width: { xs: '100%', sm: 'auto' } }}>
-                        <Box
-                            component="input"
-                            type="date"
-                            value={selectedDate || ""}
-                            onChange={(e) => onDateChange(e.target.value)}
-                            min="1900-01-01"
-                            max="2100-12-31"
+                    alignItems: 'center',
+                    gap: .5,
+                    '&:hover': {
+                      backgroundColor: '#f2f2f2',
+                      color: '#000000',
+                      boxShadow: '0 2px 8px rgba(0, 0, 0, 0.2)',
+                      '& svg': { color: '#000000' },
+                    },
+                  }}
+                >
+                  <QueryStatsIcon sx={{ color: '#ffffff', mr: 1 }} />
+                  {fund}
+                </Typography>
+                <TableContainer component={Paper} sx={{ overflowX: 'auto', maxWidth: '100%' }}>
+                  <Table stickyHeader sx={{ tableLayout: 'fixed', width: '100%', minWidth: '800px' }}>
+                    <TableHead>
+                      <TableRow sx={{ backgroundColor: theme.palette.grey[200], borderBottom: `2px solid ${theme.palette.primary.main}` }}>
+                        {[
+                          { label: 'Name', key: 'name' },
+                          { label: 'Ticker', key: 'ticker' },
+                          { label: 'Shares', key: 'shares_held' },
+                          { label: 'Price (CAD)', key: 'price' },
+                          { label: 'Purchase Price (CAD)', key: 'purchase_price' },
+                          { label: 'Book Value (CAD)', key: 'book_value' },
+                          { label: 'Market Value (CAD)', key: 'market_value' },
+                          { label: 'PnL (CAD)', key: 'PnL_CAD' },
+                          { label: 'PnL %', key: 'PnL_Pct' }
+                        ].map(({ label, key }) => (
+                          <TableCell
+                            key={key}
+                            onClick={() => handleSort(key)}
+                            align="center"
                             sx={{
-                                width: { xs: '100%', sm: 180 },
-                                height: 40,
-                                border: "1px solid #ccc",
-                                borderRadius: "8px",
-                                padding: "8px",
-                                outline: "none",
-                                "&:focus": {
-                                    borderColor: "primary.main",
-                                },
+                              fontWeight: 'bold',
+                              color: theme.palette.primary.main,
+                              borderBottom: `2px solid ${theme.palette.primary.main}`,
+                              cursor: 'pointer',
                             }}
-                        />
-                        <FormControl size="small" >
-                            <Select
-                                value={selectedPortfolio}
-                                onChange={(e) => onPortfolioChange(e.target.value)}
-                                sx={{
-                                    width: { xs: '100%', sm: 180 },
-                                    height: 40,
-                                    borderRadius: "8px",
-                                }}
-                            >
-                                <MenuItem value="core">Core Portfolio</MenuItem>
-                                <MenuItem value="benchmark">Benchmark Portfolio</MenuItem>
-                            </Select>
-                        </FormControl>
-                    </Box>
-                </Box>
-
-                {/* Table */}
-                {Object.keys(groupedByFund).map((fund) => (
-                    <Box key={fund} sx={{ mb: 4, pl: { xs: 2, sm: 10 }, pr: { xs: 2, sm: 10 } }}>
-                        <Typography
-                            variant="h6"
-                            onClick={() => router.push(`/holdings/${encodeURIComponent(fund)}`)}
-                            sx={{
-                                fontWeight: 'bold',
-                                mb: 2,
-                                cursor: 'pointer',
-                                padding: '4px 8px', // Adds padding for a button-like feel
-                                borderRadius: '4px', // Rounded corners
-                                backgroundColor: '#800000', // Light background color (button-like)
-                                color: '#ffffff', // White text on hover
-                                transition: 'all 0.3s ease-in-out',
-                                display: 'flex',
-                                alignItems: 'center',
-                                gap: .1,
-                                '&:hover': {
-                                    backgroundColor: '#f2f2f2', // Button-like background on hover
-                                    color: '#000000', // White text on hover
-                                    boxShadow: '0 2px 8px rgba(0, 0, 0, 0.2)', // Adds shadow for depth
-                                    '& svg': {
-                                        color: '#000000', // White text on hover
-                                    },
-                                },
-                            }}
-                        >
-                            <QueryStatsIcon sx={{
-                                color: '#ffffff',
-                                transition: 'color 0.3s ease-in-out',
-                                mr: 1
-                            }} />
-                            {fund}
-                        </Typography>
-                        <TableContainer component={Paper} sx={{ overflowX: 'auto', maxWidth: '100%' }}>
-                            <Table stickyHeader sx={{ tableLayout: 'fixed', width: '100%', minWidth: '800px' }}>
-                                <TableHead>
-                                    <TableRow sx={{ backgroundColor: theme.palette.grey[200], borderBottom: `2px solid ${theme.palette.primary.main}` }}>
-                                        {[
-                                            { label: 'Name', key: 'name' },
-                                            { label: 'Ticker', key: 'ticker' },
-                                            { label: 'Shares', key: 'shares_held' },
-                                            { label: 'Price (CAD)', key: 'price' },
-                                            { label: 'Purchase Price (CAD)', key: 'purchase_price' },
-                                            { label: 'Book Value (CAD)', key: 'book_value' },
-                                            { label: 'Market Value (CAD)', key: 'market_value' },
-                                            { label: 'PnL (CAD)', key: 'PnL_CAD' },
-                                            { label: 'PnL %', key: 'PnL_Pct' }
-                                        ].map(({ label, key }) => (
-                                            <TableCell
-                                                key={key}
-                                                onClick={() => handleSort(key)}
-                                                align="center"
-                                                sx={{
-                                                    fontWeight: 'bold',
-                                                    color: theme.palette.primary.main,
-                                                    borderBottom: `2px solid ${theme.palette.primary.main}`,
-                                                    cursor: 'pointer',
-                                                }}
-                                            >
-                                                <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '1.1rem' }}>
-                                                    {label}
-                                                    {sortConfig.key === key && (
-                                                        <span>{sortConfig.direction === 'asc' ? '↑' : '↓'}</span>
-                                                    )}
-                                                </Box>
-                                            </TableCell>
-                                        ))}
-                                    </TableRow>
-                                </TableHead>
-                                <TableBody>
-                                    {loading ? (
-                                        <TableRow><TableCell colSpan={9} align="center"><CircularProgress color="primary" /></TableCell></TableRow>
-                                    ) : error ? (
-                                        <TableRow><TableCell colSpan={9} align="center"><Typography color="error">{error}</Typography></TableCell></TableRow>
-                                    ) : groupedByFund[fund].length > 0 ? (
-                                        sortData(groupedByFund[fund]).map((row, index) => {
-                                            const marketValue = parseFloat(row.market_value);
-                                            const price = parseFloat(row.price);
-                                            let convertedMarketValue = marketValue;
-                                            let convertedPrice = price;
-                                            const pnlData = getPnLData(row.ticker);
-                                            const purchasePrice = Number(pnlData?.average_purchase_price ?? 0);
-                                            const bookValue = Number(pnlData?.book_value ?? 0);
-                                            const pnlPercentage = ((marketValue - bookValue) / bookValue) * 100;
-                                            const pnlValue = marketValue - bookValue;
-                                            let convertedPurchasePrice = purchasePrice;
-                                            let convertedBookValue = bookValue;
-                                            let convertedPnl = pnlValue;
-
-                                            if (exchangeRatesData) {
-                                                if (row.security_currency === "USD") {
-                                                    convertedMarketValue = marketValue / parseFloat(exchangeRatesData.USD);
-                                                    convertedPrice = price / parseFloat(exchangeRatesData.USD);
-                                                    convertedPurchasePrice = purchasePrice / parseFloat(exchangeRatesData.USD);
-                                                    convertedBookValue = bookValue / parseFloat(exchangeRatesData.USD);
-                                                    convertedPnl = pnlValue / parseFloat(exchangeRatesData.USD);
-                                                } else if (row.security_currency === "EUR") {
-                                                    convertedMarketValue = marketValue / parseFloat(exchangeRatesData.EUR);
-                                                    convertedPrice = price / parseFloat(exchangeRatesData.EUR);
-                                                    convertedPurchasePrice = purchasePrice / parseFloat(exchangeRatesData.EUR);
-                                                    convertedBookValue = bookValue / parseFloat(exchangeRatesData.EUR);
-                                                    convertedPnl = pnlValue / parseFloat(exchangeRatesData.EUR);
-                                                }
-                                            }
-
-                                            return (
-                                                <TableRow key={row.ticker} sx={{ backgroundColor: index % 2 === 0 ? theme.palette.action.hover : 'inherit' }}>
-                                                    <TableCell align="center" sx={{ fontSize: '1rem' }}>{row.name}</TableCell>
-                                                    <TableCell align="center" sx={{ fontSize: '1rem' }}>{row.ticker}</TableCell>
-                                                    <TableCell align="center" sx={{ fontSize: '1rem' }}>{row.shares_held}</TableCell>
-                                                    <TableCell align="center" sx={{ fontSize: '1rem' }}>$ {convertedPrice.toFixed(2)}</TableCell>
-                                                    <TableCell align="center" sx={{ fontSize: '1rem' }}>$ {convertedPurchasePrice.toFixed(2)}</TableCell>
-                                                    <TableCell align="center" sx={{ fontSize: '1rem' }}>$ {convertedBookValue.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</TableCell>
-                                                    <TableCell align="center" sx={{ fontSize: '1rem' }}>$ {convertedMarketValue.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</TableCell>
-                                                    <TableCell align="center" sx={{
-                                                        fontSize: '1rem',
-                                                        color: convertedPnl >= 0 ? 'success.main' : 'error.main'
-                                                    }}>$ {convertedPnl.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</TableCell>
-                                                    <TableCell align="center" sx={{
-                                                        fontSize: '1rem',
-                                                        color: pnlPercentage >= 0 ? 'success.main' : 'error.main'
-                                                    }}>{pnlPercentage.toFixed(2)}%</TableCell>
-                                                </TableRow>
-                                            );
-                                        })
-                                    ) : (
-                                        <TableRow><TableCell colSpan={9} align="center"><Typography>No data available</Typography></TableCell></TableRow>
-                                    )}
-                                </TableBody>
-                            </Table>
-                        </TableContainer>
-                    </Box>
-                ))}
-
-                <Box sx={{
-                    width: '100%',
-                    maxWidth: 'xl',
-                    display: 'flex',
-                    flexDirection: 'column',
-                    gap: 2, // Gap between the boxes
-                    pl: { xs: 2, sm: 10 }, pr: { xs: 2, sm: 10 }, pb: 5
-                }}>
-                    <Box sx={{
-                        borderRadius: 2, boxShadow: theme.shadows[2], overflow: 'hidden',
-                        padding: 2,
-                        backgroundColor: theme.palette.background.paper,
-                        display: 'flex',
-                        flexDirection: 'column',
-                        alignItems: 'flex-start',
-                    }}>
-                        <Typography variant="body1" sx={{ mb: 2 }}>
-                            <strong>USD to CAD:</strong> ${exchangeRatesData?.USD ? parseFloat(exchangeRatesData.USD).toFixed(6) : '0.000000'}
-                        </Typography>
-                    </Box>
-
-                    <Box sx={{
-                        borderRadius: 2, boxShadow: theme.shadows[2], overflow: 'hidden',
-                        padding: 2,
-                        backgroundColor: theme.palette.background.paper,
-                        display: 'flex',
-                        flexDirection: 'column',
-                        alignItems: 'flex-start',
-                    }}>
-                        <Typography variant="body1" sx={{ mb: 2 }}>
-                            <strong>Total Portfolio Value:</strong> $ {totalPortfolioValue.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
-                        </Typography>
-
-                        <Typography variant="body2" sx={{
-                            mb: 2,
-                            fontSize: '0.9em',
-                            color: '#666666'
-                        }}>
-                            (Excluding dividends)
-                        </Typography>
-
-                        <Typography variant="body1" sx={{ mb: 2 }}>
-                            <strong>Inception Return:</strong> {inceptionReturn.toFixed(2)}%
-                        </Typography>
-
-                        <Typography variant="body2" sx={{
-                            fontSize: '0.9em',
-                            color: '#666666'
-                        }}>
-                            (Since 2022-05-05)
-                        </Typography>
-                    </Box>
-
-                    <Box sx={{
-                        display: 'flex',
-                        flexDirection: 'column',
-                        gap: 2,
-                        width: '100%',
-                        justifyContent: 'space-between'
-                    }}>
-                        <Box sx={{ flex: 1 }}>
-                            <StackedAreaChart
-                                title="Geography Weights Over Time"
-                                apiUrl={`${API_BASE_URL}/api/holdings/sector-weights-geography?portfolio=${selectedPortfolio}&date=${selectedDate}`}
-                                categoryKey="geography"
-                            />
-                        </Box>
-
-                        <Box sx={{ flex: 1 }}>
-                            <StackedAreaChart
-                                title="Sector Weights Over Time"
-                                apiUrl={`${API_BASE_URL}/api/holdings/sector-weights-sector?portfolio=${selectedPortfolio}&date=${selectedDate}`}
-                                categoryKey="sector"
-                            />
-                        </Box>
-
-                        <Box sx={{ flex: 1 }}>
-                            <StackedAreaChart
-                                title="Fund Weights Over Time"
-                                apiUrl={`${API_BASE_URL}/api/holdings/sector-weights-fund?portfolio=${selectedPortfolio}&date=${selectedDate}`}
-                                categoryKey="fund"
-                            />
-                        </Box>
-                    </Box>                    
-                </Box>
-            </Paper>
+                          >
+                            <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '1.1rem' }}>
+                              {label}
+                              {sortConfig.key === key && <span>{sortConfig.direction === 'asc' ? '↑' : '↓'}</span>}
+                            </Box>
+                          </TableCell>
+                        ))}
+                      </TableRow>
+                    </TableHead>
+                    <TableBody>
+                      {loading ? (
+                        <TableRow><TableCell colSpan={9} align="center"><CircularProgress color="primary" /></TableCell></TableRow>
+                      ) : error ? (
+                        <TableRow><TableCell colSpan={9} align="center"><Typography color="error">{error}</Typography></TableCell></TableRow>
+                      ) : groupedByFund[fund].length > 0 ? (
+                        sortData(groupedByFund[fund]).map((row, index) => {
+                          const marketValue = parseFloat(row.market_value);
+                          const price = parseFloat(row.price);
+                          let convertedMarketValue = marketValue;
+                          let convertedPrice = price;
+                          const p = getPnLData(row.ticker);
+                          const purchasePrice = Number(p?.average_purchase_price ?? 0);
+                          const bookValue = Number(p?.book_value ?? 0);
+                          const pnlValue = marketValue - bookValue;
+                          const pnlPct = bookValue ? (pnlValue / bookValue) * 100 : 0;
+                          let cPurchase = purchasePrice;
+                          let cBook = bookValue;
+                          let cPnl = pnlValue;
+                          if (exchangeRatesData) {
+                            if (row.security_currency === 'USD') {
+                              convertedMarketValue = marketValue / parseFloat(exchangeRatesData.USD);
+                              convertedPrice = price / parseFloat(exchangeRatesData.USD);
+                              cPurchase = purchasePrice / parseFloat(exchangeRatesData.USD);
+                              cBook = bookValue / parseFloat(exchangeRatesData.USD);
+                              cPnl = pnlValue / parseFloat(exchangeRatesData.USD);
+                            } else if (row.security_currency === 'EUR') {
+                              convertedMarketValue = marketValue / parseFloat(exchangeRatesData.EUR);
+                              convertedPrice = price / parseFloat(exchangeRatesData.EUR);
+                              cPurchase = purchasePrice / parseFloat(exchangeRatesData.EUR);
+                              cBook = bookValue / parseFloat(exchangeRatesData.EUR);
+                              cPnl = pnlValue / parseFloat(exchangeRatesData.EUR);
+                            }
+                          }
+                          return (
+                            <TableRow key={row.ticker} sx={{ backgroundColor: index % 2 === 0 ? theme.palette.action.hover : 'inherit' }}>
+                              <TableCell align="center">{row.name}</TableCell>
+                              <TableCell align="center">{row.ticker}</TableCell>
+                              <TableCell align="center">{row.shares_held}</TableCell>
+                              <TableCell align="center">${convertedPrice.toFixed(2)}</TableCell>
+                              <TableCell align="center">${cPurchase.toFixed(2)}</TableCell>
+                              <TableCell align="center">${cBook.toLocaleString(undefined, { minimumFractionDigits: 2 })}</TableCell>
+                              <TableCell align="center">${convertedMarketValue.toLocaleString(undefined, { minimumFractionDigits: 2 })}</TableCell>
+                              <TableCell align="center" sx={{ color: cPnl >= 0 ? 'success.main' : 'error.main' }}>${cPnl.toLocaleString(undefined, { minimumFractionDigits: 2 })}</TableCell>
+                              <TableCell align="center" sx={{ color: pnlPct >= 0 ? 'success.main' : 'error.main' }}>{pnlPct.toFixed(2)}%</TableCell>
+                            </TableRow>
+                          );
+                        })
+                      ) : (
+                        <TableRow><TableCell colSpan={9} align="center"><Typography>No data available</Typography></TableCell></TableRow>
+                      )}
+                    </TableBody>
+                  </Table>
+                </TableContainer>
+              </Box>
+            ))}
+      
+          </Paper>
         </>
     );
 }

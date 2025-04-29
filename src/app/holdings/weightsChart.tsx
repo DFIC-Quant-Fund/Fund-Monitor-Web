@@ -96,6 +96,40 @@ const StackedAreaChart: React.FC<StackedAreaChartProps> = ({ title, apiUrl, cate
         fetchData();
     }, [fetchData]);
 
+    const formatDate = (dateString: string) => {
+        const date = new Date(dateString);
+        return date.toLocaleDateString('en-GB', {
+            day: '2-digit',
+            month: '2-digit',
+            year: '2-digit'
+        });
+    };
+
+    const generateQuarterlyTicks = (data: PivotedWeightData[]): string[] => {
+        if (data.length === 0) return [];
+
+        const seen = new Set<string>();
+
+        return [...data]
+            // 1. sort by date ascending
+            .sort((a, b) =>
+                new Date(a.trading_date).getTime() - new Date(b.trading_date).getTime()
+            )
+            // 2. for each row, compute its "YYYY-Q" key and only keep the first of each
+            .filter(({ trading_date }) => {
+                const d = new Date(trading_date);
+                const year = d.getFullYear();
+                const q = Math.floor(d.getMonth() / 3) + 1;     // 1–4
+                const key = `${year}-Q${q}`;
+
+                if (seen.has(key)) return false;
+                seen.add(key);
+                return true;
+            })
+            // 3. return the original date string
+            .map(({ trading_date }) => trading_date);
+    };
+
     const allKeys = Array.from(
         new Set(
             data.flatMap(d =>
@@ -130,7 +164,8 @@ const StackedAreaChart: React.FC<StackedAreaChartProps> = ({ title, apiUrl, cate
                             <CartesianGrid strokeDasharray="3 3" />
                             <XAxis
                                 dataKey="trading_date"
-                                tickFormatter={(date) => new Date(date).toLocaleDateString()}
+                                tickFormatter={(date) => formatDate(date)}
+                                ticks={generateQuarterlyTicks(data)}
                             />
                             <YAxis 
                                 domain={[0, 100]} 
@@ -140,7 +175,7 @@ const StackedAreaChart: React.FC<StackedAreaChartProps> = ({ title, apiUrl, cate
                             <Tooltip
                                 // formatter={(v: number) => [`${v.toFixed(2)}%`, 'Weight']}
                                 formatter={(value: number, name: string) => [`${value.toFixed(2)}%`, name]}
-                                labelFormatter={(label) => new Date(label).toLocaleDateString()}
+                                labelFormatter={(label) => formatDate(label)}
                             />
                             <Legend />
                             {allKeys.map((key, index) => (
