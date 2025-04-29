@@ -3,7 +3,6 @@ import {
     AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Legend
 } from 'recharts';
 import { Box, CircularProgress, Typography } from '@mui/material';
-import { addMonths } from 'date-fns';
 
 interface RawWeightData {
     trading_date: string;
