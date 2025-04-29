@@ -166,7 +166,7 @@ function HoldingsMetricsContent() {
               sx={{
                 width: { xs: '100%', sm: 160 },
                 height: 40,
-                borderRadius: 1,
+                borderRadius: "8px",
                 backgroundColor: '#800000',
                 '&:hover': { backgroundColor: '#660000' },
                 textTransform: 'uppercase',
@@ -188,7 +188,7 @@ function HoldingsMetricsContent() {
                 sx={{
                   width: { xs: '100%', sm: 160 },
                   height: 40,
-                  borderRadius: 1,
+                  borderRadius: "8px",
                   backgroundColor: '#800000',
                   '&:hover': { backgroundColor: '#660000' },
                   textTransform: 'uppercase',

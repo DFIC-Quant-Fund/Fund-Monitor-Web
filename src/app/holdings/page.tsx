@@ -414,10 +414,12 @@ function HoldingsContent() {
                   <Button
                     variant="contained"
                     sx={{
+                      width: { xs: '100%', sm: 160 },
+                      height: 40,
+                      borderRadius: "8px",
                       backgroundColor: '#800000',
                       '&:hover': { backgroundColor: '#660000' },
                       color: 'white',
-                      width: { xs: '100%', sm: 'auto' }
                     }}
                   >
                     Metrics
