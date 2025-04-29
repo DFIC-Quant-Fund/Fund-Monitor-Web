@@ -439,7 +439,7 @@ function HoldingsContent() {
                 gap: 2,
               }}
             >
-              <Paper sx={{ p: 2, flex: 1 }}>
+              <Paper sx={{ p: 2, flex: 1, boxShadow: 2 }}>
                 <Typography>
                   <strong>USD to CAD:</strong>{' '}
                   {exchangeRatesData?.USD
@@ -447,7 +447,7 @@ function HoldingsContent() {
                     : '—'}
                 </Typography>
               </Paper>
-              <Paper sx={{ p: 2, flex: 1 }}>
+              <Paper sx={{ p: 2, flex: 1, boxShadow: 2 }}>
                 <Typography>
                   <strong>Total Portfolio Value:</strong>{' '}
                   ${totalPortfolioValue.toLocaleString(undefined, { minimumFractionDigits: 2 })}
